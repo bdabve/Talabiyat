@@ -50,11 +50,13 @@ class Interface(QtWidgets.QMainWindow):
 
     def goto_product_page(self):
         self.all_products()
+        self.enable_disable_buttons(page='Products')
         self.ui.containerStackedWidget.setCurrentWidget(self.ui.ProductPage)
         Utils.pagebuttons_stats(self)
 
     def goto_order_page(self):
         self.all_orders()
+        self.enable_disable_buttons(page='Orders')
         self.ui.containerStackedWidget.setCurrentWidget(self.ui.OrderPage)
         Utils.pagebuttons_stats(self)
 
@@ -85,6 +87,72 @@ class Interface(QtWidgets.QMainWindow):
         Utils.display_table_records(table_widget, rows, headers)
         self.update_count_label(count_label, rows)
         Utils.pagebuttons_stats(self)
+
+    def enable_disable_buttons(self, page: str):
+        """
+        This function handle itemSelectionChange in QTablewidget to Enable/Disable the related buttons
+        :page: [ products | clients | fournis | vente | achat | movement | tresor ]
+        """
+        if page == 'Products':
+            self.ui.buttonProductDetails.setEnabled(Utils.selected_rows(self.ui.tableWidgetProduct))
+            self.ui.buttonEditProduct.setEnabled(Utils.selected_rows(self.ui.tableWidgetProduct))
+            self.ui.buttonDeleteProduct.setEnabled(Utils.selected_rows(self.ui.tableWidgetProduct))
+
+        elif page == 'Orders':
+            self.ui.buttonOrderDetails.setEnabled(Utils.selected_rows(self.ui.tableWidgetOrders))
+            self.ui.buttonEditOrder.setEnabled(Utils.selected_rows(self.ui.tableWidgetOrders))
+            self.ui.buttonDeleteOrder.setEnabled(Utils.selected_rows(self.ui.tableWidgetOrders))
+
+        # elif page == 'clients':
+            # self.root.ui.buttonDelete.setEnabled(Utils.selected_rows(self.client_tablew))
+            # self.root.ui.buttonDeleteClient.setEnabled(Utils.selected_rows(self.client_tablew))
+
+    # ************************************************
+    # Form Management
+    # ************************************************
+
+    def create_form(self, fields):
+        """
+        Dynamically create a form for new entries.
+        :param fields: A dictionary mapping keys to Arabic labels.
+        """
+        Utils.clear_details_form(self.ui.formLayout)
+        for count, (key, label) in enumerate(fields.items(), start=1):
+            value_edit = Utils.create_lineEdit(self.ui.scrollAreaWidgetContents, f"lineEdit_{key}")
+            value_edit.setText("")
+            value_edit.setEnabled(True)
+
+            key_label = Utils.create_label(self.ui.scrollAreaWidgetContents, f"label_{key}")
+            key_label.setText(label)
+
+            self.ui.formLayout.setWidget(count, QtWidgets.QFormLayout.FieldRole, value_edit)
+            self.ui.formLayout.setWidget(count, QtWidgets.QFormLayout.LabelRole, key_label)
+
+        self.ui.dockWidget.show()
+
+    def collect_form_data(self):
+        """
+        Collect data from formFrame QLineEdit fields.
+
+        :return: A dictionary containing the input data.
+        """
+        input_data = {}
+        for i in range(self.ui.formLayout.rowCount()):
+            # Check if Label and LineEdit widgets exist for this row
+            label_item = self.ui.formLayout.itemAt(i, QtWidgets.QFormLayout.LabelRole)
+            input_item = self.ui.formLayout.itemAt(i, QtWidgets.QFormLayout.FieldRole)
+
+            if label_item and input_item:
+                label_widget = label_item.widget()
+                input_widget = input_item.widget()
+
+                # Ensure both widgets are the correct types
+                if isinstance(label_widget, QtWidgets.QLabel) and isinstance(input_widget, QtWidgets.QLineEdit):
+                    key = input_widget.objectName().replace("lineEdit_", "")
+                    value = input_widget.text().strip()
+                    input_data[key] = value
+
+        return input_data
 
     # ************************************************
     #   PRODUCT PAGE
@@ -161,6 +229,71 @@ class Interface(QtWidgets.QMainWindow):
         else:
             print(f"Error fetching products: {response['message']}")
 
+    def new_order(self):
+        """
+        Create New Order
+        """
+        fields = {
+            "customer_name": "اسم العميل",
+            "products": "المنتجات",
+            "status": "الحالة",
+            "order_date": "تاريخ الطلب"
+        }
+        self.ui.labelMongoTable.setText('Order')
+        self.ui.labelOperation.setText('Create')
+        self.create_form(fields)
+
+    def new_product(self):
+        """
+        Add new product
+        """
+        fields = {
+            "name": "الاسم",
+            "ref": "المرجع",
+            "description": "الوصف",
+            "price": "السعر",
+            "qte": "الكمية",
+            "category": "الفئة",
+            "supplier": "المورد"
+        }
+        self.ui.labelMongoTable.setText('Product')
+        self.ui.labelOperation.setText('Create')
+        self.create_form(fields)
+
+    def save_new_item(self):
+        """
+        Save new product in database
+        when saveNewProduct is clicked
+        """
+        operation = self.ui.labelOperation.text()
+        mongo_table = self.ui.labelMongoTable.text()
+        print(operation)
+        print(mongo_table)
+        if operation == 'None':
+            logger.info('Returning from save')
+            return
+
+        mongo_table = self.ui.labelMongoTable.text()
+        data = self.collect_form_data()
+        if mongo_table == 'Product':
+            logger.info(f'SAVE BUTTON: Product( {operation} )')
+            print(data)
+            # response = self.db_handler.create_product(**data)
+            # self.all_products()
+        elif mongo_table == 'Customer':
+            logger.info(f'Customer( {operation} )')
+            print(data)
+        elif mongo_table == 'Order':
+            logger.info(f'SAVE BUTTON: Order( {operation} )')
+            print(data)
+        else:
+            logger.info('Nothing')
+
+        # if response["status"] == "success":
+            # logger.info("New product added successfully!")
+        # else:
+            # logger.error("Failed to add product.")
+
     # ************* Product Details Widget***************
 
     def populate_formFrame(self, response, lineEditEnabled=False):
@@ -211,13 +344,14 @@ class Interface(QtWidgets.QMainWindow):
             self.ui.formLayout.setWidget(count, QtWidgets.QFormLayout.FieldRole, value_edit)
             self.ui.formLayout.setWidget(count, QtWidgets.QFormLayout.LabelRole, key_label)
 
-    def product_details(self, lineEditEnabled):
+    def product_details(self, lineEditEnabled, operation='None'):
         """Show details for a selected process."""
         product_id = Utils.get_column_value(self.ui.tableWidgetProduct, 0)
 
         # Config Labels
+        self.ui.labelOperation.setText(operation)
         self.ui.labelItemID.setText(str(product_id))
-        self.ui.labelMongoTable.setText('Products')
+        self.ui.labelMongoTable.setText('Product')
         self.ui.frameDetailsID.hide()
 
         response = self.db_handler.fetch_documents(
@@ -233,8 +367,28 @@ class Interface(QtWidgets.QMainWindow):
         self.populate_formFrame(response, lineEditEnabled=lineEditEnabled)
         self.ui.dockWidget.show()
 
-    def new_product(self):
-        print("New Product")
+    def order_details(self, lineEditEnabled, operation='None'):
+        """Show details for a selected Order."""
+        order_id = Utils.get_column_value(self.ui.tableWidgetOrders, 0)
+
+        # Config Labels
+        self.ui.labelOperation.setText(operation)
+        self.ui.labelItemID.setText(str(order_id))
+        self.ui.labelMongoTable.setText('Order')
+        self.ui.frameDetailsID.hide()
+
+        response = self.db_handler.fetch_documents(
+            collection_name="Orders",
+            query={"_id": ObjectId(order_id)},
+            projection={"_id": 0}
+        )
+        if response["status"] == "error":
+            self.ui.labelErrorOrderPage.setText(response["message"])
+            return
+
+        response = response["documents"][0]
+        self.populate_formFrame(response, lineEditEnabled=lineEditEnabled)
+        self.ui.dockWidget.show()
 
     def edit_product(self):
         item_id = Utils.get_column_value()
@@ -242,7 +396,7 @@ class Interface(QtWidgets.QMainWindow):
         print(f"Edit :: {item_id} :: {mongo_table}")
 
     def delete_product(self):
-        item_id = Utils.get_column_value(self.ui.tableWidgetProduct)
+        item_id = Utils.get_column_value(self.ui.tableWidgetProduct, 0)
         print(f"Delete :: {item_id}")
 
     # ********************************************
@@ -275,6 +429,10 @@ class Interface(QtWidgets.QMainWindow):
             self.populate_table_widget('Orders', rows)
         else:
             print(f"Error fetching products: {response['message']}")
+
+    def delete_order(self):
+        item_id = Utils.get_column_value(self.ui.tableWidgetOrders, 0)
+        print(f"Delete :: {item_id}")
 
 
 if __name__ == '__main__':

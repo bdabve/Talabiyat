@@ -26,26 +26,59 @@ class Utils:
 
             # Product Page Buttons
             (
+                # product details
                 root.ui.buttonProductDetails,
                 qta.icon('mdi6.information-variant', color="#ffffff"),
                 lambda: root.product_details(lineEditEnabled=False)
             ),
             (
+                # new product
                 root.ui.buttonNewProduct,
-                qta.icon('ph.plus-circle-thin', color="#227093"),
+                qta.icon('ph.plus-circle-thin', color="#ffffff"),
                 root.new_product
             ),
             (
+                # edit product
                 root.ui.buttonEditProduct,
                 qta.icon('mdi6.tooltip-edit', color="#16a085"),
-                lambda: root.product_details(lineEditEnabled=True)
+                lambda: root.product_details(lineEditEnabled=True, operation='Edit')
             ),
             (
+                # delete product
                 root.ui.buttonDeleteProduct,
                 qta.icon('mdi6.delete-outline', color="#EA2027"),
                 root.delete_product
             ),
-            # mdi6.skull
+            # THE SAVE BUTTON
+            (
+                root.ui.buttonSave,
+                qta.icon('mdi.content-save', color="#ffffff"),
+                root.save_new_item
+            ),
+
+            # ORDERS PAGE
+            (   # Order Details
+                root.ui.buttonOrderDetails,
+                qta.icon('mdi6.information-variant', color="#ffffff"),
+                lambda: root.order_details(lineEditEnabled=False)
+            ),
+            (
+                # NEW ORDER
+                root.ui.buttonNewOrder,
+                qta.icon('ph.plus-circle-thin', color="#ffffff"),
+                root.new_order
+            ),
+            (
+                # EDIT ORDER
+                root.ui.buttonEditOrder,
+                qta.icon('mdi6.tooltip-edit', color="#16a085"),
+                lambda: root.order_details(lineEditEnabled=True, operation="Edit")
+            ),
+            (
+                root.ui.buttonDeleteOrder,
+                qta.icon('mdi6.delete-outline', color="#EA2027"),
+                root.delete_order
+            ),
         ]
 
         for button, icon, callback in buttons_icons_callbacks:
@@ -56,7 +89,12 @@ class Utils:
         root.ui.lineEditSearchProduct.textChanged.connect(root.search_products)
         root.ui.searchButtonIcon.clicked.connect(root.search_products)
 
+        # Table Widgets
         root.ui.tableWidgetProduct.itemDoubleClicked.connect(lambda: root.product_details(lineEditEnabled=False))
+        root.ui.tableWidgetProduct.itemSelectionChanged.connect(lambda: root.enable_disable_buttons('Products'))
+
+        root.ui.tableWidgetOrders.itemDoubleClicked.connect(lambda: root.order_details(lineEditEnabled=False))
+        root.ui.tableWidgetOrders.itemSelectionChanged.connect(lambda: root.enable_disable_buttons('Orders'))
 
         # # search button icon
         # root.ui.searchButtonIcon.setIcon(qta.icon('ri.search-line', color="#ffffff"))
@@ -67,6 +105,17 @@ class Utils:
         # root.ui.buttonResume.setIcon(qta.icon('fa5s.walking', color="#ffffff"))
 
         # root.ui.buttonSuspend.setIcon(qta.icon('mdi.motion-pause-outline', color="#ffffff"))
+
+    @staticmethod
+    def selected_rows(table: QtWidgets.QTableWidget) -> bool:
+        """
+        Check if table has a selected rows
+        :table: table widget name
+        :return: True or False
+        """
+        # TODO:  Enter this in TableWidgetFuncs class
+        if len(table.selectionModel().selectedRows()) > 0: return True
+        else: return False
 
     @staticmethod
     def get_column_value(table: QtWidgets.QTableWidget, column: int) -> str:

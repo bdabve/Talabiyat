@@ -141,7 +141,7 @@ class MongoDBHandler:
     # Product Methods
     # *************************************************************
 
-    def add_product(self, name, ref, description, qte, price, category, supplier):
+    def create_product(self, name, ref, description, qte, price, category, supplier):
         """
         Adds a new product to the Products collection.
         """
@@ -282,7 +282,7 @@ if __name__ == "__main__":
     # ******************
     #
     # Add a new product
-    # response = handler.add_product(
+    # response = handler.create_product(
         # name="لابتوب",
         # ref="LPT123",
         # description="شاشة 15 بوصة، 8 جيجابايت رام",
