@@ -7,6 +7,8 @@
 # ----------------------------------------------------------------------------
 from datetime import datetime
 from PyQt5 import QtWidgets   # , QtCore
+from bson.objectid import ObjectId
+
 from h_interface import Ui_MainWindow
 from utils import Utils
 from mongo_handler import MongoDBHandler
@@ -74,7 +76,9 @@ class Interface(QtWidgets.QMainWindow):
             table_widget = self.ui.tableWidgetProduct
             headers = self.prod_headers
             count_label = self.ui.labelProductTableCount
+
         elif table_name == 'Orders':
+            table_widget = self.ui.tableWidgetOrders
             headers = self.order_headers
             count_label = self.ui.labelOrderTableCount
 
@@ -97,7 +101,7 @@ class Interface(QtWidgets.QMainWindow):
         )
 
         if response["status"] == "success":
-            products = response["products"]
+            products = response["documents"]
 
             # Format rows for the table
             rows = [
@@ -150,7 +154,7 @@ class Interface(QtWidgets.QMainWindow):
                     product.get("qte", ""),
                     product.get("category", "")
                 ]
-                for product in response["products"]
+                for product in response["documents"]
             ]
             # Display the filtered products in the table
             self.populate_table_widget('Products', rows)
@@ -163,7 +167,7 @@ class Interface(QtWidgets.QMainWindow):
         """
         Populate the formFrame located in the details dockWidget.
 
-        :param response: The response from MongoDB (e.g., response['product']).
+        :param response: dict The response from MongoDB (e.g., response['product']).
         :param lineEditEnabled: If details; enabled=False; else True.
         """
         # Clear the existing form
@@ -216,12 +220,16 @@ class Interface(QtWidgets.QMainWindow):
         self.ui.labelMongoTable.setText('Products')
         self.ui.frameDetailsID.hide()
 
-        response = self.db_handler.fetch_one_product(product_id)
+        response = self.db_handler.fetch_documents(
+            collection_name="Products",
+            query={"_id": ObjectId(product_id)},
+            projection={"_id": 0}
+        )
         if response["status"] == "error":
             self.ui.labelErrorProductPage.setText(response["message"])
             return
 
-        response = response["product"]
+        response = response["documents"][0]
         self.populate_formFrame(response, lineEditEnabled=lineEditEnabled)
         self.ui.dockWidget.show()
 
@@ -245,24 +253,22 @@ class Interface(QtWidgets.QMainWindow):
         Fetches all products from the database and displays them in the table widget.
         """
         # Fetch all products
-        response = self.db_handler.fetch_orders(
-            projection={"_id": 1, "customer_id": 1, "order_date": 1, "status": 1, "total": 1},
+        response = self.db_handler.fetch_orders_with_customer_names(
+            projection={"_id": 1, "customer_id": 1, "order_date": 1, "status": 1, "total_price": 1, "customer_name": 1},
             sort=[("created_at", 1)]  # Sort by create time
         )
 
         if response["status"] == "success":
-            products = response["orders"]
-
             # Format rows for the table
             rows = [
                 [
-                    product.get("_id", ""),
-                    product.get("customer_id", ""),
-                    product.get("order_date", ""),
-                    product.get("status", ""),
-                    product.get("total", ""),
+                    order.get("_id", ""),
+                    'غير مسجل' if order.get("customer_name") is None else order.get("customer_name", "Unknown"),
+                    order.get("order_date", "").strftime('%Y - %m - %d'),
+                    order.get("status", ""),
+                    order.get("total_price", ""),
                 ]
-                for product in products
+                for order in response["orders"]
             ]
 
             # Display records in the table
