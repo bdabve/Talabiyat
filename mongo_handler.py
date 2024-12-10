@@ -278,9 +278,16 @@ if __name__ == "__main__":
     # Example usage
     handler = MongoDBHandler()
 
-    client = pymongo.MongoClient('mongodb://localhost:27017')
-    db = client['elSel3a']
-    print(db.list_collection_names())
+    # client = pymongo.MongoClient('mongodb://localhost:27017')
+    # db = client['elSel3a']
+    # print(db.list_collection_names())
+
+    def print_terminal(response):
+        if response['status'] == 'success':
+            for document in response['documents']:
+                for key, value in document.items():
+                    print(f"{key} ==> {value}")
+                print('-' * 30)
 
     # *************
     #   Products
@@ -297,16 +304,10 @@ if __name__ == "__main__":
         # supplier="تقنيات المستقبل"
     # )
     # print(response)
-
+    #
     # === FETCH ALL PRODUCTS ===
     # response = handler.fetch_products(limit=5, sort=[("price", -1)])
-    # if response['status'] == 'success':
-        # for prod in response['documents']:
-            # for key, value in prod.items():
-                # print(f"{key}  :: {value}")
-            # print('-' * 30)
-    # else:
-        # print(response['message'])
+    # print_terminal(response)
 
     # === Fetch one product by its ObjectId ===
     # product_id = "6753810bbbe65eb9e57627b0"  # Replace with a valid _id from your database
@@ -316,11 +317,7 @@ if __name__ == "__main__":
         # projection={"name": 1, "ref": 1, "description": 1, "price": 1, "qte": 1, "_id": 0}
     # )
     # print(response['documents'][0])
-    # if response["status"] == "success":
-        # print("Product Details:")
-        # print(response["documents"][0])
-    # else:
-        # print("Error:", response["message"])
+    # print_terminal(response)
 
     # **************************************************************************
     #   Orders
@@ -335,13 +332,9 @@ if __name__ == "__main__":
     # print(response)
 
     # === FETCH ORDERS
+    # response = handler.fetch_orders(limit=3, sort=[("order_date", -1)])
     # response = handler.fetch_orders_with_customer_names()
-    # # response = handler.fetch_orders(limit=3, sort=[("order_date", -1)])
-    # if response['status'] == 'success':
-        # for order in response['orders']:
-            # for key, value in order.items():
-                # print(f"{key} :: {value}")
-            # print('-' * 30)
+    # print_terminal(response)
 
     # *******************************************************************************
     # Customers
@@ -354,21 +347,25 @@ if __name__ == "__main__":
         # address="شارع الإمير عبدالقادر - تيبازة"
     # )
     # print(response)
-
-    # Fetch all customers
     #
-    response = handler.fetch_customers(sort=[("created_at", -1)], limit=5)
-    for document in response['documents']:
-        for key, value in document.items():
-            print(f"{key} ==> {value}")
-        print('-' * 30)
-
-    # Update a customer
+    # FETCH ALL CUSTOMERS
+    # -------------------
+    # response = handler.fetch_customers(sort=[("created_at", -1)], limit=5)
+    # print_terminal(response)
     #
-    # customer_id = "6489cde8a1d4b1d6e2f7a456"  # Example ID
+    # FETCH ONE CUSTOMER
+    customer_id = "67588f3bbfb3c20aca9acc12"  # Example ID
+    response = handler.fetch_documents(
+        collection_name="Customers",
+        query={"_id": ObjectId(customer_id)},
+        projection={}
+    )
+    print_terminal(response)
+    #
+    # Update Customer
     # response = handler.update_customer(customer_id, updates={"phone": "01198765432"})
     # print(response)
-
+    #
     # Delete a customer
     #
     # response = handler.delete_customer(customer_id="6489cde8a1d4b1d6e2f7a456")

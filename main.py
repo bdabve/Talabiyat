@@ -6,8 +6,9 @@
 # desc          :
 # ----------------------------------------------------------------------------
 from datetime import datetime
-from PyQt5 import QtWidgets   # , QtCore
+from PyQt5 import QtWidgets, QtCore
 from bson.objectid import ObjectId
+import qtawesome as qta
 
 from h_interface import Ui_MainWindow
 from utils import Utils
@@ -203,8 +204,11 @@ class Interface(QtWidgets.QMainWindow):
             table_widget.setItem(row_position, 2, QtWidgets.QTableWidgetItem(str(quantity)))
 
             # Add a remove button
-            remove_button = QtWidgets.QPushButton("إزالة")
+            remove_button = QtWidgets.QPushButton(" إزالة")
+            remove_button.setIcon(qta.icon('fa.trash', color="#EA2027"))
+            remove_button.setIconSize(QtCore.QSize(20, 20))
             remove_button.clicked.connect(lambda: table_widget.removeRow(row_position))
+
             table_widget.setCellWidget(row_position, 3, remove_button)
 
     def collect_form_data(self, formLayout):
@@ -550,7 +554,12 @@ class Interface(QtWidgets.QMainWindow):
         """
         item_id = Utils.get_column_value(self.ui.tableWidgetProduct, 0)
         response = self.db_handler.delete_document('Products', ObjectId(item_id))
-        print(f"Delete Products :: {response}")
+        if response['status'] == 'success':
+            self.goto_product_page()
+            logger.info(f"Delete Products :: {response['message']}")
+            self.ui.labelErrorProductPage.setText(response['message'])
+        else:
+            self.ui.labelErrorProductPage.setText(f"Error {response['message']}")
 
     # ********************************************
     # == ORDERS PAGE

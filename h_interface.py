@@ -28,7 +28,7 @@ class Ui_MainWindow(object):
 "*************************/\n"
 "\n"
 "QLabel {\n"
-"    font: italic 12pt \"Droid Sans Fallback\";\n"
+"    font: italic 12pt \"Noto Serif Thai\";\n"
 "    color: #ffffff;\n"
 "}\n"
 "\n"
@@ -52,11 +52,12 @@ class Ui_MainWindow(object):
 "}\n"
 "\n"
 "QPushButton {    \n"
-"    font: 13pt \"Droid Sans Fallback\";\n"
+"    font: 12pt \"Noto Serif Thai\";\n"
 "}\n"
 "\n"
 "QLineEdit, QDateEdit {\n"
-"    font: italic 12pt \"Droid Sans Fallback\";\n"
+"    \n"
+"    font: 11pt \"Noto Serif Thai\";\n"
 "    background: transparent;\n"
 "    color: #ffffff;\n"
 "    border: none;\n"
@@ -234,7 +235,9 @@ class Ui_MainWindow(object):
 "    padding: 3px;\n"
 "}\n"
 "\n"
-"/*** Details Frame ***/\n"
+"/********************\n"
+"    Details Frame \n"
+"****************************/\n"
 "#formFrame QLineEdit:enabled \n"
 "{\n"
 "    background-color: rgba(51, 50, 50, 172);\n"
@@ -250,7 +253,8 @@ class Ui_MainWindow(object):
 "#frameToolButton QPushButton, \n"
 "#frameToolButton_2 QPushButton,\n"
 "#frameToolButton_3 QPushButton,\n"
-"#buttonAddToCart\n"
+"\n"
+"#frameNewOrderForm QPushButton\n"
 "{\n"
 "    background: transparent;\n"
 "    border-radius: 5px;\n"
@@ -261,7 +265,8 @@ class Ui_MainWindow(object):
 "#frameToolButton QPushButton:hover, \n"
 "#frameToolButton_2 QPushButton:hover ,\n"
 "#frameToolButton_3 QPushButton:hover,\n"
-"#buttonAddToCart:hover\n"
+"\n"
+"#frameNewOrderForm QPushButton:hover\n"
 "{\n"
 "    background-color: #3e3e3e;\n"
 "}\n"
@@ -269,7 +274,9 @@ class Ui_MainWindow(object):
 "#frameToolButton QPushButton:pressed,\n"
 "#frameToolButton_2 QPushButton:pressed,\n"
 "#frameToolButton_3 QPushButton:pressed,\n"
-"#buttonAddToCart:pressed\n"
+"\n"
+"\n"
+"#frameNewOrderForm QPushButton:pressed\n"
 "{\n"
 "    background-color: transparent;\n"
 "    padding: 3px;\n"
@@ -277,7 +284,9 @@ class Ui_MainWindow(object):
 "\n"
 "\n"
 "\n"
-"/*----------------> QComboBox <---------------------*/\n"
+"/***********************\n"
+"         QComboBox \n"
+"************************/\n"
 "\n"
 "QComboBox {\n"
 "    font: italic 12pt \"Droid Sans Fallback\";\n"
@@ -363,7 +372,9 @@ class Ui_MainWindow(object):
 "    image: url(:/icons/icons/cil-arrow-bottom.png);\n"
 "}\n"
 "\n"
-"/**************** QScrollBar ****************/\n"
+"/**************** *************\n"
+"        QScrollBar \n"
+"********************/\n"
 "QScrollBar:horizontal {\n"
 "    border: none;\n"
 "    background: rgb(52, 59, 72);\n"
@@ -530,7 +541,7 @@ class Ui_MainWindow(object):
         self.buttonUsername.setMinimumSize(QtCore.QSize(84, 84))
         self.buttonUsername.setMaximumSize(QtCore.QSize(84, 84))
         font = QtGui.QFont()
-        font.setFamily("Droid Sans Fallback")
+        font.setFamily("Noto Serif Thai")
         font.setPointSize(12)
         font.setBold(False)
         font.setItalic(False)
@@ -549,8 +560,8 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.buttonProductPage.sizePolicy().hasHeightForWidth())
         self.buttonProductPage.setSizePolicy(sizePolicy)
         font = QtGui.QFont()
-        font.setFamily("Droid Sans Fallback")
-        font.setPointSize(13)
+        font.setFamily("Noto Serif Thai")
+        font.setPointSize(12)
         font.setBold(False)
         font.setItalic(False)
         font.setWeight(50)
@@ -571,8 +582,8 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.buttonOrderPage.sizePolicy().hasHeightForWidth())
         self.buttonOrderPage.setSizePolicy(sizePolicy)
         font = QtGui.QFont()
-        font.setFamily("Droid Sans Fallback")
-        font.setPointSize(13)
+        font.setFamily("Noto Serif Thai")
+        font.setPointSize(12)
         font.setBold(False)
         font.setItalic(False)
         font.setWeight(50)
@@ -620,7 +631,7 @@ class Ui_MainWindow(object):
         self.labelProductTableCount = QtWidgets.QLabel(self.frame)
         self.labelProductTableCount.setMinimumSize(QtCore.QSize(100, 0))
         font = QtGui.QFont()
-        font.setFamily("Droid Sans Fallback")
+        font.setFamily("Noto Serif Thai")
         font.setPointSize(12)
         font.setBold(False)
         font.setItalic(True)
@@ -651,10 +662,10 @@ class Ui_MainWindow(object):
         self.lineEditSearchProduct = QtWidgets.QLineEdit(self.searchFrame)
         self.lineEditSearchProduct.setMinimumSize(QtCore.QSize(30, 30))
         font = QtGui.QFont()
-        font.setFamily("Droid Sans Fallback")
-        font.setPointSize(12)
+        font.setFamily("Noto Serif Thai")
+        font.setPointSize(11)
         font.setBold(False)
-        font.setItalic(True)
+        font.setItalic(False)
         font.setWeight(50)
         self.lineEditSearchProduct.setFont(font)
         self.lineEditSearchProduct.setObjectName("lineEditSearchProduct")
@@ -679,7 +690,7 @@ class Ui_MainWindow(object):
         self.labelErrorProductPage = QtWidgets.QLabel(self.frame)
         self.labelErrorProductPage.setMinimumSize(QtCore.QSize(0, 36))
         font = QtGui.QFont()
-        font.setFamily("Droid Sans Fallback")
+        font.setFamily("Noto Serif Thai")
         font.setPointSize(12)
         font.setBold(False)
         font.setItalic(True)
@@ -827,7 +838,7 @@ class Ui_MainWindow(object):
         self.labelErrorOrderPage = QtWidgets.QLabel(self.frame_2)
         self.labelErrorOrderPage.setMinimumSize(QtCore.QSize(0, 36))
         font = QtGui.QFont()
-        font.setFamily("Droid Sans Fallback")
+        font.setFamily("Noto Serif Thai")
         font.setPointSize(12)
         font.setBold(False)
         font.setItalic(True)
@@ -869,10 +880,10 @@ class Ui_MainWindow(object):
         self.lineEditSearchOrder = QtWidgets.QLineEdit(self.searchFrame_2)
         self.lineEditSearchOrder.setMinimumSize(QtCore.QSize(30, 30))
         font = QtGui.QFont()
-        font.setFamily("Droid Sans Fallback")
-        font.setPointSize(12)
+        font.setFamily("Noto Serif Thai")
+        font.setPointSize(11)
         font.setBold(False)
-        font.setItalic(True)
+        font.setItalic(False)
         font.setWeight(50)
         self.lineEditSearchOrder.setFont(font)
         self.lineEditSearchOrder.setObjectName("lineEditSearchOrder")
@@ -881,7 +892,7 @@ class Ui_MainWindow(object):
         self.labelOrderTableCount = QtWidgets.QLabel(self.frameToolButton)
         self.labelOrderTableCount.setMinimumSize(QtCore.QSize(100, 0))
         font = QtGui.QFont()
-        font.setFamily("Droid Sans Fallback")
+        font.setFamily("Noto Serif Thai")
         font.setPointSize(12)
         font.setBold(False)
         font.setItalic(True)
@@ -1336,10 +1347,17 @@ class Ui_MainWindow(object):
         self.tableWidgetAddOrderProds.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
         self.tableWidgetAddOrderProds.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectRows)
         self.tableWidgetAddOrderProds.setObjectName("tableWidgetAddOrderProds")
-        self.tableWidgetAddOrderProds.setColumnCount(0)
-        self.tableWidgetAddOrderProds.setRowCount(0)
+        self.tableWidgetAddOrderProds.setColumnCount(1)
+        self.tableWidgetAddOrderProds.setRowCount(1)
+        item = QtWidgets.QTableWidgetItem()
+        self.tableWidgetAddOrderProds.setVerticalHeaderItem(0, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.tableWidgetAddOrderProds.setHorizontalHeaderItem(0, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.tableWidgetAddOrderProds.setItem(0, 0, item)
         self.tableWidgetAddOrderProds.horizontalHeader().setStretchLastSection(True)
         self.tableWidgetAddOrderProds.verticalHeader().setVisible(False)
+        self.tableWidgetAddOrderProds.verticalHeader().setDefaultSectionSize(50)
         self.formLayoutNewOrder.setWidget(4, QtWidgets.QFormLayout.FieldRole, self.tableWidgetAddOrderProds)
         self.verticalLayout_17.addWidget(self.frameNewOrderForm)
         spacerItem10 = QtWidgets.QSpacerItem(20, 39, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
@@ -1490,4 +1508,13 @@ class Ui_MainWindow(object):
         self.label_3.setText(_translate("MainWindow", "تاريخ الطلب"))
         self.buttonAddToCart.setText(_translate("MainWindow", "إضافة منتج"))
         self.label_5.setText(_translate("MainWindow", "المنتجات"))
+        item = self.tableWidgetAddOrderProds.verticalHeaderItem(0)
+        item.setText(_translate("MainWindow", "New Row"))
+        item = self.tableWidgetAddOrderProds.horizontalHeaderItem(0)
+        item.setText(_translate("MainWindow", "New Column"))
+        __sortingEnabled = self.tableWidgetAddOrderProds.isSortingEnabled()
+        self.tableWidgetAddOrderProds.setSortingEnabled(False)
+        item = self.tableWidgetAddOrderProds.item(0, 0)
+        item.setText(_translate("MainWindow", "item"))
+        self.tableWidgetAddOrderProds.setSortingEnabled(__sortingEnabled)
 import resource_rc
