@@ -131,6 +131,7 @@ class MongoDBHandler:
             if result.deleted_count > 0:
                 logger.info(f"Document {document_id} deleted successfully from {collection_name}.")
                 return {"status": "success", "message": "Document deleted."}
+
             logger.warning(f"Document {document_id} not found.")
             return {"status": "error", "message": "Document not found."}
         except Exception as err:
@@ -277,6 +278,10 @@ if __name__ == "__main__":
     # Example usage
     handler = MongoDBHandler()
 
+    client = pymongo.MongoClient('mongodb://localhost:27017')
+    db = client['elSel3a']
+    print(db.list_collection_names())
+
     # *************
     #   Products
     # ******************
@@ -322,21 +327,21 @@ if __name__ == "__main__":
     # ******************
     # Create an order
     # products = [
-        # {"product_id": ObjectId("6753810bbbe65eb9e57627b3"), "quantity": 2},
-        # {"product_id": ObjectId("67571d3ae8b50300ac73202f"), "quantity": 3},
+        # {"product_id": ObjectId("6753810bbbe65eb9e57627ad"), "quantity": 2},
+        # {"product_id": ObjectId("67537018273fa34dbd8983b5"), "quantity": 3},
+        # {"product_id": ObjectId("6753810bbbe65eb9e57627b3"), "quantity": 4},
     # ]
     # response = handler.create_order(customer_id=ObjectId("67571d3ae8b50300ac73202f"), products=products)
     # print(response)
 
     # === FETCH ORDERS
-    response = handler.fetch_orders_with_customer_names()
-    # response = handler.fetch_orders(limit=3, sort=[("order_date", -1)])
-    print(response)
-    if response['status'] == 'success':
-        for order in response['orders']:
-            for key, value in order.items():
-                print(f"{key} :: {value}")
-            print('-' * 30)
+    # response = handler.fetch_orders_with_customer_names()
+    # # response = handler.fetch_orders(limit=3, sort=[("order_date", -1)])
+    # if response['status'] == 'success':
+        # for order in response['orders']:
+            # for key, value in order.items():
+                # print(f"{key} :: {value}")
+            # print('-' * 30)
 
     # *******************************************************************************
     # Customers
@@ -351,14 +356,20 @@ if __name__ == "__main__":
     # print(response)
 
     # Fetch all customers
-    # response = handler.fetch_customers(sort=[("created_at", -1)], limit=5)
-    # print(response)
+    #
+    response = handler.fetch_customers(sort=[("created_at", -1)], limit=5)
+    for document in response['documents']:
+        for key, value in document.items():
+            print(f"{key} ==> {value}")
+        print('-' * 30)
 
     # Update a customer
+    #
     # customer_id = "6489cde8a1d4b1d6e2f7a456"  # Example ID
     # response = handler.update_customer(customer_id, updates={"phone": "01198765432"})
     # print(response)
 
     # Delete a customer
+    #
     # response = handler.delete_customer(customer_id="6489cde8a1d4b1d6e2f7a456")
     # print(response)

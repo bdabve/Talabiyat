@@ -23,7 +23,9 @@ class Ui_MainWindow(object):
 "#ProductPage, #OrderPage, #statisticsPage {\n"
 "    background: transparent;\n"
 "}\n"
-"/* ------- Global ---------*/\n"
+"/* **********************\n"
+"                Global \n"
+"*************************/\n"
 "\n"
 "QLabel {\n"
 "    font: italic 12pt \"Droid Sans Fallback\";\n"
@@ -53,7 +55,7 @@ class Ui_MainWindow(object):
 "    font: 13pt \"Droid Sans Fallback\";\n"
 "}\n"
 "\n"
-"QLineEdit {\n"
+"QLineEdit, QDateEdit {\n"
 "    font: italic 12pt \"Droid Sans Fallback\";\n"
 "    background: transparent;\n"
 "    color: #ffffff;\n"
@@ -61,6 +63,15 @@ class Ui_MainWindow(object):
 "    padding: 5px;\n"
 "}\n"
 "\n"
+"QDateEdit:enabled\n"
+"{\n"
+"    background-color: rgba(51, 50, 50, 172);\n"
+"    border-bottom: 2px solid #4c4c4c;\n"
+"}\n"
+"\n"
+"QDateEdit:focus {\n"
+"    border-bottom: 2px solid rgb(178, 178, 178);\n"
+"}\n"
 "/* ****************\n"
 "     MENU FRAME \n"
 "**************************/\n"
@@ -146,7 +157,7 @@ class Ui_MainWindow(object):
 "    color: #ffffff;\n"
 "}\n"
 "\n"
-"/****************\n"
+"/*****************************\n"
 "**    PRODUCT PAGE\n"
 "******************************/\n"
 "#searchFrame, #searchFrame_2 {\n"
@@ -167,14 +178,19 @@ class Ui_MainWindow(object):
 "}\n"
 "\n"
 "#labelErrorProductPage, #labelErrorOrderPage {\n"
-"    color: rgb(192, 28, 40)\n"
+"    color: rgb(192, 28, 40);\n"
 "}\n"
 "\n"
 "/* *************************************************\n"
 "        DETAILS FRAME  = QDockWidget\n"
 "***************************************************/\n"
 "\n"
-"#dockWidgetContents,  #rightFrame, #scrollAreaWidgetContents {\n"
+"#dockWidgetContents,\n"
+"#rightFrame, \n"
+"#allDetailsPage,\n"
+"#createOrderPage,\n"
+"#scrollAreaWidgetContents \n"
+"{\n"
 "    background-color: #272727;\n"
 "}\n"
 "\n"
@@ -182,7 +198,7 @@ class Ui_MainWindow(object):
 "border-color: #4c4c4c;\n"
 "*****/\n"
 "\n"
-"#labelTitle {\n"
+"#labelTitleDetails {\n"
 "    \n"
 "    font: italic 15pt \"Droid Sans Fallback\";\n"
 "}\n"
@@ -233,7 +249,8 @@ class Ui_MainWindow(object):
 "\n"
 "#frameToolButton QPushButton, \n"
 "#frameToolButton_2 QPushButton,\n"
-"#frameToolButton_3 QPushButton \n"
+"#frameToolButton_3 QPushButton,\n"
+"#buttonAddToCart\n"
 "{\n"
 "    background: transparent;\n"
 "    border-radius: 5px;\n"
@@ -243,14 +260,16 @@ class Ui_MainWindow(object):
 "\n"
 "#frameToolButton QPushButton:hover, \n"
 "#frameToolButton_2 QPushButton:hover ,\n"
-"#frameToolButton_3 QPushButton:hover\n"
+"#frameToolButton_3 QPushButton:hover,\n"
+"#buttonAddToCart:hover\n"
 "{\n"
 "    background-color: #3e3e3e;\n"
 "}\n"
 "\n"
 "#frameToolButton QPushButton:pressed,\n"
 "#frameToolButton_2 QPushButton:pressed,\n"
-"#frameToolButton_3 QPushButton:pressed\n"
+"#frameToolButton_3 QPushButton:pressed,\n"
+"#buttonAddToCart:pressed\n"
 "{\n"
 "    background-color: transparent;\n"
 "    padding: 3px;\n"
@@ -1142,18 +1161,18 @@ class Ui_MainWindow(object):
         self.buttonCloseCard.setIconSize(QtCore.QSize(25, 25))
         self.buttonCloseCard.setObjectName("buttonCloseCard")
         self.horizontalLayout_2.addWidget(self.buttonCloseCard)
-        self.labelTitle = QtWidgets.QLabel(self.titleFrame)
+        self.labelTitleDetails = QtWidgets.QLabel(self.titleFrame)
         font = QtGui.QFont()
         font.setFamily("Droid Sans Fallback")
         font.setPointSize(15)
         font.setBold(False)
         font.setItalic(True)
         font.setWeight(50)
-        self.labelTitle.setFont(font)
-        self.labelTitle.setAlignment(QtCore.Qt.AlignCenter)
-        self.labelTitle.setWordWrap(True)
-        self.labelTitle.setObjectName("labelTitle")
-        self.horizontalLayout_2.addWidget(self.labelTitle)
+        self.labelTitleDetails.setFont(font)
+        self.labelTitleDetails.setAlignment(QtCore.Qt.AlignCenter)
+        self.labelTitleDetails.setWordWrap(True)
+        self.labelTitleDetails.setObjectName("labelTitleDetails")
+        self.horizontalLayout_2.addWidget(self.labelTitleDetails)
         self.verticalLayout_3.addWidget(self.titleFrame)
         self.frameToolButton_2 = QtWidgets.QFrame(self.rightFrame)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Maximum)
@@ -1182,18 +1201,6 @@ class Ui_MainWindow(object):
         self.horizontalLayout_11.addWidget(self.buttonDetailsMoreInfo_2)
         spacerItem9 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_11.addItem(spacerItem9)
-        self.buttonSave = QtWidgets.QPushButton(self.frameToolButton_2)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.buttonSave.sizePolicy().hasHeightForWidth())
-        self.buttonSave.setSizePolicy(sizePolicy)
-        self.buttonSave.setMinimumSize(QtCore.QSize(40, 40))
-        self.buttonSave.setMaximumSize(QtCore.QSize(40, 40))
-        self.buttonSave.setText("")
-        self.buttonSave.setIconSize(QtCore.QSize(27, 27))
-        self.buttonSave.setObjectName("buttonSave")
-        self.horizontalLayout_11.addWidget(self.buttonSave)
         self.buttonDetailsEdit_2 = QtWidgets.QPushButton(self.frameToolButton_2)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
@@ -1218,8 +1225,27 @@ class Ui_MainWindow(object):
         self.buttonDetailsDelete_2.setIconSize(QtCore.QSize(27, 27))
         self.buttonDetailsDelete_2.setObjectName("buttonDetailsDelete_2")
         self.horizontalLayout_11.addWidget(self.buttonDetailsDelete_2)
+        self.buttonSave = QtWidgets.QPushButton(self.frameToolButton_2)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.buttonSave.sizePolicy().hasHeightForWidth())
+        self.buttonSave.setSizePolicy(sizePolicy)
+        self.buttonSave.setMinimumSize(QtCore.QSize(40, 40))
+        self.buttonSave.setMaximumSize(QtCore.QSize(40, 40))
+        self.buttonSave.setText("")
+        self.buttonSave.setIconSize(QtCore.QSize(27, 27))
+        self.buttonSave.setObjectName("buttonSave")
+        self.horizontalLayout_11.addWidget(self.buttonSave)
         self.verticalLayout_3.addWidget(self.frameToolButton_2)
-        self.scrollArea = QtWidgets.QScrollArea(self.rightFrame)
+        self.stackedWidgetDetails = QtWidgets.QStackedWidget(self.rightFrame)
+        self.stackedWidgetDetails.setObjectName("stackedWidgetDetails")
+        self.allDetailsPage = QtWidgets.QWidget()
+        self.allDetailsPage.setObjectName("allDetailsPage")
+        self.verticalLayout_16 = QtWidgets.QVBoxLayout(self.allDetailsPage)
+        self.verticalLayout_16.setContentsMargins(0, 0, 0, 0)
+        self.verticalLayout_16.setObjectName("verticalLayout_16")
+        self.scrollArea = QtWidgets.QScrollArea(self.allDetailsPage)
         self.scrollArea.setFrameShape(QtWidgets.QFrame.NoFrame)
         self.scrollArea.setWidgetResizable(True)
         self.scrollArea.setObjectName("scrollArea")
@@ -1237,6 +1263,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_8.setContentsMargins(0, -1, 0, 0)
         self.horizontalLayout_8.setObjectName("horizontalLayout_8")
         self.labelOperation = QtWidgets.QLabel(self.frameDetailsID)
+        self.labelOperation.setText("")
         self.labelOperation.setObjectName("labelOperation")
         self.horizontalLayout_8.addWidget(self.labelOperation)
         self.labelItemID = QtWidgets.QLabel(self.frameDetailsID)
@@ -1261,7 +1288,64 @@ class Ui_MainWindow(object):
         self.formLayout.setObjectName("formLayout")
         self.verticalLayout_5.addWidget(self.formFrame)
         self.scrollArea.setWidget(self.scrollAreaWidgetContents)
-        self.verticalLayout_3.addWidget(self.scrollArea)
+        self.verticalLayout_16.addWidget(self.scrollArea)
+        self.stackedWidgetDetails.addWidget(self.allDetailsPage)
+        self.createOrderPage = QtWidgets.QWidget()
+        self.createOrderPage.setObjectName("createOrderPage")
+        self.verticalLayout_17 = QtWidgets.QVBoxLayout(self.createOrderPage)
+        self.verticalLayout_17.setObjectName("verticalLayout_17")
+        self.frameNewOrderForm = QtWidgets.QFrame(self.createOrderPage)
+        self.frameNewOrderForm.setFrameShape(QtWidgets.QFrame.NoFrame)
+        self.frameNewOrderForm.setFrameShadow(QtWidgets.QFrame.Raised)
+        self.frameNewOrderForm.setObjectName("frameNewOrderForm")
+        self.formLayoutNewOrder = QtWidgets.QFormLayout(self.frameNewOrderForm)
+        self.formLayoutNewOrder.setContentsMargins(0, -1, 0, -1)
+        self.formLayoutNewOrder.setObjectName("formLayoutNewOrder")
+        self.label = QtWidgets.QLabel(self.frameNewOrderForm)
+        self.label.setObjectName("label")
+        self.formLayoutNewOrder.setWidget(0, QtWidgets.QFormLayout.LabelRole, self.label)
+        self.comboBoxAddOrderCustomer_id = QtWidgets.QComboBox(self.frameNewOrderForm)
+        self.comboBoxAddOrderCustomer_id.setObjectName("comboBoxAddOrderCustomer_id")
+        self.formLayoutNewOrder.setWidget(0, QtWidgets.QFormLayout.FieldRole, self.comboBoxAddOrderCustomer_id)
+        self.label_2 = QtWidgets.QLabel(self.frameNewOrderForm)
+        self.label_2.setObjectName("label_2")
+        self.formLayoutNewOrder.setWidget(1, QtWidgets.QFormLayout.LabelRole, self.label_2)
+        self.comboBoxAddOrderStatus = QtWidgets.QComboBox(self.frameNewOrderForm)
+        self.comboBoxAddOrderStatus.setObjectName("comboBoxAddOrderStatus")
+        self.formLayoutNewOrder.setWidget(1, QtWidgets.QFormLayout.FieldRole, self.comboBoxAddOrderStatus)
+        self.label_3 = QtWidgets.QLabel(self.frameNewOrderForm)
+        self.label_3.setObjectName("label_3")
+        self.formLayoutNewOrder.setWidget(2, QtWidgets.QFormLayout.LabelRole, self.label_3)
+        self.dateEditAddOrderDate = QtWidgets.QDateEdit(self.frameNewOrderForm)
+        self.dateEditAddOrderDate.setButtonSymbols(QtWidgets.QAbstractSpinBox.NoButtons)
+        self.dateEditAddOrderDate.setObjectName("dateEditAddOrderDate")
+        self.formLayoutNewOrder.setWidget(2, QtWidgets.QFormLayout.FieldRole, self.dateEditAddOrderDate)
+        self.label_4 = QtWidgets.QLabel(self.frameNewOrderForm)
+        self.label_4.setText("")
+        self.label_4.setObjectName("label_4")
+        self.formLayoutNewOrder.setWidget(3, QtWidgets.QFormLayout.LabelRole, self.label_4)
+        self.buttonAddToCart = QtWidgets.QPushButton(self.frameNewOrderForm)
+        self.buttonAddToCart.setCursor(QtGui.QCursor(QtCore.Qt.OpenHandCursor))
+        self.buttonAddToCart.setObjectName("buttonAddToCart")
+        self.formLayoutNewOrder.setWidget(3, QtWidgets.QFormLayout.FieldRole, self.buttonAddToCart)
+        self.label_5 = QtWidgets.QLabel(self.frameNewOrderForm)
+        self.label_5.setObjectName("label_5")
+        self.formLayoutNewOrder.setWidget(4, QtWidgets.QFormLayout.LabelRole, self.label_5)
+        self.tableWidgetAddOrderProds = QtWidgets.QTableWidget(self.frameNewOrderForm)
+        self.tableWidgetAddOrderProds.setFrameShape(QtWidgets.QFrame.NoFrame)
+        self.tableWidgetAddOrderProds.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
+        self.tableWidgetAddOrderProds.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectRows)
+        self.tableWidgetAddOrderProds.setObjectName("tableWidgetAddOrderProds")
+        self.tableWidgetAddOrderProds.setColumnCount(0)
+        self.tableWidgetAddOrderProds.setRowCount(0)
+        self.tableWidgetAddOrderProds.horizontalHeader().setStretchLastSection(True)
+        self.tableWidgetAddOrderProds.verticalHeader().setVisible(False)
+        self.formLayoutNewOrder.setWidget(4, QtWidgets.QFormLayout.FieldRole, self.tableWidgetAddOrderProds)
+        self.verticalLayout_17.addWidget(self.frameNewOrderForm)
+        spacerItem10 = QtWidgets.QSpacerItem(20, 39, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
+        self.verticalLayout_17.addItem(spacerItem10)
+        self.stackedWidgetDetails.addWidget(self.createOrderPage)
+        self.verticalLayout_3.addWidget(self.stackedWidgetDetails)
         self.verticalLayout.addWidget(self.rightFrame)
         self.dockWidget.setWidget(self.dockWidgetContents)
         MainWindow.addDockWidget(QtCore.Qt.DockWidgetArea(1), self.dockWidget)
@@ -1269,6 +1353,7 @@ class Ui_MainWindow(object):
         self.retranslateUi(MainWindow)
         self.containerStackedWidget.setCurrentIndex(1)
         self.stackedWidgetInfoCard.setCurrentIndex(0)
+        self.stackedWidgetDetails.setCurrentIndex(1)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
@@ -1393,12 +1478,16 @@ class Ui_MainWindow(object):
         self.labelCpuValue.setText(_translate("MainWindow", "Value"))
         self.labelRam.setText(_translate("MainWindow", "Ram"))
         self.labelRamValue.setText(_translate("MainWindow", "Value"))
-        self.labelTitle.setText(_translate("MainWindow", "معلومات إضافية"))
-        self.buttonSave.setToolTip(_translate("MainWindow", "Terminate "))
-        self.buttonSave.setStatusTip(_translate("MainWindow", "Terminate "))
+        self.labelTitleDetails.setText(_translate("MainWindow", "معلومات إضافية"))
         self.buttonDetailsEdit_2.setToolTip(_translate("MainWindow", "Edit"))
         self.buttonDetailsEdit_2.setStatusTip(_translate("MainWindow", "Edit"))
         self.buttonDetailsDelete_2.setToolTip(_translate("MainWindow", "Delete"))
         self.buttonDetailsDelete_2.setStatusTip(_translate("MainWindow", "Delete"))
-        self.labelOperation.setText(_translate("MainWindow", "TextLabel"))
+        self.buttonSave.setToolTip(_translate("MainWindow", "Terminate "))
+        self.buttonSave.setStatusTip(_translate("MainWindow", "Terminate "))
+        self.label.setText(_translate("MainWindow", "إسم العميل"))
+        self.label_2.setText(_translate("MainWindow", "الحالة"))
+        self.label_3.setText(_translate("MainWindow", "تاريخ الطلب"))
+        self.buttonAddToCart.setText(_translate("MainWindow", "إضافة منتج"))
+        self.label_5.setText(_translate("MainWindow", "المنتجات"))
 import resource_rc

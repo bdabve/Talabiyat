@@ -9,6 +9,80 @@ class Utils:
     Utility class for PyQt5 operations such as handling QTableWidget and QComboBox.
     """
 
+    success_stylesheet = "color: rgb(28, 113, 216);"
+    error_stylesheet = "color: rgb(192, 28, 40);"
+
+    dialog_styleSheet = """
+QDialog {
+    background-color: #2c2c2c;
+}
+
+/********************
+    QComboBox
+***********************/
+QComboBox {
+    font: italic 12pt "Droid Sans Fallback";
+    background-color: transparent;
+    color: #ffffff;
+    border-radius: 5px;
+    border: 1px solid rgb(64, 66, 72);
+    padding: 5px;
+    padding-left: 10px;
+    combobox-popup: 0;
+}
+QComboBox:hover{
+    border: 2px solid rgb(64, 71, 88);
+}
+QComboBox::drop-down {
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    width: 25px;
+    border-right-width: 3px;
+    border-right-color: rgb(64, 66, 72);
+    border-right-style: solid;
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+    background-image: url(:/icons/icons/cil-arrow-bottom.png);
+    background-position: center;
+    background-repeat: no-reperat;
+ }
+
+QComboBox QAbstractItemView {
+    color: #4b7bec; /*rgb(255, 121, 198);	*/
+    background-color: transparent;
+    padding: 10px 7px;
+    selection-background-color: rgb(39, 44, 54);
+    border: 2px solid rgb(64, 71, 88);
+    border-top: none;
+    border-radius: 3px;
+}
+
+QComboBox QAbstractItemView::item {
+    padding: 12px;
+}
+
+/********************
+    QSpinBox
+***********************/
+QSpinBox {
+    font: italic 12pt "Droid Sans Fallback";
+    background: transparent;
+    color: #ffffff;
+    border: none;
+    padding: 5px;
+}
+
+QSpinBox:enabled
+{
+    background-color: rgba(51, 50, 50, 172);
+    border-bottom: 2px solid #4c4c4c;
+}
+
+QSpinBox:focus {
+    border-bottom: 2px solid rgb(178, 178, 178);
+}
+    """
+
     def interface_icons_callbacks(root):
         """
         This is the main function for callback functions
@@ -68,6 +142,12 @@ class Utils:
                 qta.icon('ph.plus-circle-thin', color="#ffffff"),
                 root.new_order
             ),
+            (
+                root.ui.buttonAddToCart,
+                qta.icon('ph.plus', color="#ffffff"),
+                lambda: root.add_product_to_table(root.ui.tableWidgetAddOrderProds)
+            ),
+
             (
                 # EDIT ORDER
                 root.ui.buttonEditOrder,
@@ -147,6 +227,8 @@ class Utils:
             for col_idx, value in enumerate(row_data):
                 item = QtWidgets.QTableWidgetItem(str(value))
                 table.setItem(row_idx, col_idx, item)
+
+        table.resizeColumnsToContents()
 
     @staticmethod
     def table_column_size(table: QtWidgets.QTableWidget, columns: list) -> None:
