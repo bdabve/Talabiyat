@@ -290,6 +290,30 @@ QSpinBox:focus {
         return line_edit
 
     @staticmethod
+    def create_spinBox(parent, name):
+        """Create a styled QLabel."""
+        line_edit = QtWidgets.QSpinBox(parent)
+
+        line_edit.setObjectName(name)
+        line_edit.setFont(QtGui.QFont("Monaco", 12))
+        # label.setStyleSheet(
+            # "border: 1px solid rgb(64, 66, 72); border-top:none; border-left: none; border-right: none"
+        # )
+        return line_edit
+
+    @staticmethod
+    def create_doubleSpinBox(parent, name):
+        """Create a styled QLabel."""
+        line_edit = QtWidgets.QDoubleSpinBox(parent)
+
+        line_edit.setObjectName(name)
+        line_edit.setFont(QtGui.QFont("Monaco", 12))
+        # label.setStyleSheet(
+            # "border: 1px solid rgb(64, 66, 72); border-top:none; border-left: none; border-right: none"
+        # )
+        return line_edit
+
+    @staticmethod
     def clear_details_form(form_layout):
         """Clear all widgets from a QFormLayout."""
         while form_layout.count():

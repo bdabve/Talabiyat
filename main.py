@@ -9,6 +9,7 @@ from datetime import datetime
 from PyQt5 import QtWidgets, QtCore
 from bson.objectid import ObjectId
 import qtawesome as qta
+from decimal import Decimal
 
 from h_interface import Ui_MainWindow
 from utils import Utils
@@ -52,12 +53,16 @@ class Interface(QtWidgets.QMainWindow):
     def goto_product_page(self):
         self.all_products()
         self.enable_disable_buttons(page='Products')
+        self.ui.labelErrorProductPage.setText('')
+
         self.ui.containerStackedWidget.setCurrentWidget(self.ui.ProductPage)
         Utils.pagebuttons_stats(self)
 
     def goto_order_page(self):
         self.all_orders()
         self.enable_disable_buttons(page='Orders')
+        self.ui.labelErrorOrderPage.setText('')
+
         self.ui.containerStackedWidget.setCurrentWidget(self.ui.OrderPage)
         Utils.pagebuttons_stats(self)
 
@@ -126,12 +131,22 @@ class Interface(QtWidgets.QMainWindow):
         :param fields: A dictionary mapping keys to Arabic labels.
         """
         Utils.clear_details_form(self.ui.formLayout)
+        parent = self.ui.scrollAreaWidgetContents
         for count, (key, label) in enumerate(fields.items(), start=1):
-            value_edit = Utils.create_lineEdit(self.ui.scrollAreaWidgetContents, f"lineEdit_{key}")
-            value_edit.setText("")
-            value_edit.setEnabled(True)
+            if key == 'qte':
+                value_edit = Utils.create_spinBox(parent, f"lineEdit_{key}")
+                value_edit.setValue(0)
+                value_edit.setEnabled(True)
+            elif key == 'price':
+                value_edit = Utils.create_doubleSpinBox(parent, f"lineEdit_{key}")
+                value_edit.setValue(0)
+                value_edit.setEnabled(True)
+            else:
+                value_edit = Utils.create_lineEdit(parent, f"lineEdit_{key}")
+                value_edit.setText("")
+                value_edit.setEnabled(True)
 
-            key_label = Utils.create_label(self.ui.scrollAreaWidgetContents, f"label_{key}")
+            key_label = Utils.create_label(parent, f"label_{key}")
             key_label.setText(label)
 
             self.ui.formLayout.setWidget(count, QtWidgets.QFormLayout.FieldRole, value_edit)
@@ -243,6 +258,18 @@ class Interface(QtWidgets.QMainWindow):
                         value = input_widget.currentText().strip()
                     input_data[key] = value
 
+                # Handle QSpinBox inputs for NewOrders
+                if isinstance(label_widget, QtWidgets.QLabel) and isinstance(input_widget, QtWidgets.QSpinBox):
+                    key = input_widget.objectName().replace("lineEdit_", "")
+                    value = input_widget.value()
+                    input_data[key] = value
+
+                # Handle QSpinBox inputs for NewOrders
+                if isinstance(label_widget, QtWidgets.QLabel) and isinstance(input_widget, QtWidgets.QDoubleSpinBox):
+                    key = input_widget.objectName().replace("lineEdit_", "")
+                    value = input_widget.value()
+                    input_data[key] = value
+
                 # Handle QTableWidget for products
                 elif isinstance(label_widget, QtWidgets.QLabel) and isinstance(input_widget, QtWidgets.QTableWidget):
                     products = []
@@ -351,10 +378,8 @@ class Interface(QtWidgets.QMainWindow):
 
         # ------------# Products ------------#
         if mongo_table == 'Product':
-            logger.debug(f'SAVE BUTTON: Product( {operation} )')
-
             data = self.collect_form_data(self.ui.formLayout)
-            logger.debug(data)
+            logger.info(f'Save Button: Saving Product( {operation} ) \n{data}')
             if operation == 'Create':
                 # CREATE PRODUCT
                 response = self.db_handler.create_product(**data)
@@ -363,15 +388,15 @@ class Interface(QtWidgets.QMainWindow):
                     self.all_products()
                 else:
                     logger.error(f"Failed to add product.\n{response['message']}")
-                    self.ui.labelErrorProductPage.setText(f"{response['massage']}")
+                    self.ui.labelErrorProductPage.setText(f"{response['message']}")
             elif operation == 'Edit':
-                # Edit Product
+                # Update Product
                 product_id = self.ui.labelItemID.text()
                 logger.debug(f"Save Edit Product ({product_id})")
 
         # ------------# Customers #------------#
         elif mongo_table == 'Customer':
-            logger.info(f'Customer( {operation} )')
+            logger.debug(f'Save Button: Customer( {operation} )')
             print(data)
 
         # ------------# ORDERS #------------ #
@@ -380,7 +405,17 @@ class Interface(QtWidgets.QMainWindow):
                 # Create New Order
                 data = self.collect_form_data(self.ui.formLayoutNewOrder)
                 logger.debug(f'Save New Order with DATA: \n{data}')
+
+                response = self.db_handler.create_order(**data)
+                if response['status'] == 'success':
+                    logger.info("New order added successfully!")
+                    self.ui.labelErrorOrderPage.setText('تم بنجاح')
+                    self.all_orders()
+                else:
+                    logger.error(f"Failed to add order.\n{response['message']}")
+                    self.ui.labelErrorProductPage.setText(f"{response['massage']}")
             elif operation == 'Edit':
+                # TODO: No edit for Orders
                 # Edit Order
                 # order_id = self.ui.labelItemID.text()
                 # logger.debug(f'Edit Order ({order_id}) with DATA: \n{data}')
@@ -419,14 +454,19 @@ class Interface(QtWidgets.QMainWindow):
             "total_price": "المجموع",
             "products": "السلعة",
             "customer_id": "المشتري",
+            "customer_name": "المشتري",
         }
 
         # Populate the form with translated keys
         for count, (key, value) in enumerate(response.items(), start=1):
             # If the key is a date field, transform its format
-            if key in ["created_at", "updated_at"] and isinstance(value, str):
+            if key in ["created_at", "updated_at"] and (isinstance(value, str) or isinstance(value, datetime)):
                 try:
-                    value = datetime.strptime(value, "%Y-%m-%dT%H:%M:%S%z").strftime("%Y - %m - %d")
+                    # If the value is a string that looks like a datetime, convert it
+                    if isinstance(value, str):
+                        value = datetime.strptime(value, "%Y-%m-%dT%H:%M:%S%z")
+                    # Format the datetime in '%d-%m-%Y' format
+                    value = value.strftime("%d-%m-%Y")
                 except ValueError:
                     value = "تاريخ غير صالح"
             if key == "products":
@@ -488,7 +528,7 @@ class Interface(QtWidgets.QMainWindow):
             if product_response["status"] == "success" and product_response["documents"]:
                 product_data = product_response["documents"][0]
                 product_name = product_data.get("name", "غير معروف")
-                price = product_data.get("price", 0)
+                price = Decimal(product_data.get("price", 0).to_decimal())
                 total = price * quantity
 
             # Fill the row with product data
@@ -524,8 +564,10 @@ class Interface(QtWidgets.QMainWindow):
 
         if operation == 'Edit':
             projection = {"_id": 0, "created_at": 0, "updated_at": 0}
+            self.ui.frameToolButton_2.show()
         else:
             projection = {"_id": 0}
+            self.ui.frameToolButton_2.hide()
 
         response = self.db_handler.fetch_documents(
             collection_name="Products",
@@ -608,11 +650,12 @@ class Interface(QtWidgets.QMainWindow):
 
         if operation == 'Edit':
             projection = {"_id": 0, "created_at": 0, "updated_at": 0}
+            self.ui.frameToolButton_2.show()
         else:
-            projection = {"_id": 0}
+            projection = {"_id": 0, "customer_id": 0}
+            self.ui.frameToolButton_2.hide()
 
-        response = self.db_handler.fetch_documents(
-            collection_name="Orders",
+        response = self.db_handler.fetch_orders_with_customer_names(
             query={"_id": ObjectId(order_id)},
             projection=projection,
         )
@@ -620,7 +663,7 @@ class Interface(QtWidgets.QMainWindow):
             self.ui.labelErrorOrderPage.setText(response["message"])
             return
 
-        response = response["documents"][0]
+        response = response["orders"][0]
         self.populate_formFrame(response, lineEditEnabled=lineEditEnabled)
 
     def new_order(self):
