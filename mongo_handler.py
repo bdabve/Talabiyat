@@ -188,6 +188,46 @@ class MongoDBHandler:
 
         # return self.fetch_documents("Products", query, projection, limit, sort)
 
+    def update_product(self, product_id, update_data):
+        """
+        Updates a product in the Products collection by its product_id.
+
+        :param product_id: The ObjectId of the product to update.
+        :param update_data: A dictionary containing the fields to update.
+        :return: A dictionary with the status of the operation.
+        """
+        try:
+            # Ensure product_id is an ObjectId
+            product_id = ObjectId(product_id)
+
+            # Validate and format fields in update_data
+            if "price" in update_data:
+                # Ensure price is stored as Decimal128
+                update_data["price"] = Decimal128(Decimal(str(update_data["price"])))
+
+            if "qte" in update_data:
+                # Ensure qte is stored as an integer
+                update_data["qte"] = int(update_data["qte"])
+
+            # Add the 'updated_at' field to track modification time
+            update_data["updated_at"] = datetime.utcnow()
+
+            # Perform the update
+            result = self.db["Products"].update_one(
+                {"_id": product_id},  # Match product by its _id
+                {"$set": update_data}  # Set the fields to the new values
+            )
+
+            if result.matched_count == 0:
+                return {"status": "error", "message": "Product not found."}
+            if result.modified_count == 0:
+                return {"status": "warning", "message": "No changes were made."}
+
+            return {"status": "success", "message": "Product updated successfully."}
+        except Exception as err:
+            logger.error(f"Error updating product: {err}")
+            return {"status": "error", "message": str(err)}
+
     def update_product_quantity(self, product_id, quantity_sold):
         try:
             product = self.db["Products"].find_one({"_id": ObjectId(product_id)}, {"qte": 1})
@@ -196,7 +236,6 @@ class MongoDBHandler:
                 return {"status": "error", "message": "Product not found."}
 
             current_quantity = int(product.get("qte", 0))
-            print(f'Cur qte ({type(current_quantity)}) :: Qte DB ({type(quantity_sold)})')
             if current_quantity < quantity_sold:
                 return {"status": "error", "message": "Not enough stock available."}
 
@@ -405,14 +444,14 @@ if __name__ == "__main__":
     # print(response)
 
     # === FETCH ORDERS
-    projection = {"_id": 0, "customer_id": 0}
+    # projection = {"_id": 0, "customer_id": 0}
     # response = handler.fetch_orders(limit=3, sort=[("order_date", -1)])
-    response = handler.fetch_orders_with_customer_names(projection=projection)
-    for res in response['orders']:
-        for key, value in res.items():
-            print(f'{key} :: {value}')
-        print('-' * 30)
-    print(response)
+    # response = handler.fetch_orders_with_customer_names(projection=projection)
+    # for res in response['orders']:
+        # for key, value in res.items():
+            # print(f'{key} :: {value}')
+        # print('-' * 30)
+    # print(response)
 
     # *******************************************************************************
     # Customers
@@ -428,8 +467,8 @@ if __name__ == "__main__":
     #
     # FETCH ALL CUSTOMERS
     # -------------------
-    # response = handler.fetch_customers(sort=[("created_at", -1)], limit=5)
-    # print_terminal(response)
+    response = handler.fetch_customers(sort=[("created_at", -1)], limit=5)
+    print_terminal(response)
     #
     # FETCH ONE CUSTOMER
     # customer_id = "67588f3bbfb3c20aca9acc12"  # Example ID

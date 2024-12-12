@@ -1,0 +1,93 @@
+QDialog {
+    background-color: #32312f;
+}
+
+QLabel, QLineEdit, QDateEdit, QSpinBox, QDoubleSpinBox {
+    font: 12pt "Noto Serif Thai";
+    color: #ffffff;
+}
+
+QLineEdit, QDateEdit, QSpinBox, QDoubleSpinBox {
+    background: #393836;
+    border: none;
+    padding: 5px;
+    border-radius: 7px;
+}
+
+QSpinBox:hover, QDoubleSpinBox:hover {
+    border: 2px solid #4c4c4c;
+}
+
+QLineEdit:focus,
+QSpinBox:focus,
+QDoubleSpinBox:focus
+{
+    background-color: rgba(51, 50, 50, 172);
+    border: 2px solid #4c4c4c;
+}
+
+/********************
+    QPushButton
+************************/
+QPushButton
+{
+    background: transparent;
+    border-radius: 5px;
+    color: #ffffff;
+    padding: 5px;
+}
+
+QPushButton:hover
+{
+    background-color: #3e3e3e;
+}
+
+QPushButton:pressed
+{
+    background-color: transparent;
+    padding: 3px;
+}
+
+/********************
+    QComboBox
+***********************/
+QComboBox {
+    font: 12pt "Droid Sans Fallback";
+    background-color: #32312f;
+    color: #ffffff;
+    border-radius: 5px;
+    border: 1px solid rgb(64, 66, 72);
+    padding: 5px;
+    padding-left: 10px;
+    combobox-popup: 0;
+}
+QComboBox:hover{
+    border: 2px solid #4c4c4c;
+}
+QComboBox::drop-down {
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    width: 25px;
+    border-right-width: 3px;
+    border-right-color: #4c4c4c;
+    border-right-style: solid;
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+    background-image: url(:/icons/icons/cil-arrow-bottom.png);
+    background-position: center;
+    background-repeat: no-reperat;
+ }
+
+QComboBox QAbstractItemView {
+    color: #4b7bec; /*rgb(255, 121, 198);	*/
+    background-color: transparent;
+    padding: 10px 7px;
+    selection-background-color: rgb(39, 44, 54);
+    border: 2px solid #4c4c4c;
+    border-top: none;
+    border-radius: 3px;
+}
+
+QComboBox QAbstractItemView::item {
+    padding: 12px;
+}

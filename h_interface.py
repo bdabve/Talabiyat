@@ -14,25 +14,23 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(1147, 640)
+        MainWindow.resize(1083, 640)
         MainWindow.setLayoutDirection(QtCore.Qt.RightToLeft)
-        MainWindow.setStyleSheet("#mainWidget {\n"
-"    background-color: #2c2c2c;\n"
+        MainWindow.setStyleSheet("/* **********************\n"
+"                Global \n"
+"*************************/\n"
+"#mainWidget {\n"
+"    background-color: #393836;\n"
 "}\n"
 "\n"
-"#ProductPage, #OrderPage, #statisticsPage {\n"
+"#ProductPage, #OrderPage, #statisticsPage, #CustomerPage {\n"
 "    background: transparent;\n"
 "}\n"
 "/* **********************\n"
 "                Global \n"
 "*************************/\n"
 "\n"
-"QLabel {\n"
-"    font: italic 12pt \"Noto Serif Thai\";\n"
-"    color: #ffffff;\n"
-"}\n"
-"\n"
-"QMainWindow::separator {\n"
+"QMainWindow::separator {  /* for the dockWidget line */\n"
 "    width: 2px;\n"
 "    background-color: #4c4c4c;\n"
 "}\n"
@@ -55,60 +53,66 @@ class Ui_MainWindow(object):
 "    font: 12pt \"Noto Serif Thai\";\n"
 "}\n"
 "\n"
-"QLineEdit, QDateEdit {\n"
-"    \n"
-"    font: 11pt \"Noto Serif Thai\";\n"
-"    background: transparent;\n"
+"QPushButton:hover {\n"
+"}\n"
+"\n"
+"QLabel, QLineEdit, QDateEdit, QSpinBox, QDoubleSpinBox {\n"
+"    font: 12pt \"Noto Serif Thai\";\n"
 "    color: #ffffff;\n"
+"}\n"
+"\n"
+"QLineEdit, QDateEdit, QSpinBox, QDoubleSpinBox {\n"
+"    background: transparent;\n"
 "    border: none;\n"
 "    padding: 5px;\n"
+"    border-radius: 7px;\n"
 "}\n"
 "\n"
-"QDateEdit:enabled\n"
+"QDateEdit:enabled, QSpinBox:enabled\n"
 "{\n"
 "    background-color: rgba(51, 50, 50, 172);\n"
-"    border-bottom: 2px solid #4c4c4c;\n"
+"    /*border-bottom: 2px solid #4c4c4c;*/\n"
 "}\n"
 "\n"
-"QDateEdit:focus {\n"
+"QDateEdit:focus, QSpinBox:focus {\n"
 "    border-bottom: 2px solid rgb(178, 178, 178);\n"
 "}\n"
 "/* ****************\n"
 "     MENU FRAME \n"
 "**************************/\n"
 "\n"
-"#leftMenuFrame {\n"
+"#menuFrame {\n"
 "    background-color: #303030;\n"
 "    border-radius: 12px;\n"
 "    border: 1px solid #202020;\n"
 "    padding: 0px 5px;\n"
 "}\n"
 "\n"
-"#leftMenuFrame QPushButton {\n"
+"#menuFrame QPushButton {\n"
 "    background-color: transparent;\n"
-"    padding: 8px;\n"
+"    padding: 5px 10px;\n"
 "    color: #ffffff;\n"
 "    border: none;\n"
 "    border-radius: 7px;\n"
 "    text-align: right;\n"
 "}\n"
 "\n"
-"#leftMenuFrame QPushButton:hover {\n"
+"#menuFrame QPushButton:hover {\n"
 "    background-color: #3e3e3e;\n"
 "}\n"
 "\n"
-"#leftMenuFrame QPushButton:pressed {\n"
+"#menuFrame QPushButton:pressed {\n"
 "    background-color: transparent;\n"
 "}\n"
 "\n"
-"#leftMenuFrame QPushButton:checked {\n"
-"    background-color: #454545;\n"
+"#menuFrame QPushButton:checked {\n"
+"    background-color: #3e3e3e;\n"
 "}\n"
 "\n"
-"#leftMenuFrame #buttonUsername {\n"
+"#menuFrame #buttonUsername {\n"
 "    font-size: 12pt;\n"
 "    background-color: rgba(34, 112, 147, 236);\n"
-"    border-radius: 42px;\n"
+"    border-radius: 25px;\n"
 "    padding: 5px;\n"
 "    text-align: center;\n"
 "}\n"
@@ -161,24 +165,30 @@ class Ui_MainWindow(object):
 "/*****************************\n"
 "**    PRODUCT PAGE\n"
 "******************************/\n"
-"#searchFrame, #searchFrame_2 {\n"
-"    background: transparent;\n"
+"#searchFrame, \n"
+"#searchFrame_2, \n"
+"#searchFrame_3 \n"
+"{\n"
+"    background: #303030;\n"
 "    border: 1px solid rgb(64, 66, 72);\n"
 "    border-top: none;\n"
 "    border-left: none;\n"
 "    border-right: none;\n"
+"    border-bottom: none;\n"
+"    border-radius: 20px;\n"
 "}\n"
 "\n"
-"#searchFrame:hover, #searchFrame_2 {\n"
-"    border-bottom: 2px solid rgb(178, 178, 178);\n"
+"#searchFrame:hover, \n"
+"#searchFrame_2:hover,\n"
+"searchFrame_3:hover\n"
+"{\n"
+"    border: 2px solid     #4c4c4c;\n"
 "}\n"
 "\n"
-"#searchButtonIcon, #searchButtonIcon_2 {\n"
-"    background: transparent;\n"
-"    border: none;\n"
-"}\n"
-"\n"
-"#labelErrorProductPage, #labelErrorOrderPage {\n"
+"#labelErrorProductPage, \n"
+"#labelErrorOrderPage,\n"
+"#labelErrorCustomerPage\n"
+"{\n"
 "    color: rgb(192, 28, 40);\n"
 "}\n"
 "\n"
@@ -192,7 +202,7 @@ class Ui_MainWindow(object):
 "#createOrderPage,\n"
 "#scrollAreaWidgetContents \n"
 "{\n"
-"    background-color: #272727;\n"
+"    background-color: #32312f;\n"
 "}\n"
 "\n"
 "/*** \n"
@@ -238,43 +248,60 @@ class Ui_MainWindow(object):
 "/********************\n"
 "    Details Frame \n"
 "****************************/\n"
-"#formFrame QLineEdit:enabled \n"
+"#formFrame QLineEdit, \n"
+"#formFrame QSpinBox, \n"
+"#formFrame QDoubleSpinBox {\n"
+"    background: #393836;\n"
+"}\n"
+"#formFrame QLineEdit:hover, \n"
+"#formFrame QSpinBox:hover, \n"
+"#formFrame QDoubleSpinBox:hover {\n"
+"    border: 2px solid     #4c4c4c;\n"
+"}\n"
+"/*#formFrame QLineEdit:enabled\n"
+"#formFrame QSpinBox:enabled, \n"
+"#formFrame QDoubleSpinBox:enabled\n"
 "{\n"
 "    background-color: rgba(51, 50, 50, 172);\n"
-"    border-bottom: 2px solid     #4c4c4c;\n"
-"}\n"
+"    border: 2px solid     #4c4c4c;\n"
+"}*/\n"
 "\n"
-"#formFrame QLineEdit:focus\n"
+"#formFrame QLineEdit:focus,\n"
+"#formFrame QSpinBox:focus, \n"
+"#formFrame QDoubleSpinBox:focus\n"
 "{\n"
-"    border-bottom: 2px solid rgb(178, 178, 178);\n"
+"    background-color: rgba(51, 50, 50, 172);\n"
+"    border: 2px solid #4c4c4c;\n"
 "}\n"
 "\n"
 "\n"
 "#frameToolButton QPushButton, \n"
 "#frameToolButton_2 QPushButton,\n"
 "#frameToolButton_3 QPushButton,\n"
+"#frameToolButton_4 QPushButton,\n"
 "\n"
 "#frameNewOrderForm QPushButton\n"
 "{\n"
-"    background: transparent;\n"
+"    background: #4b4b4b;\n"
 "    border-radius: 5px;\n"
 "    color: #ffffff;\n"
-"    padding: 5px;\n"
+"    padding: 7px;\n"
 "}\n"
 "\n"
 "#frameToolButton QPushButton:hover, \n"
 "#frameToolButton_2 QPushButton:hover ,\n"
 "#frameToolButton_3 QPushButton:hover,\n"
+"#frameToolButton_4 QPushButton:hover,\n"
 "\n"
 "#frameNewOrderForm QPushButton:hover\n"
 "{\n"
-"    background-color: #3e3e3e;\n"
+"    background-color: #555555;\n"
 "}\n"
 "\n"
 "#frameToolButton QPushButton:pressed,\n"
 "#frameToolButton_2 QPushButton:pressed,\n"
 "#frameToolButton_3 QPushButton:pressed,\n"
-"\n"
+"#frameToolButton_4 QPushButton:pressed,\n"
 "\n"
 "#frameNewOrderForm QPushButton:pressed\n"
 "{\n"
@@ -282,15 +309,30 @@ class Ui_MainWindow(object):
 "    padding: 3px;\n"
 "}\n"
 "\n"
+"#frameToolButton QPushButton:!enabled,\n"
+"#frameToolButton_2 QPushButton:!enabled,\n"
+"#frameToolButton_3 QPushButton:!enabled,\n"
+"#frameToolButton_4 QPushButton:!enabled,\n"
 "\n"
+"#frameNewOrderForm QPushButton:!enabled\n"
+"{\n"
+"    background-color: transparent;\n"
+"}\n"
 "\n"
+"/*** Search LineEdit Button Icon ***/\n"
+"#searchButtonIcon, \n"
+"#searchButtonIcon_2,\n"
+"#searchButtonIcon_3\n"
+"{\n"
+"    background-color: #303030;\n"
+"}\n"
 "/***********************\n"
 "         QComboBox \n"
 "************************/\n"
 "\n"
 "QComboBox {\n"
-"    font: italic 12pt \"Droid Sans Fallback\";\n"
-"    background-color: transparent;\n"
+"    font: 12pt \"Droid Sans Fallback\";\n"
+"    background-color: #32312f;\n"
 "    color: #ffffff;\n"
 "    border-radius: 5px;\n"
 "    border: 1px solid rgb(64, 66, 72);    \n"
@@ -299,14 +341,14 @@ class Ui_MainWindow(object):
 "    combobox-popup: 0;\n"
 "}\n"
 "QComboBox:hover{\n"
-"    border: 2px solid rgb(64, 71, 88);\n"
+"    border: 2px solid #4c4c4c;\n"
 "}\n"
 "QComboBox::drop-down {\n"
 "    subcontrol-origin: padding;\n"
 "    subcontrol-position: top right;\n"
 "    width: 25px; \n"
 "    border-right-width: 3px;\n"
-"    border-right-color: rgb(64, 66, 72);\n"
+"    border-right-color: #4c4c4c;\n"
 "    border-right-style: solid;\n"
 "    border-top-right-radius: 3px;\n"
 "    border-bottom-right-radius: 3px;\n"
@@ -320,7 +362,7 @@ class Ui_MainWindow(object):
 "    background-color: transparent;\n"
 "    padding: 10px 7px;\n"
 "    selection-background-color: rgb(39, 44, 54);\n"
-"    border: 2px solid rgb(64, 71, 88);\n"
+"    border: 2px solid #4c4c4c;\n"
 "    border-top: none;\n"
 "    border-radius: 3px;\n"
 "}\n"
@@ -513,33 +555,34 @@ class Ui_MainWindow(object):
         MainWindow.setUnifiedTitleAndToolBarOnMac(False)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
-        self.horizontalLayout_9 = QtWidgets.QHBoxLayout(self.centralwidget)
-        self.horizontalLayout_9.setContentsMargins(0, 0, 0, 0)
-        self.horizontalLayout_9.setObjectName("horizontalLayout_9")
+        self.verticalLayout_18 = QtWidgets.QVBoxLayout(self.centralwidget)
+        self.verticalLayout_18.setContentsMargins(0, 0, 0, 0)
+        self.verticalLayout_18.setSpacing(0)
+        self.verticalLayout_18.setObjectName("verticalLayout_18")
         self.mainWidget = QtWidgets.QWidget(self.centralwidget)
         self.mainWidget.setStyleSheet("")
         self.mainWidget.setObjectName("mainWidget")
-        self.horizontalLayout = QtWidgets.QHBoxLayout(self.mainWidget)
-        self.horizontalLayout.setContentsMargins(0, 0, 10, 0)
-        self.horizontalLayout.setSpacing(0)
-        self.horizontalLayout.setObjectName("horizontalLayout")
-        self.leftMenuFrame = QtWidgets.QFrame(self.mainWidget)
-        self.leftMenuFrame.setMinimumSize(QtCore.QSize(255, 0))
-        self.leftMenuFrame.setMaximumSize(QtCore.QSize(273, 500))
-        self.leftMenuFrame.setFrameShape(QtWidgets.QFrame.NoFrame)
-        self.leftMenuFrame.setFrameShadow(QtWidgets.QFrame.Raised)
-        self.leftMenuFrame.setObjectName("leftMenuFrame")
-        self.verticalLayout_2 = QtWidgets.QVBoxLayout(self.leftMenuFrame)
-        self.verticalLayout_2.setContentsMargins(0, 9, 0, -1)
+        self.verticalLayout_2 = QtWidgets.QVBoxLayout(self.mainWidget)
+        self.verticalLayout_2.setContentsMargins(10, 10, 10, 10)
+        self.verticalLayout_2.setSpacing(0)
         self.verticalLayout_2.setObjectName("verticalLayout_2")
-        self.buttonUsername = QtWidgets.QPushButton(self.leftMenuFrame)
+        self.menuFrame = QtWidgets.QFrame(self.mainWidget)
+        self.menuFrame.setMinimumSize(QtCore.QSize(0, 0))
+        self.menuFrame.setMaximumSize(QtCore.QSize(16777215, 70))
+        self.menuFrame.setFrameShape(QtWidgets.QFrame.NoFrame)
+        self.menuFrame.setFrameShadow(QtWidgets.QFrame.Raised)
+        self.menuFrame.setObjectName("menuFrame")
+        self.horizontalLayout_9 = QtWidgets.QHBoxLayout(self.menuFrame)
+        self.horizontalLayout_9.setContentsMargins(0, 9, 0, -1)
+        self.horizontalLayout_9.setObjectName("horizontalLayout_9")
+        self.buttonUsername = QtWidgets.QPushButton(self.menuFrame)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Minimum)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.buttonUsername.sizePolicy().hasHeightForWidth())
         self.buttonUsername.setSizePolicy(sizePolicy)
-        self.buttonUsername.setMinimumSize(QtCore.QSize(84, 84))
-        self.buttonUsername.setMaximumSize(QtCore.QSize(84, 84))
+        self.buttonUsername.setMinimumSize(QtCore.QSize(50, 50))
+        self.buttonUsername.setMaximumSize(QtCore.QSize(50, 50))
         font = QtGui.QFont()
         font.setFamily("Noto Serif Thai")
         font.setPointSize(12)
@@ -548,13 +591,12 @@ class Ui_MainWindow(object):
         font.setWeight(50)
         self.buttonUsername.setFont(font)
         self.buttonUsername.setStyleSheet("")
+        self.buttonUsername.setText("")
         self.buttonUsername.setIconSize(QtCore.QSize(30, 30))
         self.buttonUsername.setObjectName("buttonUsername")
-        self.verticalLayout_2.addWidget(self.buttonUsername, 0, QtCore.Qt.AlignHCenter)
-        spacerItem = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
-        self.verticalLayout_2.addItem(spacerItem)
-        self.buttonProductPage = QtWidgets.QPushButton(self.leftMenuFrame)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed)
+        self.horizontalLayout_9.addWidget(self.buttonUsername)
+        self.buttonProductPage = QtWidgets.QPushButton(self.menuFrame)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.buttonProductPage.sizePolicy().hasHeightForWidth())
@@ -566,6 +608,7 @@ class Ui_MainWindow(object):
         font.setItalic(False)
         font.setWeight(50)
         self.buttonProductPage.setFont(font)
+        self.buttonProductPage.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         self.buttonProductPage.setLayoutDirection(QtCore.Qt.RightToLeft)
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap(":/icons/icons/cil-tags.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
@@ -574,9 +617,18 @@ class Ui_MainWindow(object):
         self.buttonProductPage.setCheckable(True)
         self.buttonProductPage.setChecked(False)
         self.buttonProductPage.setObjectName("buttonProductPage")
-        self.verticalLayout_2.addWidget(self.buttonProductPage)
-        self.buttonOrderPage = QtWidgets.QPushButton(self.leftMenuFrame)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed)
+        self.horizontalLayout_9.addWidget(self.buttonProductPage)
+        self.buttonCustomerPage = QtWidgets.QPushButton(self.menuFrame)
+        self.buttonCustomerPage.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+        icon1 = QtGui.QIcon()
+        icon1.addPixmap(QtGui.QPixmap(":/icons/icons/cil-people.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.buttonCustomerPage.setIcon(icon1)
+        self.buttonCustomerPage.setIconSize(QtCore.QSize(30, 30))
+        self.buttonCustomerPage.setCheckable(True)
+        self.buttonCustomerPage.setObjectName("buttonCustomerPage")
+        self.horizontalLayout_9.addWidget(self.buttonCustomerPage)
+        self.buttonOrderPage = QtWidgets.QPushButton(self.menuFrame)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.buttonOrderPage.sizePolicy().hasHeightForWidth())
@@ -588,29 +640,33 @@ class Ui_MainWindow(object):
         font.setItalic(False)
         font.setWeight(50)
         self.buttonOrderPage.setFont(font)
-        icon1 = QtGui.QIcon()
-        icon1.addPixmap(QtGui.QPixmap(":/icons/icons/cil-cart.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.buttonOrderPage.setIcon(icon1)
+        self.buttonOrderPage.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+        icon2 = QtGui.QIcon()
+        icon2.addPixmap(QtGui.QPixmap(":/icons/icons/cil-cart.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.buttonOrderPage.setIcon(icon2)
         self.buttonOrderPage.setIconSize(QtCore.QSize(30, 30))
         self.buttonOrderPage.setCheckable(True)
         self.buttonOrderPage.setChecked(False)
         self.buttonOrderPage.setObjectName("buttonOrderPage")
-        self.verticalLayout_2.addWidget(self.buttonOrderPage)
-        self.buttonStatisticsPage = QtWidgets.QPushButton(self.leftMenuFrame)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed)
+        self.horizontalLayout_9.addWidget(self.buttonOrderPage)
+        self.buttonStatisticsPage = QtWidgets.QPushButton(self.menuFrame)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.buttonStatisticsPage.sizePolicy().hasHeightForWidth())
         self.buttonStatisticsPage.setSizePolicy(sizePolicy)
-        icon2 = QtGui.QIcon()
-        icon2.addPixmap(QtGui.QPixmap(":/icons/icons/cil-chart.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.buttonStatisticsPage.setIcon(icon2)
+        self.buttonStatisticsPage.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+        icon3 = QtGui.QIcon()
+        icon3.addPixmap(QtGui.QPixmap(":/icons/icons/cil-chart.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.buttonStatisticsPage.setIcon(icon3)
         self.buttonStatisticsPage.setIconSize(QtCore.QSize(30, 30))
+        self.buttonStatisticsPage.setCheckable(True)
+        self.buttonStatisticsPage.setChecked(False)
         self.buttonStatisticsPage.setObjectName("buttonStatisticsPage")
-        self.verticalLayout_2.addWidget(self.buttonStatisticsPage)
-        spacerItem1 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
-        self.verticalLayout_2.addItem(spacerItem1)
-        self.horizontalLayout.addWidget(self.leftMenuFrame)
+        self.horizontalLayout_9.addWidget(self.buttonStatisticsPage)
+        spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.horizontalLayout_9.addItem(spacerItem)
+        self.verticalLayout_2.addWidget(self.menuFrame)
         self.containerStackedWidget = QtWidgets.QStackedWidget(self.mainWidget)
         self.containerStackedWidget.setMinimumSize(QtCore.QSize(390, 0))
         self.containerStackedWidget.setFrameShape(QtWidgets.QFrame.NoFrame)
@@ -628,49 +684,6 @@ class Ui_MainWindow(object):
         self.gridLayout.setContentsMargins(0, 0, 0, 0)
         self.gridLayout.setSpacing(10)
         self.gridLayout.setObjectName("gridLayout")
-        self.labelProductTableCount = QtWidgets.QLabel(self.frame)
-        self.labelProductTableCount.setMinimumSize(QtCore.QSize(100, 0))
-        font = QtGui.QFont()
-        font.setFamily("Noto Serif Thai")
-        font.setPointSize(12)
-        font.setBold(False)
-        font.setItalic(True)
-        font.setWeight(50)
-        self.labelProductTableCount.setFont(font)
-        self.labelProductTableCount.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
-        self.labelProductTableCount.setObjectName("labelProductTableCount")
-        self.gridLayout.addWidget(self.labelProductTableCount, 4, 3, 1, 1)
-        self.searchFrame = QtWidgets.QFrame(self.frame)
-        self.searchFrame.setMinimumSize(QtCore.QSize(200, 0))
-        self.searchFrame.setMaximumSize(QtCore.QSize(350, 16777215))
-        self.searchFrame.setFrameShape(QtWidgets.QFrame.NoFrame)
-        self.searchFrame.setFrameShadow(QtWidgets.QFrame.Raised)
-        self.searchFrame.setObjectName("searchFrame")
-        self.horizontalLayout_4 = QtWidgets.QHBoxLayout(self.searchFrame)
-        self.horizontalLayout_4.setContentsMargins(5, 2, 5, 2)
-        self.horizontalLayout_4.setSpacing(2)
-        self.horizontalLayout_4.setObjectName("horizontalLayout_4")
-        self.searchButtonIcon = QtWidgets.QPushButton(self.searchFrame)
-        self.searchButtonIcon.setMinimumSize(QtCore.QSize(0, 0))
-        self.searchButtonIcon.setText("")
-        icon3 = QtGui.QIcon()
-        icon3.addPixmap(QtGui.QPixmap(":/icons/icons/cil-magnifying-glass.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.searchButtonIcon.setIcon(icon3)
-        self.searchButtonIcon.setIconSize(QtCore.QSize(25, 25))
-        self.searchButtonIcon.setObjectName("searchButtonIcon")
-        self.horizontalLayout_4.addWidget(self.searchButtonIcon)
-        self.lineEditSearchProduct = QtWidgets.QLineEdit(self.searchFrame)
-        self.lineEditSearchProduct.setMinimumSize(QtCore.QSize(30, 30))
-        font = QtGui.QFont()
-        font.setFamily("Noto Serif Thai")
-        font.setPointSize(11)
-        font.setBold(False)
-        font.setItalic(False)
-        font.setWeight(50)
-        self.lineEditSearchProduct.setFont(font)
-        self.lineEditSearchProduct.setObjectName("lineEditSearchProduct")
-        self.horizontalLayout_4.addWidget(self.lineEditSearchProduct)
-        self.gridLayout.addWidget(self.searchFrame, 4, 0, 1, 1)
         self.comboBoxProductBy = QtWidgets.QComboBox(self.frame)
         self.comboBoxProductBy.setMinimumSize(QtCore.QSize(0, 0))
         self.comboBoxProductBy.setMaximumSize(QtCore.QSize(350, 16777215))
@@ -678,7 +691,7 @@ class Ui_MainWindow(object):
         font.setFamily("Droid Sans Fallback")
         font.setPointSize(12)
         font.setBold(False)
-        font.setItalic(True)
+        font.setItalic(False)
         font.setWeight(50)
         self.comboBoxProductBy.setFont(font)
         self.comboBoxProductBy.setObjectName("comboBoxProductBy")
@@ -693,7 +706,7 @@ class Ui_MainWindow(object):
         font.setFamily("Noto Serif Thai")
         font.setPointSize(12)
         font.setBold(False)
-        font.setItalic(True)
+        font.setItalic(False)
         font.setWeight(50)
         self.labelErrorProductPage.setFont(font)
         self.labelErrorProductPage.setObjectName("labelErrorProductPage")
@@ -712,6 +725,52 @@ class Ui_MainWindow(object):
         self.horizontalLayout_12 = QtWidgets.QHBoxLayout(self.frameToolButton_3)
         self.horizontalLayout_12.setContentsMargins(5, 5, 5, 5)
         self.horizontalLayout_12.setObjectName("horizontalLayout_12")
+        self.searchFrame = QtWidgets.QFrame(self.frameToolButton_3)
+        self.searchFrame.setMinimumSize(QtCore.QSize(200, 0))
+        self.searchFrame.setMaximumSize(QtCore.QSize(350, 16777215))
+        self.searchFrame.setFrameShape(QtWidgets.QFrame.NoFrame)
+        self.searchFrame.setFrameShadow(QtWidgets.QFrame.Raised)
+        self.searchFrame.setObjectName("searchFrame")
+        self.horizontalLayout_4 = QtWidgets.QHBoxLayout(self.searchFrame)
+        self.horizontalLayout_4.setContentsMargins(10, 4, 10, 4)
+        self.horizontalLayout_4.setSpacing(2)
+        self.horizontalLayout_4.setObjectName("horizontalLayout_4")
+        self.searchButtonIcon = QtWidgets.QPushButton(self.searchFrame)
+        self.searchButtonIcon.setEnabled(False)
+        self.searchButtonIcon.setMinimumSize(QtCore.QSize(0, 0))
+        self.searchButtonIcon.setText("")
+        icon4 = QtGui.QIcon()
+        icon4.addPixmap(QtGui.QPixmap(":/icons/icons/cil-magnifying-glass.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.searchButtonIcon.setIcon(icon4)
+        self.searchButtonIcon.setIconSize(QtCore.QSize(25, 25))
+        self.searchButtonIcon.setObjectName("searchButtonIcon")
+        self.horizontalLayout_4.addWidget(self.searchButtonIcon)
+        self.lineEditSearchProduct = QtWidgets.QLineEdit(self.searchFrame)
+        self.lineEditSearchProduct.setMinimumSize(QtCore.QSize(30, 30))
+        font = QtGui.QFont()
+        font.setFamily("Noto Serif Thai")
+        font.setPointSize(12)
+        font.setBold(False)
+        font.setItalic(False)
+        font.setWeight(50)
+        self.lineEditSearchProduct.setFont(font)
+        self.lineEditSearchProduct.setObjectName("lineEditSearchProduct")
+        self.horizontalLayout_4.addWidget(self.lineEditSearchProduct)
+        self.horizontalLayout_12.addWidget(self.searchFrame)
+        self.labelProductTableCount = QtWidgets.QLabel(self.frameToolButton_3)
+        self.labelProductTableCount.setMinimumSize(QtCore.QSize(100, 0))
+        font = QtGui.QFont()
+        font.setFamily("Noto Serif Thai")
+        font.setPointSize(12)
+        font.setBold(False)
+        font.setItalic(False)
+        font.setWeight(50)
+        self.labelProductTableCount.setFont(font)
+        self.labelProductTableCount.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignVCenter)
+        self.labelProductTableCount.setObjectName("labelProductTableCount")
+        self.horizontalLayout_12.addWidget(self.labelProductTableCount)
+        spacerItem1 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.horizontalLayout_12.addItem(spacerItem1)
         self.buttonProductDetails = QtWidgets.QPushButton(self.frameToolButton_3)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
@@ -724,8 +783,6 @@ class Ui_MainWindow(object):
         self.buttonProductDetails.setIconSize(QtCore.QSize(27, 27))
         self.buttonProductDetails.setObjectName("buttonProductDetails")
         self.horizontalLayout_12.addWidget(self.buttonProductDetails)
-        spacerItem2 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.horizontalLayout_12.addItem(spacerItem2)
         self.buttonNewProduct = QtWidgets.QPushButton(self.frameToolButton_3)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
@@ -807,6 +864,200 @@ class Ui_MainWindow(object):
         self.tableWidgetProduct.verticalHeader().setHighlightSections(False)
         self.verticalLayout_4.addWidget(self.tableWidgetProduct)
         self.containerStackedWidget.addWidget(self.ProductPage)
+        self.CustomerPage = QtWidgets.QWidget()
+        self.CustomerPage.setObjectName("CustomerPage")
+        self.verticalLayout_19 = QtWidgets.QVBoxLayout(self.CustomerPage)
+        self.verticalLayout_19.setObjectName("verticalLayout_19")
+        self.frame_3 = QtWidgets.QFrame(self.CustomerPage)
+        self.frame_3.setFrameShape(QtWidgets.QFrame.NoFrame)
+        self.frame_3.setFrameShadow(QtWidgets.QFrame.Raised)
+        self.frame_3.setObjectName("frame_3")
+        self.gridLayout_4 = QtWidgets.QGridLayout(self.frame_3)
+        self.gridLayout_4.setContentsMargins(0, 0, 0, 0)
+        self.gridLayout_4.setSpacing(10)
+        self.gridLayout_4.setObjectName("gridLayout_4")
+        self.comboBoxProductBy_2 = QtWidgets.QComboBox(self.frame_3)
+        self.comboBoxProductBy_2.setMinimumSize(QtCore.QSize(0, 0))
+        self.comboBoxProductBy_2.setMaximumSize(QtCore.QSize(350, 16777215))
+        font = QtGui.QFont()
+        font.setFamily("Droid Sans Fallback")
+        font.setPointSize(12)
+        font.setBold(False)
+        font.setItalic(False)
+        font.setWeight(50)
+        self.comboBoxProductBy_2.setFont(font)
+        self.comboBoxProductBy_2.setObjectName("comboBoxProductBy_2")
+        self.comboBoxProductBy_2.addItem("")
+        self.comboBoxProductBy_2.addItem("")
+        self.comboBoxProductBy_2.addItem("")
+        self.comboBoxProductBy_2.addItem("")
+        self.gridLayout_4.addWidget(self.comboBoxProductBy_2, 2, 0, 1, 1)
+        self.labelErrorCustomerPage = QtWidgets.QLabel(self.frame_3)
+        self.labelErrorCustomerPage.setMinimumSize(QtCore.QSize(0, 36))
+        font = QtGui.QFont()
+        font.setFamily("Noto Serif Thai")
+        font.setPointSize(12)
+        font.setBold(False)
+        font.setItalic(False)
+        font.setWeight(50)
+        self.labelErrorCustomerPage.setFont(font)
+        self.labelErrorCustomerPage.setObjectName("labelErrorCustomerPage")
+        self.gridLayout_4.addWidget(self.labelErrorCustomerPage, 2, 3, 1, 1)
+        self.verticalLayout_19.addWidget(self.frame_3)
+        self.frameToolButton_4 = QtWidgets.QFrame(self.CustomerPage)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Maximum)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.frameToolButton_4.sizePolicy().hasHeightForWidth())
+        self.frameToolButton_4.setSizePolicy(sizePolicy)
+        self.frameToolButton_4.setMaximumSize(QtCore.QSize(16777215, 16777215))
+        self.frameToolButton_4.setFrameShape(QtWidgets.QFrame.NoFrame)
+        self.frameToolButton_4.setFrameShadow(QtWidgets.QFrame.Raised)
+        self.frameToolButton_4.setObjectName("frameToolButton_4")
+        self.horizontalLayout_13 = QtWidgets.QHBoxLayout(self.frameToolButton_4)
+        self.horizontalLayout_13.setContentsMargins(5, 5, 5, 5)
+        self.horizontalLayout_13.setObjectName("horizontalLayout_13")
+        self.searchFrame_3 = QtWidgets.QFrame(self.frameToolButton_4)
+        self.searchFrame_3.setMinimumSize(QtCore.QSize(200, 0))
+        self.searchFrame_3.setMaximumSize(QtCore.QSize(350, 16777215))
+        self.searchFrame_3.setFrameShape(QtWidgets.QFrame.NoFrame)
+        self.searchFrame_3.setFrameShadow(QtWidgets.QFrame.Raised)
+        self.searchFrame_3.setObjectName("searchFrame_3")
+        self.horizontalLayout_14 = QtWidgets.QHBoxLayout(self.searchFrame_3)
+        self.horizontalLayout_14.setContentsMargins(10, 4, 10, 4)
+        self.horizontalLayout_14.setSpacing(2)
+        self.horizontalLayout_14.setObjectName("horizontalLayout_14")
+        self.searchButtonIcon_3 = QtWidgets.QPushButton(self.searchFrame_3)
+        self.searchButtonIcon_3.setEnabled(False)
+        self.searchButtonIcon_3.setMinimumSize(QtCore.QSize(0, 0))
+        self.searchButtonIcon_3.setText("")
+        self.searchButtonIcon_3.setIcon(icon4)
+        self.searchButtonIcon_3.setIconSize(QtCore.QSize(25, 25))
+        self.searchButtonIcon_3.setObjectName("searchButtonIcon_3")
+        self.horizontalLayout_14.addWidget(self.searchButtonIcon_3)
+        self.lineEditSearchCustomer = QtWidgets.QLineEdit(self.searchFrame_3)
+        self.lineEditSearchCustomer.setMinimumSize(QtCore.QSize(30, 30))
+        font = QtGui.QFont()
+        font.setFamily("Noto Serif Thai")
+        font.setPointSize(12)
+        font.setBold(False)
+        font.setItalic(False)
+        font.setWeight(50)
+        self.lineEditSearchCustomer.setFont(font)
+        self.lineEditSearchCustomer.setObjectName("lineEditSearchCustomer")
+        self.horizontalLayout_14.addWidget(self.lineEditSearchCustomer)
+        self.horizontalLayout_13.addWidget(self.searchFrame_3)
+        self.labelCustomerTableCount = QtWidgets.QLabel(self.frameToolButton_4)
+        self.labelCustomerTableCount.setMinimumSize(QtCore.QSize(100, 0))
+        font = QtGui.QFont()
+        font.setFamily("Noto Serif Thai")
+        font.setPointSize(12)
+        font.setBold(False)
+        font.setItalic(False)
+        font.setWeight(50)
+        self.labelCustomerTableCount.setFont(font)
+        self.labelCustomerTableCount.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignVCenter)
+        self.labelCustomerTableCount.setObjectName("labelCustomerTableCount")
+        self.horizontalLayout_13.addWidget(self.labelCustomerTableCount)
+        spacerItem2 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.horizontalLayout_13.addItem(spacerItem2)
+        self.buttonCustomerDetails = QtWidgets.QPushButton(self.frameToolButton_4)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.buttonCustomerDetails.sizePolicy().hasHeightForWidth())
+        self.buttonCustomerDetails.setSizePolicy(sizePolicy)
+        self.buttonCustomerDetails.setMinimumSize(QtCore.QSize(40, 40))
+        self.buttonCustomerDetails.setMaximumSize(QtCore.QSize(40, 40))
+        self.buttonCustomerDetails.setText("")
+        self.buttonCustomerDetails.setIconSize(QtCore.QSize(27, 27))
+        self.buttonCustomerDetails.setObjectName("buttonCustomerDetails")
+        self.horizontalLayout_13.addWidget(self.buttonCustomerDetails)
+        self.buttonNewCustomer = QtWidgets.QPushButton(self.frameToolButton_4)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.buttonNewCustomer.sizePolicy().hasHeightForWidth())
+        self.buttonNewCustomer.setSizePolicy(sizePolicy)
+        self.buttonNewCustomer.setMinimumSize(QtCore.QSize(40, 40))
+        self.buttonNewCustomer.setMaximumSize(QtCore.QSize(40, 40))
+        self.buttonNewCustomer.setText("")
+        self.buttonNewCustomer.setIconSize(QtCore.QSize(27, 27))
+        self.buttonNewCustomer.setObjectName("buttonNewCustomer")
+        self.horizontalLayout_13.addWidget(self.buttonNewCustomer)
+        self.buttonEditCustomer = QtWidgets.QPushButton(self.frameToolButton_4)
+        self.buttonEditCustomer.setEnabled(True)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.buttonEditCustomer.sizePolicy().hasHeightForWidth())
+        self.buttonEditCustomer.setSizePolicy(sizePolicy)
+        self.buttonEditCustomer.setMinimumSize(QtCore.QSize(40, 40))
+        self.buttonEditCustomer.setMaximumSize(QtCore.QSize(40, 40))
+        self.buttonEditCustomer.setText("")
+        self.buttonEditCustomer.setIconSize(QtCore.QSize(27, 27))
+        self.buttonEditCustomer.setObjectName("buttonEditCustomer")
+        self.horizontalLayout_13.addWidget(self.buttonEditCustomer)
+        self.buttonDeleteCustomer = QtWidgets.QPushButton(self.frameToolButton_4)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.buttonDeleteCustomer.sizePolicy().hasHeightForWidth())
+        self.buttonDeleteCustomer.setSizePolicy(sizePolicy)
+        self.buttonDeleteCustomer.setMinimumSize(QtCore.QSize(40, 40))
+        self.buttonDeleteCustomer.setMaximumSize(QtCore.QSize(40, 40))
+        self.buttonDeleteCustomer.setText("")
+        icon5 = QtGui.QIcon()
+        icon5.addPixmap(QtGui.QPixmap(":/icons/icons/cil-minus.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.buttonDeleteCustomer.setIcon(icon5)
+        self.buttonDeleteCustomer.setIconSize(QtCore.QSize(27, 27))
+        self.buttonDeleteCustomer.setObjectName("buttonDeleteCustomer")
+        self.horizontalLayout_13.addWidget(self.buttonDeleteCustomer)
+        self.verticalLayout_19.addWidget(self.frameToolButton_4)
+        self.tableWidgetCustomer = QtWidgets.QTableWidget(self.CustomerPage)
+        self.tableWidgetCustomer.setFrameShape(QtWidgets.QFrame.NoFrame)
+        self.tableWidgetCustomer.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
+        self.tableWidgetCustomer.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectRows)
+        self.tableWidgetCustomer.setObjectName("tableWidgetCustomer")
+        self.tableWidgetCustomer.setColumnCount(3)
+        self.tableWidgetCustomer.setRowCount(6)
+        item = QtWidgets.QTableWidgetItem()
+        self.tableWidgetCustomer.setVerticalHeaderItem(0, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.tableWidgetCustomer.setVerticalHeaderItem(1, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.tableWidgetCustomer.setVerticalHeaderItem(2, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.tableWidgetCustomer.setVerticalHeaderItem(3, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.tableWidgetCustomer.setVerticalHeaderItem(4, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.tableWidgetCustomer.setVerticalHeaderItem(5, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.tableWidgetCustomer.setHorizontalHeaderItem(0, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.tableWidgetCustomer.setHorizontalHeaderItem(1, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.tableWidgetCustomer.setHorizontalHeaderItem(2, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.tableWidgetCustomer.setItem(0, 0, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.tableWidgetCustomer.setItem(0, 1, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.tableWidgetCustomer.setItem(0, 2, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.tableWidgetCustomer.setItem(1, 0, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.tableWidgetCustomer.setItem(1, 1, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.tableWidgetCustomer.setItem(1, 2, item)
+        self.tableWidgetCustomer.horizontalHeader().setDefaultSectionSize(150)
+        self.tableWidgetCustomer.horizontalHeader().setHighlightSections(False)
+        self.tableWidgetCustomer.horizontalHeader().setStretchLastSection(True)
+        self.tableWidgetCustomer.verticalHeader().setVisible(False)
+        self.tableWidgetCustomer.verticalHeader().setHighlightSections(False)
+        self.verticalLayout_19.addWidget(self.tableWidgetCustomer)
+        self.containerStackedWidget.addWidget(self.CustomerPage)
         self.OrderPage = QtWidgets.QWidget()
         self.OrderPage.setObjectName("OrderPage")
         self.verticalLayout_15 = QtWidgets.QVBoxLayout(self.OrderPage)
@@ -819,6 +1070,17 @@ class Ui_MainWindow(object):
         self.gridLayout_3.setContentsMargins(0, 0, 0, 0)
         self.gridLayout_3.setSpacing(10)
         self.gridLayout_3.setObjectName("gridLayout_3")
+        self.labelErrorOrderPage = QtWidgets.QLabel(self.frame_2)
+        self.labelErrorOrderPage.setMinimumSize(QtCore.QSize(0, 36))
+        font = QtGui.QFont()
+        font.setFamily("Noto Serif Thai")
+        font.setPointSize(12)
+        font.setBold(False)
+        font.setItalic(False)
+        font.setWeight(50)
+        self.labelErrorOrderPage.setFont(font)
+        self.labelErrorOrderPage.setObjectName("labelErrorOrderPage")
+        self.gridLayout_3.addWidget(self.labelErrorOrderPage, 3, 3, 1, 1)
         self.comboBoxOrderBy = QtWidgets.QComboBox(self.frame_2)
         self.comboBoxOrderBy.setMinimumSize(QtCore.QSize(0, 0))
         self.comboBoxOrderBy.setMaximumSize(QtCore.QSize(350, 16777215))
@@ -826,7 +1088,7 @@ class Ui_MainWindow(object):
         font.setFamily("Droid Sans Fallback")
         font.setPointSize(12)
         font.setBold(False)
-        font.setItalic(True)
+        font.setItalic(False)
         font.setWeight(50)
         self.comboBoxOrderBy.setFont(font)
         self.comboBoxOrderBy.setObjectName("comboBoxOrderBy")
@@ -834,18 +1096,7 @@ class Ui_MainWindow(object):
         self.comboBoxOrderBy.addItem("")
         self.comboBoxOrderBy.addItem("")
         self.comboBoxOrderBy.addItem("")
-        self.gridLayout_3.addWidget(self.comboBoxOrderBy, 2, 0, 1, 1)
-        self.labelErrorOrderPage = QtWidgets.QLabel(self.frame_2)
-        self.labelErrorOrderPage.setMinimumSize(QtCore.QSize(0, 36))
-        font = QtGui.QFont()
-        font.setFamily("Noto Serif Thai")
-        font.setPointSize(12)
-        font.setBold(False)
-        font.setItalic(True)
-        font.setWeight(50)
-        self.labelErrorOrderPage.setFont(font)
-        self.labelErrorOrderPage.setObjectName("labelErrorOrderPage")
-        self.gridLayout_3.addWidget(self.labelErrorOrderPage, 2, 3, 1, 1)
+        self.gridLayout_3.addWidget(self.comboBoxOrderBy, 3, 0, 1, 1)
         self.verticalLayout_15.addWidget(self.frame_2)
         self.frameToolButton = QtWidgets.QFrame(self.OrderPage)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Maximum)
@@ -871,9 +1122,10 @@ class Ui_MainWindow(object):
         self.horizontalLayout_10.setSpacing(2)
         self.horizontalLayout_10.setObjectName("horizontalLayout_10")
         self.searchButtonIcon_2 = QtWidgets.QPushButton(self.searchFrame_2)
+        self.searchButtonIcon_2.setEnabled(False)
         self.searchButtonIcon_2.setMinimumSize(QtCore.QSize(0, 0))
         self.searchButtonIcon_2.setText("")
-        self.searchButtonIcon_2.setIcon(icon3)
+        self.searchButtonIcon_2.setIcon(icon4)
         self.searchButtonIcon_2.setIconSize(QtCore.QSize(25, 25))
         self.searchButtonIcon_2.setObjectName("searchButtonIcon_2")
         self.horizontalLayout_10.addWidget(self.searchButtonIcon_2)
@@ -881,7 +1133,7 @@ class Ui_MainWindow(object):
         self.lineEditSearchOrder.setMinimumSize(QtCore.QSize(30, 30))
         font = QtGui.QFont()
         font.setFamily("Noto Serif Thai")
-        font.setPointSize(11)
+        font.setPointSize(12)
         font.setBold(False)
         font.setItalic(False)
         font.setWeight(50)
@@ -895,26 +1147,14 @@ class Ui_MainWindow(object):
         font.setFamily("Noto Serif Thai")
         font.setPointSize(12)
         font.setBold(False)
-        font.setItalic(True)
+        font.setItalic(False)
         font.setWeight(50)
         self.labelOrderTableCount.setFont(font)
-        self.labelOrderTableCount.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
+        self.labelOrderTableCount.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignVCenter)
         self.labelOrderTableCount.setObjectName("labelOrderTableCount")
         self.horizontalLayout_5.addWidget(self.labelOrderTableCount)
         spacerItem3 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_5.addItem(spacerItem3)
-        self.buttonOrderDetails = QtWidgets.QPushButton(self.frameToolButton)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.buttonOrderDetails.sizePolicy().hasHeightForWidth())
-        self.buttonOrderDetails.setSizePolicy(sizePolicy)
-        self.buttonOrderDetails.setMinimumSize(QtCore.QSize(40, 40))
-        self.buttonOrderDetails.setMaximumSize(QtCore.QSize(40, 40))
-        self.buttonOrderDetails.setText("")
-        self.buttonOrderDetails.setIconSize(QtCore.QSize(27, 27))
-        self.buttonOrderDetails.setObjectName("buttonOrderDetails")
-        self.horizontalLayout_5.addWidget(self.buttonOrderDetails)
         self.buttonNewOrder = QtWidgets.QPushButton(self.frameToolButton)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
@@ -927,18 +1167,18 @@ class Ui_MainWindow(object):
         self.buttonNewOrder.setIconSize(QtCore.QSize(27, 27))
         self.buttonNewOrder.setObjectName("buttonNewOrder")
         self.horizontalLayout_5.addWidget(self.buttonNewOrder)
-        self.buttonEditOrder = QtWidgets.QPushButton(self.frameToolButton)
+        self.buttonOrderDetails = QtWidgets.QPushButton(self.frameToolButton)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.buttonEditOrder.sizePolicy().hasHeightForWidth())
-        self.buttonEditOrder.setSizePolicy(sizePolicy)
-        self.buttonEditOrder.setMinimumSize(QtCore.QSize(40, 40))
-        self.buttonEditOrder.setMaximumSize(QtCore.QSize(40, 40))
-        self.buttonEditOrder.setText("")
-        self.buttonEditOrder.setIconSize(QtCore.QSize(27, 27))
-        self.buttonEditOrder.setObjectName("buttonEditOrder")
-        self.horizontalLayout_5.addWidget(self.buttonEditOrder)
+        sizePolicy.setHeightForWidth(self.buttonOrderDetails.sizePolicy().hasHeightForWidth())
+        self.buttonOrderDetails.setSizePolicy(sizePolicy)
+        self.buttonOrderDetails.setMinimumSize(QtCore.QSize(40, 40))
+        self.buttonOrderDetails.setMaximumSize(QtCore.QSize(40, 40))
+        self.buttonOrderDetails.setText("")
+        self.buttonOrderDetails.setIconSize(QtCore.QSize(27, 27))
+        self.buttonOrderDetails.setObjectName("buttonOrderDetails")
+        self.horizontalLayout_5.addWidget(self.buttonOrderDetails)
         self.buttonDeleteOrder = QtWidgets.QPushButton(self.frameToolButton)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
@@ -1018,9 +1258,9 @@ class Ui_MainWindow(object):
         self.gridLayout_2.setContentsMargins(-1, 5, -1, 5)
         self.gridLayout_2.setObjectName("gridLayout_2")
         self.pushButton = QtWidgets.QPushButton(self.gridFrame)
-        icon4 = QtGui.QIcon()
-        icon4.addPixmap(QtGui.QPixmap(":/icons/icons/cil-clipboard.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.pushButton.setIcon(icon4)
+        icon6 = QtGui.QIcon()
+        icon6.addPixmap(QtGui.QPixmap(":/icons/icons/cil-clipboard.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.pushButton.setIcon(icon6)
         self.pushButton.setIconSize(QtCore.QSize(20, 20))
         self.pushButton.setObjectName("pushButton")
         self.gridLayout_2.addWidget(self.pushButton, 1, 0, 1, 1)
@@ -1134,8 +1374,8 @@ class Ui_MainWindow(object):
         spacerItem8 = QtWidgets.QSpacerItem(20, 116, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
         self.verticalLayout_6.addItem(spacerItem8)
         self.containerStackedWidget.addWidget(self.statisticsPage)
-        self.horizontalLayout.addWidget(self.containerStackedWidget)
-        self.horizontalLayout_9.addWidget(self.mainWidget)
+        self.verticalLayout_2.addWidget(self.containerStackedWidget)
+        self.verticalLayout_18.addWidget(self.mainWidget)
         MainWindow.setCentralWidget(self.centralwidget)
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
         self.statusbar.setObjectName("statusbar")
@@ -1198,44 +1438,6 @@ class Ui_MainWindow(object):
         self.horizontalLayout_11 = QtWidgets.QHBoxLayout(self.frameToolButton_2)
         self.horizontalLayout_11.setContentsMargins(5, 5, 5, 5)
         self.horizontalLayout_11.setObjectName("horizontalLayout_11")
-        self.buttonDetailsMoreInfo_2 = QtWidgets.QPushButton(self.frameToolButton_2)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.buttonDetailsMoreInfo_2.sizePolicy().hasHeightForWidth())
-        self.buttonDetailsMoreInfo_2.setSizePolicy(sizePolicy)
-        self.buttonDetailsMoreInfo_2.setMinimumSize(QtCore.QSize(40, 40))
-        self.buttonDetailsMoreInfo_2.setMaximumSize(QtCore.QSize(40, 40))
-        self.buttonDetailsMoreInfo_2.setText("")
-        self.buttonDetailsMoreInfo_2.setIconSize(QtCore.QSize(27, 27))
-        self.buttonDetailsMoreInfo_2.setObjectName("buttonDetailsMoreInfo_2")
-        self.horizontalLayout_11.addWidget(self.buttonDetailsMoreInfo_2)
-        spacerItem9 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.horizontalLayout_11.addItem(spacerItem9)
-        self.buttonDetailsEdit_2 = QtWidgets.QPushButton(self.frameToolButton_2)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.buttonDetailsEdit_2.sizePolicy().hasHeightForWidth())
-        self.buttonDetailsEdit_2.setSizePolicy(sizePolicy)
-        self.buttonDetailsEdit_2.setMinimumSize(QtCore.QSize(40, 40))
-        self.buttonDetailsEdit_2.setMaximumSize(QtCore.QSize(40, 40))
-        self.buttonDetailsEdit_2.setText("")
-        self.buttonDetailsEdit_2.setIconSize(QtCore.QSize(27, 27))
-        self.buttonDetailsEdit_2.setObjectName("buttonDetailsEdit_2")
-        self.horizontalLayout_11.addWidget(self.buttonDetailsEdit_2)
-        self.buttonDetailsDelete_2 = QtWidgets.QPushButton(self.frameToolButton_2)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.buttonDetailsDelete_2.sizePolicy().hasHeightForWidth())
-        self.buttonDetailsDelete_2.setSizePolicy(sizePolicy)
-        self.buttonDetailsDelete_2.setMinimumSize(QtCore.QSize(40, 40))
-        self.buttonDetailsDelete_2.setMaximumSize(QtCore.QSize(40, 40))
-        self.buttonDetailsDelete_2.setText("")
-        self.buttonDetailsDelete_2.setIconSize(QtCore.QSize(27, 27))
-        self.buttonDetailsDelete_2.setObjectName("buttonDetailsDelete_2")
-        self.horizontalLayout_11.addWidget(self.buttonDetailsDelete_2)
         self.buttonSave = QtWidgets.QPushButton(self.frameToolButton_2)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
@@ -1248,6 +1450,8 @@ class Ui_MainWindow(object):
         self.buttonSave.setIconSize(QtCore.QSize(27, 27))
         self.buttonSave.setObjectName("buttonSave")
         self.horizontalLayout_11.addWidget(self.buttonSave)
+        spacerItem9 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.horizontalLayout_11.addItem(spacerItem9)
         self.verticalLayout_3.addWidget(self.frameToolButton_2)
         self.stackedWidgetDetails = QtWidgets.QStackedWidget(self.rightFrame)
         self.stackedWidgetDetails.setObjectName("stackedWidgetDetails")
@@ -1261,7 +1465,7 @@ class Ui_MainWindow(object):
         self.scrollArea.setWidgetResizable(True)
         self.scrollArea.setObjectName("scrollArea")
         self.scrollAreaWidgetContents = QtWidgets.QWidget()
-        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 300, 454))
+        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 359, 454))
         self.scrollAreaWidgetContents.setObjectName("scrollAreaWidgetContents")
         self.verticalLayout_5 = QtWidgets.QVBoxLayout(self.scrollAreaWidgetContents)
         self.verticalLayout_5.setContentsMargins(5, -1, 5, -1)
@@ -1329,6 +1533,7 @@ class Ui_MainWindow(object):
         self.formLayoutNewOrder.setWidget(2, QtWidgets.QFormLayout.LabelRole, self.label_3)
         self.dateEditAddOrderDate = QtWidgets.QDateEdit(self.frameNewOrderForm)
         self.dateEditAddOrderDate.setButtonSymbols(QtWidgets.QAbstractSpinBox.NoButtons)
+        self.dateEditAddOrderDate.setCalendarPopup(False)
         self.dateEditAddOrderDate.setObjectName("dateEditAddOrderDate")
         self.formLayoutNewOrder.setWidget(2, QtWidgets.QFormLayout.FieldRole, self.dateEditAddOrderDate)
         self.label_4 = QtWidgets.QLabel(self.frameNewOrderForm)
@@ -1339,9 +1544,6 @@ class Ui_MainWindow(object):
         self.buttonAddToCart.setCursor(QtGui.QCursor(QtCore.Qt.OpenHandCursor))
         self.buttonAddToCart.setObjectName("buttonAddToCart")
         self.formLayoutNewOrder.setWidget(3, QtWidgets.QFormLayout.FieldRole, self.buttonAddToCart)
-        self.label_5 = QtWidgets.QLabel(self.frameNewOrderForm)
-        self.label_5.setObjectName("label_5")
-        self.formLayoutNewOrder.setWidget(4, QtWidgets.QFormLayout.LabelRole, self.label_5)
         self.tableWidgetAddOrderProds = QtWidgets.QTableWidget(self.frameNewOrderForm)
         self.tableWidgetAddOrderProds.setFrameShape(QtWidgets.QFrame.NoFrame)
         self.tableWidgetAddOrderProds.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
@@ -1353,8 +1555,12 @@ class Ui_MainWindow(object):
         self.tableWidgetAddOrderProds.verticalHeader().setVisible(False)
         self.tableWidgetAddOrderProds.verticalHeader().setDefaultSectionSize(50)
         self.formLayoutNewOrder.setWidget(4, QtWidgets.QFormLayout.FieldRole, self.tableWidgetAddOrderProds)
+        self.labelMontajatNedForColData = QtWidgets.QLabel(self.frameNewOrderForm)
+        self.labelMontajatNedForColData.setText("")
+        self.labelMontajatNedForColData.setObjectName("labelMontajatNedForColData")
+        self.formLayoutNewOrder.setWidget(4, QtWidgets.QFormLayout.LabelRole, self.labelMontajatNedForColData)
         self.verticalLayout_17.addWidget(self.frameNewOrderForm)
-        spacerItem10 = QtWidgets.QSpacerItem(20, 39, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
+        spacerItem10 = QtWidgets.QSpacerItem(20, 37, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
         self.verticalLayout_17.addItem(spacerItem10)
         self.stackedWidgetDetails.addWidget(self.createOrderPage)
         self.verticalLayout_3.addWidget(self.stackedWidgetDetails)
@@ -1363,22 +1569,18 @@ class Ui_MainWindow(object):
         MainWindow.addDockWidget(QtCore.Qt.DockWidgetArea(1), self.dockWidget)
 
         self.retranslateUi(MainWindow)
-        self.containerStackedWidget.setCurrentIndex(1)
+        self.containerStackedWidget.setCurrentIndex(0)
         self.stackedWidgetInfoCard.setCurrentIndex(0)
-        self.stackedWidgetDetails.setCurrentIndex(1)
+        self.stackedWidgetDetails.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
-        self.buttonUsername.setText(_translate("MainWindow", "الإسم"))
         self.buttonProductPage.setText(_translate("MainWindow", "السلعة"))
+        self.buttonCustomerPage.setText(_translate("MainWindow", "المشترية"))
         self.buttonOrderPage.setText(_translate("MainWindow", "الطلبيات"))
         self.buttonStatisticsPage.setText(_translate("MainWindow", "الإحصائيات"))
-        self.labelProductTableCount.setText(_translate("MainWindow", "المجموع"))
-        self.lineEditSearchProduct.setToolTip(_translate("MainWindow", "بحث عن سلعة بالإسم"))
-        self.lineEditSearchProduct.setStatusTip(_translate("MainWindow", "بحث عن سلعة بالإسم"))
-        self.lineEditSearchProduct.setPlaceholderText(_translate("MainWindow", "بحث"))
         self.comboBoxProductBy.setStatusTip(_translate("MainWindow", "Process By Owner"))
         self.comboBoxProductBy.setPlaceholderText(_translate("MainWindow", "Process By Username"))
         self.comboBoxProductBy.setItemText(0, _translate("MainWindow", "New Item"))
@@ -1386,12 +1588,18 @@ class Ui_MainWindow(object):
         self.comboBoxProductBy.setItemText(2, _translate("MainWindow", "New Item"))
         self.comboBoxProductBy.setItemText(3, _translate("MainWindow", "New Item"))
         self.labelErrorProductPage.setText(_translate("MainWindow", "Error Label"))
-        self.buttonNewProduct.setToolTip(_translate("MainWindow", "Terminate "))
-        self.buttonNewProduct.setStatusTip(_translate("MainWindow", "Terminate "))
-        self.buttonEditProduct.setToolTip(_translate("MainWindow", "Edit"))
-        self.buttonEditProduct.setStatusTip(_translate("MainWindow", "Edit"))
-        self.buttonDeleteProduct.setToolTip(_translate("MainWindow", "Delete"))
-        self.buttonDeleteProduct.setStatusTip(_translate("MainWindow", "Delete"))
+        self.lineEditSearchProduct.setToolTip(_translate("MainWindow", "بحث عن سلعة بالإسم"))
+        self.lineEditSearchProduct.setStatusTip(_translate("MainWindow", "بحث عن سلعة بالإسم"))
+        self.lineEditSearchProduct.setPlaceholderText(_translate("MainWindow", "بحث"))
+        self.labelProductTableCount.setText(_translate("MainWindow", "المجموع"))
+        self.buttonProductDetails.setToolTip(_translate("MainWindow", "معلومات إضافية عن السلعة"))
+        self.buttonProductDetails.setStatusTip(_translate("MainWindow", "معلومات إضافية عن السلعة"))
+        self.buttonNewProduct.setToolTip(_translate("MainWindow", "إضافة سلعة"))
+        self.buttonNewProduct.setStatusTip(_translate("MainWindow", "إضافة سلعة"))
+        self.buttonEditProduct.setToolTip(_translate("MainWindow", "تعديل على السلعة"))
+        self.buttonEditProduct.setStatusTip(_translate("MainWindow", "تعديل على السلعة"))
+        self.buttonDeleteProduct.setToolTip(_translate("MainWindow", "حذف السلعة"))
+        self.buttonDeleteProduct.setStatusTip(_translate("MainWindow", "حذف السلعة"))
         self.tableWidgetProduct.setSortingEnabled(True)
         item = self.tableWidgetProduct.verticalHeaderItem(0)
         item.setText(_translate("MainWindow", "New Row"))
@@ -1426,23 +1634,76 @@ class Ui_MainWindow(object):
         item = self.tableWidgetProduct.item(1, 2)
         item.setText(_translate("MainWindow", "runing"))
         self.tableWidgetProduct.setSortingEnabled(__sortingEnabled)
+        self.comboBoxProductBy_2.setStatusTip(_translate("MainWindow", "Process By Owner"))
+        self.comboBoxProductBy_2.setPlaceholderText(_translate("MainWindow", "Process By Username"))
+        self.comboBoxProductBy_2.setItemText(0, _translate("MainWindow", "New Item"))
+        self.comboBoxProductBy_2.setItemText(1, _translate("MainWindow", "New Item"))
+        self.comboBoxProductBy_2.setItemText(2, _translate("MainWindow", "New Item"))
+        self.comboBoxProductBy_2.setItemText(3, _translate("MainWindow", "New Item"))
+        self.labelErrorCustomerPage.setText(_translate("MainWindow", "Error Label"))
+        self.lineEditSearchCustomer.setToolTip(_translate("MainWindow", "بحث عن سلعة بالإسم"))
+        self.lineEditSearchCustomer.setStatusTip(_translate("MainWindow", "بحث عن سلعة بالإسم"))
+        self.lineEditSearchCustomer.setPlaceholderText(_translate("MainWindow", "بحث"))
+        self.labelCustomerTableCount.setText(_translate("MainWindow", "المجموع"))
+        self.buttonCustomerDetails.setToolTip(_translate("MainWindow", "معلومات إضافية عن السلعة"))
+        self.buttonCustomerDetails.setStatusTip(_translate("MainWindow", "معلومات إضافية عن السلعة"))
+        self.buttonNewCustomer.setToolTip(_translate("MainWindow", "إضافة مشتري"))
+        self.buttonNewCustomer.setStatusTip(_translate("MainWindow", "إضافة مشتري"))
+        self.buttonEditCustomer.setToolTip(_translate("MainWindow", "تعديل"))
+        self.buttonEditCustomer.setStatusTip(_translate("MainWindow", "تعديل"))
+        self.buttonDeleteCustomer.setToolTip(_translate("MainWindow", "حذف المشتري"))
+        self.buttonDeleteCustomer.setStatusTip(_translate("MainWindow", "حذف المشتري"))
+        self.tableWidgetCustomer.setSortingEnabled(True)
+        item = self.tableWidgetCustomer.verticalHeaderItem(0)
+        item.setText(_translate("MainWindow", "New Row"))
+        item = self.tableWidgetCustomer.verticalHeaderItem(1)
+        item.setText(_translate("MainWindow", "New Row"))
+        item = self.tableWidgetCustomer.verticalHeaderItem(2)
+        item.setText(_translate("MainWindow", "New Row"))
+        item = self.tableWidgetCustomer.verticalHeaderItem(3)
+        item.setText(_translate("MainWindow", "New Row"))
+        item = self.tableWidgetCustomer.verticalHeaderItem(4)
+        item.setText(_translate("MainWindow", "New Row"))
+        item = self.tableWidgetCustomer.verticalHeaderItem(5)
+        item.setText(_translate("MainWindow", "New Row"))
+        item = self.tableWidgetCustomer.horizontalHeaderItem(0)
+        item.setText(_translate("MainWindow", "PID"))
+        item = self.tableWidgetCustomer.horizontalHeaderItem(1)
+        item.setText(_translate("MainWindow", "NAM"))
+        item = self.tableWidgetCustomer.horizontalHeaderItem(2)
+        item.setText(_translate("MainWindow", "STATUS"))
+        __sortingEnabled = self.tableWidgetCustomer.isSortingEnabled()
+        self.tableWidgetCustomer.setSortingEnabled(False)
+        item = self.tableWidgetCustomer.item(0, 0)
+        item.setText(_translate("MainWindow", "python"))
+        item = self.tableWidgetCustomer.item(0, 1)
+        item.setText(_translate("MainWindow", "python"))
+        item = self.tableWidgetCustomer.item(0, 2)
+        item.setText(_translate("MainWindow", "runing"))
+        item = self.tableWidgetCustomer.item(1, 0)
+        item.setText(_translate("MainWindow", "firefox"))
+        item = self.tableWidgetCustomer.item(1, 1)
+        item.setText(_translate("MainWindow", "firefox"))
+        item = self.tableWidgetCustomer.item(1, 2)
+        item.setText(_translate("MainWindow", "runing"))
+        self.tableWidgetCustomer.setSortingEnabled(__sortingEnabled)
+        self.labelErrorOrderPage.setText(_translate("MainWindow", "Error Label"))
         self.comboBoxOrderBy.setStatusTip(_translate("MainWindow", "Process By Owner"))
         self.comboBoxOrderBy.setPlaceholderText(_translate("MainWindow", "Process By Username"))
         self.comboBoxOrderBy.setItemText(0, _translate("MainWindow", "New Item"))
         self.comboBoxOrderBy.setItemText(1, _translate("MainWindow", "New Item"))
         self.comboBoxOrderBy.setItemText(2, _translate("MainWindow", "New Item"))
         self.comboBoxOrderBy.setItemText(3, _translate("MainWindow", "New Item"))
-        self.labelErrorOrderPage.setText(_translate("MainWindow", "Error Label"))
         self.lineEditSearchOrder.setToolTip(_translate("MainWindow", "بحث عن سلعة بالإسم"))
         self.lineEditSearchOrder.setStatusTip(_translate("MainWindow", "بحث عن سلعة بالإسم"))
         self.lineEditSearchOrder.setPlaceholderText(_translate("MainWindow", "بحث"))
         self.labelOrderTableCount.setText(_translate("MainWindow", "المجموع"))
-        self.buttonNewOrder.setToolTip(_translate("MainWindow", "Terminate "))
-        self.buttonNewOrder.setStatusTip(_translate("MainWindow", "Terminate "))
-        self.buttonEditOrder.setToolTip(_translate("MainWindow", "Edit"))
-        self.buttonEditOrder.setStatusTip(_translate("MainWindow", "Edit"))
-        self.buttonDeleteOrder.setToolTip(_translate("MainWindow", "Delete"))
-        self.buttonDeleteOrder.setStatusTip(_translate("MainWindow", "Delete"))
+        self.buttonNewOrder.setToolTip(_translate("MainWindow", "طلبية جديدة"))
+        self.buttonNewOrder.setStatusTip(_translate("MainWindow", "طلبية جديدة"))
+        self.buttonOrderDetails.setToolTip(_translate("MainWindow", "معلومات إضافية"))
+        self.buttonOrderDetails.setStatusTip(_translate("MainWindow", "معلومات إضافية"))
+        self.buttonDeleteOrder.setToolTip(_translate("MainWindow", "حذف الطلبية"))
+        self.buttonDeleteOrder.setStatusTip(_translate("MainWindow", "حذف الطلبية"))
         self.tableWidgetOrders.setSortingEnabled(True)
         item = self.tableWidgetOrders.verticalHeaderItem(0)
         item.setText(_translate("MainWindow", "New Row"))
@@ -1491,15 +1752,10 @@ class Ui_MainWindow(object):
         self.labelRam.setText(_translate("MainWindow", "Ram"))
         self.labelRamValue.setText(_translate("MainWindow", "Value"))
         self.labelTitleDetails.setText(_translate("MainWindow", "معلومات إضافية"))
-        self.buttonDetailsEdit_2.setToolTip(_translate("MainWindow", "Edit"))
-        self.buttonDetailsEdit_2.setStatusTip(_translate("MainWindow", "Edit"))
-        self.buttonDetailsDelete_2.setToolTip(_translate("MainWindow", "Delete"))
-        self.buttonDetailsDelete_2.setStatusTip(_translate("MainWindow", "Delete"))
         self.buttonSave.setToolTip(_translate("MainWindow", "Terminate "))
         self.buttonSave.setStatusTip(_translate("MainWindow", "Terminate "))
         self.label.setText(_translate("MainWindow", "إسم العميل"))
         self.label_2.setText(_translate("MainWindow", "الحالة"))
         self.label_3.setText(_translate("MainWindow", "تاريخ الطلب"))
         self.buttonAddToCart.setText(_translate("MainWindow", "إضافة منتج"))
-        self.label_5.setText(_translate("MainWindow", "المنتجات"))
 import resource_rc

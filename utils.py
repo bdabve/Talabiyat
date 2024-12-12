@@ -1,7 +1,10 @@
-from PyQt5 import QtWidgets, QtGui    # , QtCore
+from PyQt5 import QtWidgets, QtGui, QtCore
 import qtawesome as qta
 
 MENU_BUTTON_COLOR = "#ffffff"
+BUTTON_PLUS_COLOR = "#25CCF7"
+BUTTON_EDIT_COLOR = "#60a3bc"
+BUTTON_DELETE_COLOR = "#EA2027"
 
 
 class Utils:
@@ -11,77 +14,6 @@ class Utils:
 
     success_stylesheet = "color: rgb(28, 113, 216);"
     error_stylesheet = "color: rgb(192, 28, 40);"
-
-    dialog_styleSheet = """
-QDialog {
-    background-color: #2c2c2c;
-}
-
-/********************
-    QComboBox
-***********************/
-QComboBox {
-    font: italic 12pt "Droid Sans Fallback";
-    background-color: transparent;
-    color: #ffffff;
-    border-radius: 5px;
-    border: 1px solid rgb(64, 66, 72);
-    padding: 5px;
-    padding-left: 10px;
-    combobox-popup: 0;
-}
-QComboBox:hover{
-    border: 2px solid rgb(64, 71, 88);
-}
-QComboBox::drop-down {
-    subcontrol-origin: padding;
-    subcontrol-position: top right;
-    width: 25px;
-    border-right-width: 3px;
-    border-right-color: rgb(64, 66, 72);
-    border-right-style: solid;
-    border-top-right-radius: 3px;
-    border-bottom-right-radius: 3px;
-    background-image: url(:/icons/icons/cil-arrow-bottom.png);
-    background-position: center;
-    background-repeat: no-reperat;
- }
-
-QComboBox QAbstractItemView {
-    color: #4b7bec; /*rgb(255, 121, 198);	*/
-    background-color: transparent;
-    padding: 10px 7px;
-    selection-background-color: rgb(39, 44, 54);
-    border: 2px solid rgb(64, 71, 88);
-    border-top: none;
-    border-radius: 3px;
-}
-
-QComboBox QAbstractItemView::item {
-    padding: 12px;
-}
-
-/********************
-    QSpinBox
-***********************/
-QSpinBox {
-    font: italic 12pt "Droid Sans Fallback";
-    background: transparent;
-    color: #ffffff;
-    border: none;
-    padding: 5px;
-}
-
-QSpinBox:enabled
-{
-    background-color: rgba(51, 50, 50, 172);
-    border-bottom: 2px solid #4c4c4c;
-}
-
-QSpinBox:focus {
-    border-bottom: 2px solid rgb(178, 178, 178);
-}
-    """
 
     def interface_icons_callbacks(root):
         """
@@ -94,6 +26,7 @@ QSpinBox:focus {
             # Main Button Pages
             (root.ui.buttonProductPage, qta.icon('mdi.alpha-p-box', color=MENU_BUTTON_COLOR), root.goto_product_page),
             (root.ui.buttonOrderPage, qta.icon('mdi6.clipboard', color=MENU_BUTTON_COLOR), root.goto_order_page),
+            (root.ui.buttonCustomerPage, qta.icon('ph.users-three-light', color=MENU_BUTTON_COLOR), root.goto_customer_page),
 
             # Details Card Buttons
             (root.ui.buttonCloseCard, qta.icon('ri.close-fill', color="#227093"), root.ui.dockWidget.close),
@@ -106,21 +39,21 @@ QSpinBox:focus {
                 lambda: root.product_details(lineEditEnabled=False)
             ),
             (
-                # new product
+                # New Product
                 root.ui.buttonNewProduct,
-                qta.icon('ph.plus-circle-thin', color="#ffffff"),
+                qta.icon('ph.plus', color=BUTTON_PLUS_COLOR),
                 root.new_product
             ),
             (
-                # edit product
+                # Edit product
                 root.ui.buttonEditProduct,
-                qta.icon('mdi6.tooltip-edit', color="#16a085"),
+                qta.icon('mdi6.tooltip-edit', color=BUTTON_EDIT_COLOR),
                 lambda: root.product_details(lineEditEnabled=True, operation='Edit')
             ),
             (
-                # delete product
+                # Delete Product
                 root.ui.buttonDeleteProduct,
-                qta.icon('mdi6.delete-outline', color="#EA2027"),
+                qta.icon('mdi6.delete-outline', color=BUTTON_DELETE_COLOR),
                 root.delete_product
             ),
             # THE SAVE BUTTON
@@ -128,6 +61,30 @@ QSpinBox:focus {
                 root.ui.buttonSave,
                 qta.icon('mdi.content-save', color="#ffffff"),
                 root.save_new_item
+            ),
+
+            # CUSTOMERS PAGE
+            (   # Customer Details
+                root.ui.buttonCustomerDetails,
+                qta.icon('mdi.account-question', color="#ffffff"),
+                lambda: root.customer_details()
+            ),
+
+            (   # New Customer
+                root.ui.buttonNewCustomer,
+                qta.icon('mdi6.account-plus', color=BUTTON_PLUS_COLOR),
+                lambda: root.new_customer()
+            ),
+
+            (   # Edit Customer
+                root.ui.buttonEditCustomer,
+                qta.icon('mdi6.account-edit', color=BUTTON_EDIT_COLOR),
+                lambda: root.edit_customer()
+            ),
+            (   # Delete Customer
+                root.ui.buttonDeleteCustomer,
+                qta.icon('mdi6.account-minus', color=BUTTON_DELETE_COLOR),
+                lambda: root.delete_customer()
             ),
 
             # ORDERS PAGE
@@ -139,24 +96,19 @@ QSpinBox:focus {
             (
                 # NEW ORDER
                 root.ui.buttonNewOrder,
-                qta.icon('ph.plus-circle-thin', color="#ffffff"),
+                qta.icon('ph.plus', color=BUTTON_PLUS_COLOR),
                 root.new_order
             ),
             (
+                # Button Add To Cart
                 root.ui.buttonAddToCart,
                 qta.icon('ph.plus', color="#ffffff"),
                 lambda: root.add_product_to_table(root.ui.tableWidgetAddOrderProds)
             ),
-
             (
-                # EDIT ORDER
-                root.ui.buttonEditOrder,
-                qta.icon('mdi6.tooltip-edit', color="#16a085"),
-                lambda: root.order_details(lineEditEnabled=True, operation="Edit")
-            ),
-            (
+                # Delete Order
                 root.ui.buttonDeleteOrder,
-                qta.icon('mdi6.delete-outline', color="#EA2027"),
+                qta.icon('mdi6.delete-outline', color=BUTTON_DELETE_COLOR),
                 root.delete_order
             ),
         ]
@@ -170,9 +122,15 @@ QSpinBox:focus {
         root.ui.searchButtonIcon.clicked.connect(root.search_products)
 
         # Table Widgets
+        # Product Table
         root.ui.tableWidgetProduct.itemDoubleClicked.connect(lambda: root.product_details(lineEditEnabled=False))
         root.ui.tableWidgetProduct.itemSelectionChanged.connect(lambda: root.enable_disable_buttons('Products'))
 
+        # Customer Table
+        root.ui.tableWidgetCustomer.itemDoubleClicked.connect(root.customer_details)
+        root.ui.tableWidgetCustomer.itemSelectionChanged.connect(lambda: root.enable_disable_buttons('Customers'))
+
+        # Order Table
         root.ui.tableWidgetOrders.itemDoubleClicked.connect(lambda: root.order_details(lineEditEnabled=False))
         root.ui.tableWidgetOrders.itemSelectionChanged.connect(lambda: root.enable_disable_buttons('Orders'))
 
@@ -262,7 +220,8 @@ QSpinBox:focus {
         """
         current_page = root.ui.containerStackedWidget.currentIndex()
         root.ui.buttonProductPage.setChecked(current_page == 0)
-        root.ui.buttonOrderPage.setChecked(current_page == 1)
+        root.ui.buttonCustomerPage.setChecked(current_page == 1)
+        root.ui.buttonOrderPage.setChecked(current_page == 2)
 
     @staticmethod
     def create_label(parent, label_name):
@@ -283,35 +242,32 @@ QSpinBox:focus {
         line_edit = QtWidgets.QLineEdit(parent)
 
         line_edit.setObjectName(name)
-        line_edit.setFont(QtGui.QFont("Monaco", 12))
-        # label.setStyleSheet(
-            # "border: 1px solid rgb(64, 66, 72); border-top:none; border-left: none; border-right: none"
-        # )
         return line_edit
 
     @staticmethod
-    def create_spinBox(parent, name):
+    def create_spinBox(parent=None, name=None):
         """Create a styled QLabel."""
-        line_edit = QtWidgets.QSpinBox(parent)
-
-        line_edit.setObjectName(name)
-        line_edit.setFont(QtGui.QFont("Monaco", 12))
-        # label.setStyleSheet(
-            # "border: 1px solid rgb(64, 66, 72); border-top:none; border-left: none; border-right: none"
-        # )
-        return line_edit
+        if parent:
+            spin_box = QtWidgets.QSpinBox(parent)
+        else:
+            spin_box = QtWidgets.QSpinBox()
+        if name:
+            spin_box.setObjectName(name)
+        spin_box.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
+        spin_box.setButtonSymbols(QtWidgets.QAbstractSpinBox.NoButtons)
+        spin_box.setMaximum(16777215)
+        return spin_box
 
     @staticmethod
     def create_doubleSpinBox(parent, name):
         """Create a styled QLabel."""
-        line_edit = QtWidgets.QDoubleSpinBox(parent)
+        double_spinbox = QtWidgets.QDoubleSpinBox(parent)
 
-        line_edit.setObjectName(name)
-        line_edit.setFont(QtGui.QFont("Monaco", 12))
-        # label.setStyleSheet(
-            # "border: 1px solid rgb(64, 66, 72); border-top:none; border-left: none; border-right: none"
-        # )
-        return line_edit
+        double_spinbox.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
+        double_spinbox.setButtonSymbols(QtWidgets.QAbstractSpinBox.NoButtons)
+        double_spinbox.setMaximum(16777215)
+        double_spinbox.setObjectName(name)
+        return double_spinbox
 
     @staticmethod
     def clear_details_form(form_layout):
