@@ -49,40 +49,82 @@ class Ui_MainWindow(object):
 "    border-radius: 3px;\n"
 "}\n"
 "\n"
+"/* **********************\n"
+"                QPushButton \n"
+"*************************/\n"
 "QPushButton {    \n"
 "    font: 12pt \"Noto Serif Thai\";\n"
+"    background: #4b4b4b;\n"
+"    border-radius: 5px;\n"
+"    color: #ffffff;\n"
+"    padding: 7px;\n"
+"}\n"
+"QPushButton:hover\n"
+"{\n"
+"    background-color: #555555;\n"
 "}\n"
 "\n"
-"QPushButton:hover {\n"
+"QPushButton:pressed\n"
+"{\n"
+"    background-color: transparent;\n"
+"    padding: 3px;\n"
+"}\n"
+"QPushButton:!enabled\n"
+"{\n"
+"    background-color: transparent;\n"
 "}\n"
 "\n"
-"QLabel, QLineEdit, QDateEdit, QSpinBox, QDoubleSpinBox {\n"
+"/* **********************\n"
+"                QLabel \n"
+"*************************/\n"
+"QLabel {\n"
 "    font: 12pt \"Noto Serif Thai\";\n"
 "    color: #ffffff;\n"
 "}\n"
 "\n"
-"QLineEdit, QDateEdit, QSpinBox, QDoubleSpinBox {\n"
-"    background: transparent;\n"
+"#labelErrorProductPage, \n"
+"#labelErrorOrderPage,\n"
+"#labelErrorCustomerPage\n"
+"{\n"
+"    color: rgb(192, 28, 40);\n"
+"}\n"
+"\n"
+"/* **********************\n"
+"                LineEdits \n"
+"*************************/\n"
+"QLineEdit, \n"
+"QDateEdit, \n"
+"QSpinBox, \n"
+"QDoubleSpinBox {\n"
+"    font: 12pt \"Noto Serif Thai\";\n"
+"    color: #ffffff;\n"
+"    background: #393836;\n"
 "    border: none;\n"
 "    padding: 5px;\n"
 "    border-radius: 7px;\n"
 "}\n"
 "\n"
-"QDateEdit:enabled, QSpinBox:enabled\n"
+"QLineEdit:hover, \n"
+"QDateEdit:hover,\n"
+"QSpinBox:hover, \n"
+"QDoubleSpinBox:hover {\n"
+"    border: 2px solid     #4c4c4c;\n"
+"}\n"
+"QLineEdit:focus,\n"
+"QSpinBox:focus,\n"
+"QDateEdit:focus, \n"
+"QDoubleSpinBox:focus\n"
 "{\n"
 "    background-color: rgba(51, 50, 50, 172);\n"
-"    /*border-bottom: 2px solid #4c4c4c;*/\n"
+"    border: 2px solid #4c4c4c;\n"
 "}\n"
 "\n"
-"QDateEdit:focus, QSpinBox:focus {\n"
-"    border-bottom: 2px solid rgb(178, 178, 178);\n"
-"}\n"
 "/* ****************\n"
 "     MENU FRAME \n"
 "**************************/\n"
 "\n"
 "#menuFrame {\n"
-"    background-color: #303030;\n"
+"    background-color: #272727;\n"
 "    border-radius: 12px;\n"
 "    border: 1px solid #202020;\n"
 "    padding: 0px 5px;\n"
@@ -163,7 +205,7 @@ class Ui_MainWindow(object):
 "}\n"
 "\n"
 "/*****************************\n"
-"**    PRODUCT PAGE\n"
+"**    SEARCH FRAME\n"
 "******************************/\n"
 "#searchFrame, \n"
 "#searchFrame_2, \n"
@@ -180,41 +222,49 @@ class Ui_MainWindow(object):
 "\n"
 "#searchFrame:hover, \n"
 "#searchFrame_2:hover,\n"
-"searchFrame_3:hover\n"
+"#searchFrame_3:hover\n"
 "{\n"
 "    border: 2px solid     #4c4c4c;\n"
 "}\n"
 "\n"
-"#labelErrorProductPage, \n"
-"#labelErrorOrderPage,\n"
-"#labelErrorCustomerPage\n"
+"#searchButtonIcon, \n"
+"#searchButtonIcon_2,\n"
+"#searchButtonIcon_3\n"
 "{\n"
-"    color: rgb(192, 28, 40);\n"
+"    background-color: #303030;\n"
+"    border-radius: 12px;\n"
+"}\n"
+"\n"
+"#lineEditSearchProduct,\n"
+"#lineEditSearchCustomer,\n"
+"#lineEditSearchOrder {\n"
+"    background: transparent;\n"
+"}\n"
+"\n"
+"#lineEditSearchProduct:hover, #lineEditSearchProduct:focus,\n"
+"#lineEditSearchCustomer:hover, #lineEditSearchCustomer:focus,\n"
+"#lineEditSearchOrder:hover, #lineEditSearchOrder:focus\n"
+"{\n"
+"    border: none;\n"
+"    background-color: transparent;\n"
 "}\n"
 "\n"
 "/* *************************************************\n"
 "        DETAILS FRAME  = QDockWidget\n"
 "***************************************************/\n"
-"\n"
 "#dockWidgetContents,\n"
 "#rightFrame, \n"
 "#allDetailsPage,\n"
 "#createOrderPage,\n"
 "#scrollAreaWidgetContents \n"
 "{\n"
-"    background-color: #32312f;\n"
+"    background-color: #272727;\n"
 "}\n"
-"\n"
-"/*** \n"
-"border-color: #4c4c4c;\n"
-"*****/\n"
 "\n"
 "#labelTitleDetails {\n"
 "    \n"
 "    font: italic 15pt \"Droid Sans Fallback\";\n"
 "}\n"
-"\n"
-"/*===    Close Card Button   ===*/\n"
 "\n"
 "#scrollAreaWidgetContents {\n"
 "    border: 2px solid #4c4c4c;\n"
@@ -231,6 +281,7 @@ class Ui_MainWindow(object):
 "    border-right: none;\n"
 "}\n"
 "\n"
+"/*===    Close Card Button   ===*/\n"
 "#buttonCloseCard {\n"
 "    border-radius: 19px;\n"
 "    background: transparent;    \n"
@@ -248,84 +299,8 @@ class Ui_MainWindow(object):
 "/********************\n"
 "    Details Frame \n"
 "****************************/\n"
-"#formFrame QLineEdit, \n"
-"#formFrame QSpinBox, \n"
-"#formFrame QDoubleSpinBox {\n"
-"    background: #393836;\n"
-"}\n"
-"#formFrame QLineEdit:hover, \n"
-"#formFrame QSpinBox:hover, \n"
-"#formFrame QDoubleSpinBox:hover {\n"
-"    border: 2px solid     #4c4c4c;\n"
-"}\n"
-"/*#formFrame QLineEdit:enabled\n"
-"#formFrame QSpinBox:enabled, \n"
-"#formFrame QDoubleSpinBox:enabled\n"
-"{\n"
-"    background-color: rgba(51, 50, 50, 172);\n"
-"    border: 2px solid     #4c4c4c;\n"
-"}*/\n"
-"\n"
-"#formFrame QLineEdit:focus,\n"
-"#formFrame QSpinBox:focus, \n"
-"#formFrame QDoubleSpinBox:focus\n"
-"{\n"
-"    background-color: rgba(51, 50, 50, 172);\n"
-"    border: 2px solid #4c4c4c;\n"
-"}\n"
-"\n"
-"\n"
-"#frameToolButton QPushButton, \n"
-"#frameToolButton_2 QPushButton,\n"
-"#frameToolButton_3 QPushButton,\n"
-"#frameToolButton_4 QPushButton,\n"
-"\n"
-"#frameNewOrderForm QPushButton\n"
-"{\n"
-"    background: #4b4b4b;\n"
-"    border-radius: 5px;\n"
-"    color: #ffffff;\n"
-"    padding: 7px;\n"
-"}\n"
-"\n"
-"#frameToolButton QPushButton:hover, \n"
-"#frameToolButton_2 QPushButton:hover ,\n"
-"#frameToolButton_3 QPushButton:hover,\n"
-"#frameToolButton_4 QPushButton:hover,\n"
-"\n"
-"#frameNewOrderForm QPushButton:hover\n"
-"{\n"
-"    background-color: #555555;\n"
-"}\n"
-"\n"
-"#frameToolButton QPushButton:pressed,\n"
-"#frameToolButton_2 QPushButton:pressed,\n"
-"#frameToolButton_3 QPushButton:pressed,\n"
-"#frameToolButton_4 QPushButton:pressed,\n"
-"\n"
-"#frameNewOrderForm QPushButton:pressed\n"
-"{\n"
-"    background-color: transparent;\n"
-"    padding: 3px;\n"
-"}\n"
-"\n"
-"#frameToolButton QPushButton:!enabled,\n"
-"#frameToolButton_2 QPushButton:!enabled,\n"
-"#frameToolButton_3 QPushButton:!enabled,\n"
-"#frameToolButton_4 QPushButton:!enabled,\n"
-"\n"
-"#frameNewOrderForm QPushButton:!enabled\n"
-"{\n"
-"    background-color: transparent;\n"
-"}\n"
 "\n"
 "/*** Search LineEdit Button Icon ***/\n"
-"#searchButtonIcon, \n"
-"#searchButtonIcon_2,\n"
-"#searchButtonIcon_3\n"
-"{\n"
-"    background-color: #303030;\n"
-"}\n"
 "/***********************\n"
 "         QComboBox \n"
 "************************/\n"
@@ -336,7 +311,7 @@ class Ui_MainWindow(object):
 "    color: #ffffff;\n"
 "    border-radius: 5px;\n"
 "    border: 1px solid rgb(64, 66, 72);    \n"
-"    padding: 5px;\n"
+"    padding: 7px;\n"
 "    padding-left: 10px;\n"
 "    combobox-popup: 0;\n"
 "}\n"
@@ -355,20 +330,17 @@ class Ui_MainWindow(object):
 "    background-image: url(:/icons/icons/cil-arrow-bottom.png);\n"
 "    background-position: center;\n"
 "    background-repeat: no-reperat;\n"
+"    padding: 10px;\n"
 " }\n"
 "\n"
 "QComboBox QAbstractItemView {\n"
-"    color: #4b7bec; /*rgb(255, 121, 198);    */\n"
+"    color: #ffffff; \n"
 "    background-color: transparent;\n"
-"    padding: 10px 7px;\n"
-"    selection-background-color: rgb(39, 44, 54);\n"
+"    padding: 10px 0;\n"
+"    selection-background-color: #555555;\n"
 "    border: 2px solid #4c4c4c;\n"
 "    border-top: none;\n"
 "    border-radius: 3px;\n"
-"}\n"
-"\n"
-"QComboBox QAbstractItemView::item {\n"
-"    padding: 12px;\n"
 "}\n"
 "\n"
 "/***************\n"
@@ -493,65 +465,17 @@ class Ui_MainWindow(object):
 "     background: none;\n"
 " }\n"
 "\n"
-"\n"
 "/**********************\n"
-"    => QScrollBar\n"
+"    => QToolTip\n"
 "***********************/\n"
-"/* \n"
-"QScrollBar:vertical {\n"
-"    width: 12;\n"
-"    margin: 0 0 0 2;\n"
-"    border-radius: 2;\n"
-"    background-color: transparent;\n"
-"}\n"
-"\n"
-"QScrollBar::handle:vertical {\n"
-"    background-color: @color01;\n"
-"    min-height: 20px;\n"
-"    border-radius: 2;\n"
-"}\n"
-"\n"
-"QScrollBar::add-line:vertical,\n"
-"QScrollBar::sub-line:vertical {\n"
-"    height: 0;\n"
-"}\n"
-"\n"
-"QScrollBar::add-page:vertical,\n"
-"QScrollBar::sub-page:vertical {\n"
-"    border-bottom-right-radius: 2;\n"
-"    border-bottom-left-radius: 2;\n"
-"    background-color: transparent;\n"
-"}\n"
-"\n"
-"QScrollBar:horizontal {\n"
-"    height: 12;\n"
-"    margin: 2 0 0 0;\n"
-"    border-radius: 2;\n"
-"    background-color: transparent;\n"
-"}\n"
-"\n"
-"QScrollBar::handle:horizontal {\n"
-"    background-color: @color01;\n"
-"    min-width: 20px;\n"
-"    border-radius: 2;\n"
-"}\n"
-"\n"
-"QScrollBar::add-line:horizontal,\n"
-"QScrollBar::sub-line:horizontal {\n"
-"    height: 0;\n"
-"}\n"
-"\n"
-"QScrollBar::add-page:horizontal,\n"
-"QScrollBar::sub-page:horizontal {\n"
-"    border-bottom-right-radius: 2;\n"
-"    border-bottom-left-radius: 2;\n"
-"    background-color: transparent;\n"
-"}\n"
-"\n"
-"QAbstractScrollArea::corner {\n"
-"    background: transparent;\n"
-"}\n"
-"*/")
+"QToolTip {\n"
+"    background-color: #272727;\n"
+"    border: 1px solid     #4c4c4c;\n"
+"    padding: 0px 5px;\n"
+"    color: #ffffff;\n"
+"    border-radius: 10px;\n"
+"    font: 12pt \"Droid Sans Fallback\";\n"
+"}")
         MainWindow.setUnifiedTitleAndToolBarOnMac(False)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
@@ -709,6 +633,7 @@ class Ui_MainWindow(object):
         font.setItalic(False)
         font.setWeight(50)
         self.labelErrorProductPage.setFont(font)
+        self.labelErrorProductPage.setText("")
         self.labelErrorProductPage.setObjectName("labelErrorProductPage")
         self.gridLayout.addWidget(self.labelErrorProductPage, 2, 3, 1, 1)
         self.verticalLayout_4.addWidget(self.frame)
@@ -732,7 +657,7 @@ class Ui_MainWindow(object):
         self.searchFrame.setFrameShadow(QtWidgets.QFrame.Raised)
         self.searchFrame.setObjectName("searchFrame")
         self.horizontalLayout_4 = QtWidgets.QHBoxLayout(self.searchFrame)
-        self.horizontalLayout_4.setContentsMargins(10, 4, 10, 4)
+        self.horizontalLayout_4.setContentsMargins(5, 2, 5, 2)
         self.horizontalLayout_4.setSpacing(2)
         self.horizontalLayout_4.setObjectName("horizontalLayout_4")
         self.searchButtonIcon = QtWidgets.QPushButton(self.searchFrame)
@@ -901,6 +826,7 @@ class Ui_MainWindow(object):
         font.setItalic(False)
         font.setWeight(50)
         self.labelErrorCustomerPage.setFont(font)
+        self.labelErrorCustomerPage.setText("")
         self.labelErrorCustomerPage.setObjectName("labelErrorCustomerPage")
         self.gridLayout_4.addWidget(self.labelErrorCustomerPage, 2, 3, 1, 1)
         self.verticalLayout_19.addWidget(self.frame_3)
@@ -924,7 +850,7 @@ class Ui_MainWindow(object):
         self.searchFrame_3.setFrameShadow(QtWidgets.QFrame.Raised)
         self.searchFrame_3.setObjectName("searchFrame_3")
         self.horizontalLayout_14 = QtWidgets.QHBoxLayout(self.searchFrame_3)
-        self.horizontalLayout_14.setContentsMargins(10, 4, 10, 4)
+        self.horizontalLayout_14.setContentsMargins(5, 2, 5, 2)
         self.horizontalLayout_14.setSpacing(2)
         self.horizontalLayout_14.setObjectName("horizontalLayout_14")
         self.searchButtonIcon_3 = QtWidgets.QPushButton(self.searchFrame_3)
@@ -1079,6 +1005,7 @@ class Ui_MainWindow(object):
         font.setItalic(False)
         font.setWeight(50)
         self.labelErrorOrderPage.setFont(font)
+        self.labelErrorOrderPage.setText("")
         self.labelErrorOrderPage.setObjectName("labelErrorOrderPage")
         self.gridLayout_3.addWidget(self.labelErrorOrderPage, 3, 3, 1, 1)
         self.comboBoxOrderBy = QtWidgets.QComboBox(self.frame_2)
@@ -1377,9 +1304,6 @@ class Ui_MainWindow(object):
         self.verticalLayout_2.addWidget(self.containerStackedWidget)
         self.verticalLayout_18.addWidget(self.mainWidget)
         MainWindow.setCentralWidget(self.centralwidget)
-        self.statusbar = QtWidgets.QStatusBar(MainWindow)
-        self.statusbar.setObjectName("statusbar")
-        MainWindow.setStatusBar(self.statusbar)
         self.dockWidget = QtWidgets.QDockWidget(MainWindow)
         self.dockWidget.setFeatures(QtWidgets.QDockWidget.NoDockWidgetFeatures)
         self.dockWidget.setWindowTitle("")
@@ -1501,6 +1425,12 @@ class Ui_MainWindow(object):
         self.formLayout = QtWidgets.QFormLayout(self.formFrame)
         self.formLayout.setHorizontalSpacing(10)
         self.formLayout.setObjectName("formLayout")
+        self.lineEdit = QtWidgets.QLineEdit(self.formFrame)
+        self.lineEdit.setObjectName("lineEdit")
+        self.formLayout.setWidget(0, QtWidgets.QFormLayout.LabelRole, self.lineEdit)
+        self.doubleSpinBox = QtWidgets.QDoubleSpinBox(self.formFrame)
+        self.doubleSpinBox.setObjectName("doubleSpinBox")
+        self.formLayout.setWidget(0, QtWidgets.QFormLayout.FieldRole, self.doubleSpinBox)
         self.verticalLayout_5.addWidget(self.formFrame)
         self.scrollArea.setWidget(self.scrollAreaWidgetContents)
         self.verticalLayout_16.addWidget(self.scrollArea)
@@ -1567,11 +1497,14 @@ class Ui_MainWindow(object):
         self.verticalLayout.addWidget(self.rightFrame)
         self.dockWidget.setWidget(self.dockWidgetContents)
         MainWindow.addDockWidget(QtCore.Qt.DockWidgetArea(1), self.dockWidget)
+        self.statusbar = QtWidgets.QStatusBar(MainWindow)
+        self.statusbar.setObjectName("statusbar")
+        MainWindow.setStatusBar(self.statusbar)
 
         self.retranslateUi(MainWindow)
-        self.containerStackedWidget.setCurrentIndex(0)
+        self.containerStackedWidget.setCurrentIndex(2)
         self.stackedWidgetInfoCard.setCurrentIndex(0)
-        self.stackedWidgetDetails.setCurrentIndex(0)
+        self.stackedWidgetDetails.setCurrentIndex(1)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
@@ -1587,7 +1520,6 @@ class Ui_MainWindow(object):
         self.comboBoxProductBy.setItemText(1, _translate("MainWindow", "New Item"))
         self.comboBoxProductBy.setItemText(2, _translate("MainWindow", "New Item"))
         self.comboBoxProductBy.setItemText(3, _translate("MainWindow", "New Item"))
-        self.labelErrorProductPage.setText(_translate("MainWindow", "Error Label"))
         self.lineEditSearchProduct.setToolTip(_translate("MainWindow", "بحث عن سلعة بالإسم"))
         self.lineEditSearchProduct.setStatusTip(_translate("MainWindow", "بحث عن سلعة بالإسم"))
         self.lineEditSearchProduct.setPlaceholderText(_translate("MainWindow", "بحث"))
@@ -1640,7 +1572,6 @@ class Ui_MainWindow(object):
         self.comboBoxProductBy_2.setItemText(1, _translate("MainWindow", "New Item"))
         self.comboBoxProductBy_2.setItemText(2, _translate("MainWindow", "New Item"))
         self.comboBoxProductBy_2.setItemText(3, _translate("MainWindow", "New Item"))
-        self.labelErrorCustomerPage.setText(_translate("MainWindow", "Error Label"))
         self.lineEditSearchCustomer.setToolTip(_translate("MainWindow", "بحث عن سلعة بالإسم"))
         self.lineEditSearchCustomer.setStatusTip(_translate("MainWindow", "بحث عن سلعة بالإسم"))
         self.lineEditSearchCustomer.setPlaceholderText(_translate("MainWindow", "بحث"))
@@ -1687,7 +1618,6 @@ class Ui_MainWindow(object):
         item = self.tableWidgetCustomer.item(1, 2)
         item.setText(_translate("MainWindow", "runing"))
         self.tableWidgetCustomer.setSortingEnabled(__sortingEnabled)
-        self.labelErrorOrderPage.setText(_translate("MainWindow", "Error Label"))
         self.comboBoxOrderBy.setStatusTip(_translate("MainWindow", "Process By Owner"))
         self.comboBoxOrderBy.setPlaceholderText(_translate("MainWindow", "Process By Username"))
         self.comboBoxOrderBy.setItemText(0, _translate("MainWindow", "New Item"))
@@ -1752,8 +1682,8 @@ class Ui_MainWindow(object):
         self.labelRam.setText(_translate("MainWindow", "Ram"))
         self.labelRamValue.setText(_translate("MainWindow", "Value"))
         self.labelTitleDetails.setText(_translate("MainWindow", "معلومات إضافية"))
-        self.buttonSave.setToolTip(_translate("MainWindow", "Terminate "))
-        self.buttonSave.setStatusTip(_translate("MainWindow", "Terminate "))
+        self.buttonSave.setToolTip(_translate("MainWindow", "حفظ البيانات"))
+        self.buttonSave.setStatusTip(_translate("MainWindow", "حفظ البيانات"))
         self.label.setText(_translate("MainWindow", "إسم العميل"))
         self.label_2.setText(_translate("MainWindow", "الحالة"))
         self.label_3.setText(_translate("MainWindow", "تاريخ الطلب"))

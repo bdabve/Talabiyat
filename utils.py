@@ -2,9 +2,12 @@ from PyQt5 import QtWidgets, QtGui, QtCore
 import qtawesome as qta
 
 MENU_BUTTON_COLOR = "#ffffff"
-BUTTON_PLUS_COLOR = "#25CCF7"
-BUTTON_EDIT_COLOR = "#60a3bc"
-BUTTON_DELETE_COLOR = "#EA2027"
+# BUTTON_PLUS_COLOR = "#25CCF7"
+# BUTTON_EDIT_COLOR = "#60a3bc"
+# BUTTON_DELETE_COLOR = "#EA2027"
+BUTTON_PLUS_COLOR = "#ffffff"
+BUTTON_EDIT_COLOR = "#ffffff"
+BUTTON_DELETE_COLOR = "#ffffff"
 
 
 class Utils:
@@ -24,19 +27,35 @@ class Utils:
         # -------------------
         buttons_icons_callbacks = [
             # Main Button Pages
-            (root.ui.buttonProductPage, qta.icon('mdi.alpha-p-box', color=MENU_BUTTON_COLOR), root.goto_product_page),
-            (root.ui.buttonOrderPage, qta.icon('mdi6.clipboard', color=MENU_BUTTON_COLOR), root.goto_order_page),
-            (root.ui.buttonCustomerPage, qta.icon('ph.users-three-light', color=MENU_BUTTON_COLOR), root.goto_customer_page),
+            (
+                root.ui.buttonProductPage,
+                qta.icon('mdi.alpha-p-box', color=MENU_BUTTON_COLOR),
+                root.goto_product_page
+            ),
+            (
+                root.ui.buttonOrderPage,
+                qta.icon('mdi6.clipboard', color=MENU_BUTTON_COLOR),
+                root.goto_order_page
+            ),
+            (
+                root.ui.buttonCustomerPage,
+                qta.icon('ph.users-three-light', color=MENU_BUTTON_COLOR),
+                root.goto_customer_page
+            ),
 
             # Details Card Buttons
-            (root.ui.buttonCloseCard, qta.icon('ri.close-fill', color="#227093"), root.ui.dockWidget.close),
+            (
+                root.ui.buttonCloseCard,
+                qta.icon('ri.close-fill', color="#227093"),
+                root.ui.dockWidget.close
+            ),
 
             # Product Page Buttons
             (
                 # product details
                 root.ui.buttonProductDetails,
                 qta.icon('mdi6.information-variant', color="#ffffff"),
-                lambda: root.product_details(lineEditEnabled=False)
+                lambda: root.item_details(lineEditEnabled=False)
             ),
             (
                 # New Product
@@ -48,13 +67,13 @@ class Utils:
                 # Edit product
                 root.ui.buttonEditProduct,
                 qta.icon('mdi6.tooltip-edit', color=BUTTON_EDIT_COLOR),
-                lambda: root.product_details(lineEditEnabled=True, operation='Edit')
+                lambda: root.item_details(lineEditEnabled=True, operation='Edit')
             ),
             (
                 # Delete Product
                 root.ui.buttonDeleteProduct,
                 qta.icon('mdi6.delete-outline', color=BUTTON_DELETE_COLOR),
-                root.delete_product
+                lambda: root.delete_item(coll_name='Products')
             ),
             # THE SAVE BUTTON
             (
@@ -67,7 +86,7 @@ class Utils:
             (   # Customer Details
                 root.ui.buttonCustomerDetails,
                 qta.icon('mdi.account-question', color="#ffffff"),
-                lambda: root.customer_details()
+                lambda: root.item_details(lineEditEnabled=False, operation="None", coll_name="Customers")
             ),
 
             (   # New Customer
@@ -79,12 +98,12 @@ class Utils:
             (   # Edit Customer
                 root.ui.buttonEditCustomer,
                 qta.icon('mdi6.account-edit', color=BUTTON_EDIT_COLOR),
-                lambda: root.edit_customer()
+                lambda: root.item_details(lineEditEnabled=True, operation="Edit", coll_name="Customers")
             ),
             (   # Delete Customer
                 root.ui.buttonDeleteCustomer,
                 qta.icon('mdi6.account-minus', color=BUTTON_DELETE_COLOR),
-                lambda: root.delete_customer()
+                lambda: root.delete_item(coll_name='Customers')
             ),
 
             # ORDERS PAGE
@@ -109,7 +128,7 @@ class Utils:
                 # Delete Order
                 root.ui.buttonDeleteOrder,
                 qta.icon('mdi6.delete-outline', color=BUTTON_DELETE_COLOR),
-                root.delete_order
+                lambda: root.delete_item(coll_name='Orders')
             ),
         ]
 
@@ -121,13 +140,15 @@ class Utils:
         root.ui.lineEditSearchProduct.textChanged.connect(root.search_products)
         root.ui.searchButtonIcon.clicked.connect(root.search_products)
 
-        # Table Widgets
-        # Product Table
-        root.ui.tableWidgetProduct.itemDoubleClicked.connect(lambda: root.product_details(lineEditEnabled=False))
+        # => Product TableWidget
+        root.ui.tableWidgetProduct.itemDoubleClicked.connect(lambda: root.item_details(lineEditEnabled=False))
         root.ui.tableWidgetProduct.itemSelectionChanged.connect(lambda: root.enable_disable_buttons('Products'))
 
-        # Customer Table
-        root.ui.tableWidgetCustomer.itemDoubleClicked.connect(root.customer_details)
+        # => Customer TableWidget
+        root.ui.tableWidgetCustomer.itemDoubleClicked.connect(
+            lambda: root.item_details(lineEditEnabled=False, coll_name="Customers")
+        )
+
         root.ui.tableWidgetCustomer.itemSelectionChanged.connect(lambda: root.enable_disable_buttons('Customers'))
 
         # Order Table
@@ -143,6 +164,19 @@ class Utils:
         # root.ui.buttonResume.setIcon(qta.icon('fa5s.walking', color="#ffffff"))
 
         # root.ui.buttonSuspend.setIcon(qta.icon('mdi.motion-pause-outline', color="#ffffff"))
+
+    def success_message(label, message, success=True):
+        """
+        This function display message in label
+        :label: the label where to display the message
+        :message: message to display like response['message']
+        :success: change style sheet if sucess; else danger
+        """
+        label.setText(message)
+        if success:
+            label.setStyleSheet('color: green')
+        else:
+            label.setStyleSheet('color: red')
 
     @staticmethod
     def selected_rows(table: QtWidgets.QTableWidget) -> bool:

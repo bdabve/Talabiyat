@@ -134,7 +134,7 @@ class MongoDBHandler:
                 logger.info(f"Document {document_id} deleted successfully from {collection_name}.")
                 return {"status": "success", "message": "Document deleted."}
 
-            logger.warning(f"Document {document_id} not found.")
+            logger.warning(f"Document {document_id} not found in collection {collection_name}.")
             return {"status": "error", "message": "Document not found."}
         except Exception as err:
             logger.error(f"Error deleting document from {collection_name}: {err}")
@@ -228,23 +228,23 @@ class MongoDBHandler:
             logger.error(f"Error updating product: {err}")
             return {"status": "error", "message": str(err)}
 
-    def update_product_quantity(self, product_id, quantity_sold):
+    def update_product_quantity(self, product_id, quantity_change):
+        """
+        Updates the quantity of a product in the database.
+
+        :param product_id: The ID of the product to update.
+        :param quantity_change: The change in quantity (negative to reduce, positive to increase).
+        :return: A dictionary with the status of the operation.
+        """
         try:
-            product = self.db["Products"].find_one({"_id": ObjectId(product_id)}, {"qte": 1})
+            result = self.db["Products"].update_one(
+                {"_id": ObjectId(product_id)},
+                {"$inc": {"qte": quantity_change}}
+            )
+            if result.matched_count == 0:
+                return {"status": "error", "message": f"Product with ID {product_id} not found."}
 
-            if not product:
-                return {"status": "error", "message": "Product not found."}
-
-            current_quantity = int(product.get("qte", 0))
-            if current_quantity < quantity_sold:
-                return {"status": "error", "message": "Not enough stock available."}
-
-            new_quantity = current_quantity - quantity_sold
-            self.db["Products"].update_one({"_id": ObjectId(product_id)}, {"$set": {"qte": new_quantity}})
-
-            logger.info(f"Updated product {product_id} quantity: {current_quantity} -> {new_quantity}")
             return {"status": "success", "message": "Quantity updated successfully."}
-
         except Exception as err:
             logger.error(f"Error updating product quantity: {err}")
             return {"status": "error", "message": str(err)}
@@ -254,21 +254,33 @@ class MongoDBHandler:
     # *************************************************************
     def create_order(self, customer_id, products, order_date=None, status="pending"):
         try:
+            if len(products) == 0:
+                logger.error("No products selected for this order")
+                return {"status": "error", "message": "عليك إضافة السلعة إلالطلبية"}
+
             total_price = 0
+            product_updates = []    # Keep track of quantity updates to apply after
             for product in products:
                 product_id = product["product_id"]
                 quantity = product["quantity"]
 
-                product_response = self.db["Products"].find_one({"_id": ObjectId(product_id)}, {"price": 1})
+                product_response = self.db["Products"].find_one({"_id": ObjectId(product_id)}, {"price": 1, "qte": 1})
                 if not product_response:
                     return {"status": "error", "message": f"Product with ID {product_id} not found."}
 
                 price = Decimal(product_response["price"].to_decimal())
+                # Check Quantity in Stock if Available
+                available_quantity = product_response.get("qte", 0)
+                if quantity > available_quantity:
+                    return {
+                        "status": "error",
+                        "message": f"insufficient stock for product with ID {product_id}. Available: {available_quantity}"
+                    }
+                # Calculate total price
                 total_price += price * quantity
 
-                update_response = self.update_product_quantity(product_id, quantity)
-                if update_response["status"] != "success":
-                    return update_response
+                # Prepare quantity update but do not apply it yet
+                product_updates.append((product_id, -quantity))
 
             order = {
                 "customer_id": ObjectId(customer_id),
@@ -281,6 +293,13 @@ class MongoDBHandler:
             }
 
             result = self.db["Orders"].insert_one(order)
+            # If order insertion is successful, update product quantities
+            for product_id, quantity_change in product_updates:
+                update_response = self.update_product_quantity(product_id, quantity_change)
+                if update_response["status"] != "success":
+                    # Log the failure but continue
+                    logger.error(f"Failed to update quantity for product {product_id}: {update_response['message']}")
+
             logger.info(f"Order created successfully with ID: {result.inserted_id}")
             return {"status": "success", "order_id": str(result.inserted_id)}
 
