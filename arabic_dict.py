@@ -23,6 +23,14 @@ arabic_mapping = {
     "products": "السلعة",
     "customer_id": "المشتري",
     "customer_name": "المشتري",
+    # customers
+    "first_name": "الإسم",
+    "last_name": "اللقب",
+    "email": "إيمايل",
+    "phone": "الهاتف",
+    "address": "العنوان",
+    True: "مفعل",
+    False: "غير مفعل",
 }
 
 order_status_mapping = {
@@ -46,7 +54,10 @@ order_status_mapping_en = {
     "delivered": "تم التوصيل",
     "completed": "منجز",
     "cancelled": "ملغي",
-    "failed": "فشل"
+    "failed": "فشل",
+    # this for customer status
+    True: "مفعل",
+    False: "غير مفعل",
 }
 
 prod_headers = ["أيد", "الاسم", "المرجع", "الوصف", "السعر", "الكمية", "الفئة"]

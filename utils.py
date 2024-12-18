@@ -30,17 +30,19 @@ class Utils:
             (
                 root.ui.buttonProductPage,
                 qta.icon('mdi.alpha-p-box', color=MENU_BUTTON_COLOR),
-                root.goto_product_page
+                lambda: root.goto_page(page="Products")
             ),
-            (
-                root.ui.buttonOrderPage,
-                qta.icon('mdi6.clipboard', color=MENU_BUTTON_COLOR),
-                root.goto_order_page
-            ),
+
             (
                 root.ui.buttonCustomerPage,
                 qta.icon('ph.users-three-light', color=MENU_BUTTON_COLOR),
-                root.goto_customer_page
+                lambda: root.goto_page(page="Customers")
+            ),
+
+            (
+                root.ui.buttonOrderPage,
+                qta.icon('mdi6.clipboard', color=MENU_BUTTON_COLOR),
+                lambda: root.goto_page(page="Orders")
             ),
 
             # Details Card Buttons
@@ -202,7 +204,7 @@ class Utils:
         return table.item(row, column).text()
 
     @staticmethod
-    def display_table_records(table: QtWidgets.QTableWidget, rows: list, headers: list):
+    def populate_table_widget(table: QtWidgets.QTableWidget, rows: list, headers: list):
         """
         Populate a QTableWidget with rows and headers.
 

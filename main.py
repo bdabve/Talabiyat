@@ -5,7 +5,7 @@
 # created       :
 # desc          :
 # ----------------------------------------------------------------------------
-from datetime import datetime
+from datetime import datetime, date
 from PyQt5 import QtWidgets, QtCore
 from bson.objectid import ObjectId
 import qtawesome as qta
@@ -44,33 +44,41 @@ class Interface(QtWidgets.QMainWindow):
         self.ui.dockWidget.close()
 
         # initial functions
-        self.goto_product_page()
+        self.goto_page(page='Products')
         self.showMaximized()
 
     # ********** Global Functions *************#
+    def goto_page(self, page: str):
+        """
+        Navigate to the specified page and update UI elements accordingly.
+        :param page: Page to navigate to (Products | Customers | Orders).
+        """
+        if page == 'Products':
+            # Display all products
+            self.fetch_and_display_data(
+                collection_name='Products',
+                headers=["_id", "name", "ref", "description", "price", "qte", "category"],
+            )
+            self.enable_disable_buttons(page='Products')
+            self.ui.labelErrorProductPage.setText('')
+            self.ui.containerStackedWidget.setCurrentWidget(self.ui.ProductPage)
 
-    def goto_product_page(self):
-        self.all_products()
-        self.enable_disable_buttons(page='Products')
-        self.ui.labelErrorProductPage.setText('')
+        elif page == 'Customers':
+            # Display all customers
+            self.fetch_and_display_data(
+                collection_name='Customers',
+                headers=["_id", "first_name", "last_name", "phone", "email", "address", "is_active"]
+            )
+            self.enable_disable_buttons(page='Customers')
+            self.ui.labelErrorCustomerPage.setText('')
+            self.ui.containerStackedWidget.setCurrentWidget(self.ui.CustomerPage)
 
-        self.ui.containerStackedWidget.setCurrentWidget(self.ui.ProductPage)
-        Utils.pagebuttons_stats(self)
+        elif page == 'Orders':
+            self.all_orders()
+            self.enable_disable_buttons(page='Orders')
+            self.ui.labelErrorOrderPage.setText('')
+            self.ui.containerStackedWidget.setCurrentWidget(self.ui.OrderPage)
 
-    def goto_customer_page(self):
-        self.all_customers()
-        self.enable_disable_buttons(page='Customers')
-        self.ui.labelErrorCustomerPage.setText('')
-
-        self.ui.containerStackedWidget.setCurrentWidget(self.ui.CustomerPage)
-        Utils.pagebuttons_stats(self)
-
-    def goto_order_page(self):
-        self.all_orders()
-        self.enable_disable_buttons(page='Orders')
-        self.ui.labelErrorOrderPage.setText('')
-
-        self.ui.containerStackedWidget.setCurrentWidget(self.ui.OrderPage)
         Utils.pagebuttons_stats(self)
 
     def update_count_label(self, label, rows):
@@ -83,7 +91,7 @@ class Interface(QtWidgets.QMainWindow):
 
     def populate_table_widget(self, table_name, rows):
         """
-        Display processes in the process table widget.
+        Display rows in tableWidget_name and update the count label.
         :table_name: Products | Orders
         :rows: rows to diaplay in table
         """
@@ -102,10 +110,36 @@ class Interface(QtWidgets.QMainWindow):
             headers = arabic.customer_headers
             count_label = self.ui.labelCustomerTableCount
 
-        Utils.display_table_records(table_widget, rows, headers)
+        Utils.populate_table_widget(table_widget, rows, headers)
         self.update_count_label(count_label, rows)
         Utils.pagebuttons_stats(self)
 
+    def fetch_and_display_data(self, collection_name: str, headers: list, query=None, projection=None, sort=None):
+        """
+        Generic function to fetch and display data in a table widget.
+        :param collection_name: MongoDB collection name.
+        :param headers: List of headers to display in the table widget.
+        :param query: MongoDB query filter.
+        :param projection: Fields to include or exclude in results.
+        :param sort: Sort order.
+        """
+        response = self.db_handler.fetch_documents(
+            collection_name=collection_name,
+            query=query or {},
+            projection=projection,
+            sort=sort or [("created_at", 1)]
+        )
+
+        if response["status"] == "success":
+            rows = [
+                [doc.get(field, "") for field in headers] for doc in response["documents"]
+            ]
+            self.populate_table_widget(collection_name, rows)
+        else:
+            logger.error(f"Error fetching data from {collection_name}: {response['message']}")
+            Utils.success_message(self.ui.labelErrorProductPage, response['message'], success=False)
+
+    #
     def enable_disable_buttons(self, page: str):
         """
         This function Enable/Disable details/update/delete button if tableWidget has at least one selected rows
@@ -138,6 +172,81 @@ class Interface(QtWidgets.QMainWindow):
         # elif page == 'clients':
             # self.root.ui.buttonDelete.setEnabled(Utils.selected_rows(self.client_tablew))
             # self.root.ui.buttonDeleteClient.setEnabled(Utils.selected_rows(self.client_tablew))
+
+    def item_details(self, lineEditEnabled, operation='None', coll_name="Products", item_id=None):
+        """
+        Show details for a selected Product.
+        :lineEditEnabled: if enable line edits to update product
+        :operation: the operation ( Create | Edit | None ) None is for view
+        :coll_name: the collection name (Products | Customers)
+        :item_id: product_id | customer_id
+        """
+        if coll_name == 'Customers':
+            table_widget = self.ui.tableWidgetCustomer
+            label_message = self.ui.labelErrorCustomerPage
+        elif coll_name == 'Products':
+            table_widget = self.ui.tableWidgetProduct
+            label_message = self.ui.labelErrorProductPage
+
+        if not item_id:
+            item_id = Utils.get_column_value(table_widget, 0)
+
+        # Config Labels
+        self.ui.labelOperation.setText(operation)
+        self.ui.labelItemID.setText(str(item_id))
+        self.ui.labelMongoTable.setText(coll_name)
+        self.ui.frameDetailsID.hide()
+
+        if operation in ['Edit', 'Create']:
+            projection = {"_id": 0, "created_at": 0, "updated_at": 0}
+            self.ui.frameToolButton_2.show()
+        else:
+            projection = {"_id": 0}
+            self.ui.frameToolButton_2.hide()
+
+        response = self.db_handler.fetch_documents(
+            collection_name=coll_name,
+            query={"_id": ObjectId(item_id)},
+            projection=projection,
+        )
+        if response["status"] == "error":
+            Utils.success_message(label_message, response['message'], False)
+            return
+
+        response = response["documents"][0]
+
+        self.populate_formFrame(response, lineEditEnabled=lineEditEnabled)
+
+    def delete_item(self, coll_name):
+        """
+        Delete Customer
+        :coll_name: ( Products | Items | Orders )
+        """
+        # Delete Product
+        if coll_name == 'Products':
+            item_id = Utils.get_column_value(self.ui.tableWidgetProduct, 0)
+            label = self.ui.labelErrorProductPage
+
+        # Delete Customer
+        elif coll_name == 'Customers':
+            item_id = Utils.get_column_value(self.ui.tableWidgetCustomer, 0)
+            label = self.ui.labelErrorCustomerPage
+
+        # Delete Order
+        elif coll_name == 'Orders':
+            item_id = Utils.get_column_value(self.ui.tableWidgetOrders, 0)
+            label = self.ui.labelErrorOrderPage
+
+        # Delete item from database
+        response = self.db_handler.delete_document(coll_name, ObjectId(item_id))
+        if response['status'] == 'success':
+            if coll_name == 'Products': self.goto_page(page="Products")
+            elif coll_name == 'Orders': self.goto_page(page="Orders")
+            elif coll_name == 'Customers': self.goto_page(page="Customers")
+
+            Utils.success_message(label, 'تم الحذف بنجاح', success=True)
+        else:
+            Utils.success_message(label, 'هناك خطأ أعد من جديد', success=False)
 
     # ************************************************
     # Form Management
@@ -353,7 +462,12 @@ class Interface(QtWidgets.QMainWindow):
                     # Success
                     logger.info("New product added successfully!")
 
-                    self.all_products()
+                    # re-display all the Products
+                    self.fetch_and_display_data(
+                        collection_name='Products',
+                        headers=["_id", "name", "ref", "description", "price", "qte", "category"]
+                    )
+
                     Utils.success_message(label, response['message'], success=False)
                 else:
                     logger.error(f"Failed to add product.\n{response['message']}")
@@ -368,7 +482,11 @@ class Interface(QtWidgets.QMainWindow):
 
                     Utils.success_message(label, 'تم إضافة المنتج بنجاح', success=True)
                     self.item_details(lineEditEnabled=False, operation='None', item_id=product_id)
-                    self.all_products()
+                    # re-display all Products
+                    self.fetch_and_display_data(
+                        collection_name='Products',
+                        headers=["_id", "name", "ref", "description", "price", "qte", "category"]
+                    )
                 else:
                     logger.error(response['message'])
                     Utils.success_message(label, 'هنالك خطأ إعد من جديد', success=True)
@@ -383,7 +501,12 @@ class Interface(QtWidgets.QMainWindow):
                 if response['status'] == 'success':
                     message = "تم إضافة المشتري بنجاح"
                     Utils.success_message(label, message, success=True)
-                    self.all_customers()
+
+                    # re-display all customers in tableWidget
+                    self.fetch_and_display_data(
+                        collection_name='Customers',
+                        headers=["_id", "first_name", "last_name", "phone", "email", "address", "is_active"]
+                    )
                 else:
                     message = "هنالك خطأ إعد من جديد"
                     Utils.success_message(label, message, success=True)
@@ -397,7 +520,11 @@ class Interface(QtWidgets.QMainWindow):
                 if response['status'] == 'success':
                     Utils.success_message(label, 'تم إضافة المنتج بنجاح', success=True)
                     self.item_details(lineEditEnabled=False, coll_name='Customers', operation='None', item_id=customer_id)
-                    self.all_customers()
+                    # re-display the Customers in the tableWidget
+                    self.fetch_and_display_data(
+                        collection_name='Customers',
+                        headers=["_id", "first_name", "last_name", "phone", "email", "address", "is_active"]
+                    )
                 else:
                     Utils.success_message(label, 'هنالك خطأ إعد من جديد', success=True)
 
@@ -457,17 +584,6 @@ class Interface(QtWidgets.QMainWindow):
             message = f"Error fetching products: {response['message']}"
             Utils.success_message(label, message, success=False)
 
-    def all_products(self):
-        """
-        Fetches all products from the database and displays them in the table widget.
-        """
-        # Fetch all products
-        response = self.db_handler.fetch_products(
-            projection={"_id": 1, "name": 1, "ref": 1, "description": 1, "price": 1, "qte": 1, "category": 1},
-            sort=[("created_at", 1)]  # Sort by create time
-        )
-        self.display_product_data(response)
-
     def search_products(self):
         """
         Searches for products in the database and updates the table display.
@@ -518,48 +634,54 @@ class Interface(QtWidgets.QMainWindow):
         """
         Populate the formFrame located in the details dockWidget
         and open the dockWidget work with
-            - product_details
-            - edit_product
+            - product_details, edit_product
             - order_details
+            - customer_details, edit_customer
 
         :param response: dict The response from MongoDB (e.g., response['product']).
         :param lineEditEnabled: If details; enabled=False; else True.
         """
         # Clear the existing form
-        Utils.clear_details_form(self.ui.formLayout)
+        form_layout = self.ui.formLayout
+        Utils.clear_details_form(form_layout)
 
-        # Mapping of column names from English to Arabic
-
-        # Populate the form with translated keys
         for count, (key, value) in enumerate(response.items(), start=1):
+            print(key, '::> ', value)
+            print('-' * 30)
+
             # If the key is a date field, transform its format
-            if key in ["created_at", "updated_at"] and (isinstance(value, str) or isinstance(value, datetime)):
+            date_fields = ["created_at", "updated_at", "order_date"]
+            if key in date_fields and (isinstance(value, str) or isinstance(value, datetime)):
                 try:
                     # If the value is a string that looks like a datetime, convert it
                     if isinstance(value, str):
                         value = datetime.strptime(value, "%Y-%m-%dT%H:%M:%S%z")
-                    value = value.strftime("%d-%m-%Y")  # Format the datetime in '%d-%m-%Y' format
+                    elif isinstance(value, date):
+                        value = datetime.combine(value, datetime.min.time())
+                    value = value.strftime("%Y-%m-%d")  # Format the datetime in '%d-%m-%Y' format
                 except ValueError:
                     value = "تاريخ غير صالح"
+
+            # Create QTableWidget to display Products for a specific Order
             if key == "products":
                 # Create a QTableWidget for product details
                 product_table = self.create_product_table(value)
-                self.ui.formLayout.setWidget(count, QtWidgets.QFormLayout.FieldRole, product_table)
+                form_layout.setWidget(count, QtWidgets.QFormLayout.FieldRole, product_table)
 
                 key_label = Utils.create_label(self.ui.scrollAreaWidgetContents, f"label_{key}")
                 key_label.setText(arabic.arabic_mapping.get(key, key))
-                self.ui.formLayout.setWidget(count, QtWidgets.QFormLayout.LabelRole, key_label)
+                form_layout.setWidget(count, QtWidgets.QFormLayout.LabelRole, key_label)
                 continue
 
-            if key == "status":
+            if key in ["status", "is_active"]:
                 value_edit = Utils.create_lineEdit(self.ui.scrollAreaWidgetContents, f"lineEdit_{key}")
-                value_edit.setText(arabic.order_status_mapping_en.get(value.strip(), value))
+                value_edit.setText(arabic.order_status_mapping_en.get(value, value))
                 value_edit.setEnabled(lineEditEnabled)
-                self.ui.formLayout.setWidget(count, QtWidgets.QFormLayout.FieldRole, value_edit)
+                form_layout.setWidget(count, QtWidgets.QFormLayout.FieldRole, value_edit)
 
                 key_label = Utils.create_label(self.ui.scrollAreaWidgetContents, f"label_{key}")
                 key_label.setText(arabic.arabic_mapping.get(key, key))
-                self.ui.formLayout.setWidget(count, QtWidgets.QFormLayout.LabelRole, key_label)
+                form_layout.setWidget(count, QtWidgets.QFormLayout.LabelRole, key_label)
                 continue
 
             # Create a line edit for the value
@@ -567,16 +689,14 @@ class Interface(QtWidgets.QMainWindow):
             value_edit.setText(str(value))
             value_edit.setEnabled(lineEditEnabled)
 
-            # Translate the key to Arabic using the mapping
+            # Translate the key to Arabic using the mapping and create the Label
             translated_key = arabic.arabic_mapping.get(key, key)  # Default to key if no translation exists
-
-            # Create a label for the key
             key_label = Utils.create_label(self.ui.scrollAreaWidgetContents, f"label_{key}")
             key_label.setText(translated_key)
 
             # Add the widgets to the form layout
-            self.ui.formLayout.setWidget(count, QtWidgets.QFormLayout.FieldRole, value_edit)
-            self.ui.formLayout.setWidget(count, QtWidgets.QFormLayout.LabelRole, key_label)
+            form_layout.setWidget(count, QtWidgets.QFormLayout.FieldRole, value_edit)
+            form_layout.setWidget(count, QtWidgets.QFormLayout.LabelRole, key_label)
 
         self.ui.stackedWidgetDetails.setCurrentWidget(self.ui.allDetailsPage)
         self.ui.dockWidget.show()
@@ -631,96 +751,9 @@ class Interface(QtWidgets.QMainWindow):
         table_widget.horizontalHeader().setStretchLastSection(True)
         return table_widget
 
-    def item_details(self, lineEditEnabled, operation='None', coll_name="Products", item_id=None):
-        """
-        Show details for a selected Product.
-        :lineEditEnabled: if enable line edits to update product
-        :operation: the operation ( Create | Edit | None ) None is for view
-        :coll_name: the collection name (Products | Customers)
-        :item_id: product_id | customer_id
-        """
-        if coll_name == 'Customers':
-            table_widget = self.ui.tableWidgetCustomer
-            label_message = self.ui.labelErrorCustomerPage
-        elif coll_name == 'Products':
-            table_widget = self.ui.tableWidgetProduct
-            label_message = self.ui.labelErrorProductPage
-
-        if not item_id:
-            item_id = Utils.get_column_value(table_widget, 0)
-
-        # Config Labels
-        self.ui.labelOperation.setText(operation)
-        self.ui.labelItemID.setText(str(item_id))
-        self.ui.labelMongoTable.setText(coll_name)
-        self.ui.frameDetailsID.hide()
-
-        if operation in ['Edit', 'Create']:
-            projection = {"_id": 0, "created_at": 0, "updated_at": 0}
-            self.ui.frameToolButton_2.show()
-        else:
-            projection = {"_id": 0}
-            self.ui.frameToolButton_2.hide()
-
-        response = self.db_handler.fetch_documents(
-            collection_name=coll_name,
-            query={"_id": ObjectId(item_id)},
-            projection=projection,
-        )
-        if response["status"] == "error":
-            Utils.success_message(label_message, response['message'], False)
-            return
-
-        response = response["documents"][0]
-
-        self.populate_formFrame(response, lineEditEnabled=lineEditEnabled)
-
     # ********************************************
     #       => CUSTOMERS PAGE
     # ********************************************
-    def all_customers(self):
-        """
-        Fetches all Orders from the database and displays them in the table widget.
-        """
-        # Fetch all products
-        response = self.db_handler.fetch_documents(
-            collection_name='Customers',
-            projection={
-                "_id": 1,
-                "first_name": 1,
-                "last_name": 1,
-                "phone": 1,
-                "email": 1,
-                "address": 1,
-                "is_active": 1
-            },
-            sort=[("created_at", 1)]  # Sort by create time
-        )
-
-        if response["status"] == "success":
-            # Format rows for the table
-            rows = [
-                [
-                    customer.get("_id", ""),
-                    customer.get("first_name", ""),
-                    customer.get("last_name", ""),
-                    customer.get("phone", ""),
-                    customer.get("email", ""),
-                    customer.get("address", ""),
-                    customer.get("is_active", ""),
-                ]
-                for customer in response["documents"]
-            ]
-
-            # Display records in the table
-            self.populate_table_widget('Customers', rows)
-        else:
-            logger.error(f"Error Fetching Orders: {response['message']}")
-            Utils.success_message(self.ui.labelErrorCustomerPage, response['message'], success=False)
-
-    def customer_details(self):
-        cust_id = Utils.get_column_value(self.ui.tableWidgetCustomer, 0)
-        logger.debug(f"Customer Details ({cust_id})")
 
     def new_customer(self):
         """
@@ -744,41 +777,6 @@ class Interface(QtWidgets.QMainWindow):
 
         # create the form
         self.create_form(fields)
-
-    def edit_customer(self):
-        cust_id = Utils.get_column_value(self.ui.tableWidgetCustomer, 0)
-        logger.debug(f"Edit Customer ({cust_id})")
-
-    def delete_item(self, coll_name):
-        """
-        Delete Customer
-        :coll_name: ( Products | Items | Orders )
-        """
-        # Delete Product
-        if coll_name == 'Products':
-            item_id = Utils.get_column_value(self.ui.tableWidgetProduct, 0)
-            label = self.ui.labelErrorProductPage
-
-        # Delete Customer
-        elif coll_name == 'Customers':
-            item_id = Utils.get_column_value(self.ui.tableWidgetCustomer, 0)
-            label = self.ui.labelErrorCustomerPage
-
-        # Delete Order
-        elif coll_name == 'Orders':
-            item_id = Utils.get_column_value(self.ui.tableWidgetOrders, 0)
-            label = self.ui.labelErrorOrderPage
-
-        # Delete item from database
-        response = self.db_handler.delete_document(coll_name, ObjectId(item_id))
-        if response['status'] == 'success':
-            if coll_name == 'Products': self.goto_product_page()
-            elif coll_name == 'Orders': self.goto_order_page()
-            elif coll_name == 'Customers': self.goto_customer_page()
-
-            Utils.success_message(label, 'تم الحذف بنجاح', success=True)
-        else:
-            Utils.success_message(label, 'هناك خطأ أعد من جديد', success=False)
 
     # ********************************************
     # == ORDERS PAGE
@@ -807,7 +805,7 @@ class Interface(QtWidgets.QMainWindow):
                     order.get("_id", ""),
                     'غير مسجل' if order.get("customer_name") is None else order.get("customer_name", "Unknown"),
                     order.get("order_date", "").strftime('%Y - %m - %d'),
-                    order.get("status", ""),
+                    arabic.order_status_mapping_en.get(order.get("status", ""), ""),
                     order.get("total_price", ""),
                 ]
                 for order in response["orders"]
@@ -891,7 +889,6 @@ class Interface(QtWidgets.QMainWindow):
             self.ui.comboBoxAddOrderStatus.addItem(status)
 
         # Set DateEdit to now
-        from datetime import datetime
         self.ui.dateEditAddOrderDate.setDate(datetime.now())
 
         self.ui.stackedWidgetDetails.setCurrentWidget(self.ui.createOrderPage)
