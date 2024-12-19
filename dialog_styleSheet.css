@@ -31,7 +31,7 @@ QDoubleSpinBox:focus
 ************************/
 QPushButton
 {
-    background: transparent;
+    background: #4b4b4b;
     border-radius: 5px;
     color: #ffffff;
     padding: 5px;
@@ -39,7 +39,7 @@ QPushButton
 
 QPushButton:hover
 {
-    background-color: #3e3e3e;
+    background-color: #555555;
 }
 
 QPushButton:pressed

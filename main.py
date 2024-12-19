@@ -231,6 +231,7 @@ class Interface(QtWidgets.QMainWindow):
 
         # Delete Customer
         elif coll_name == 'Customers':
+            # FIXME: Work the delete_customers_and_orders or Update MongoTables value to avoid errors in GUI
             label = self.ui.labelErrorCustomerPage
             table_widget = self.ui.tableWidgetCustomer
 
@@ -240,27 +241,29 @@ class Interface(QtWidgets.QMainWindow):
             table_widget = self.ui.tableWidgetOrders
 
         selected_rows = set(index.row() for index in table_widget.selectedIndexes())
-        if len(selected_rows) > 1:
-            ids = Utils.table_selection_ids(table_widget)
-        else:
-            ids = Utils.get_column_value(table_widget, 0)
+        # check how many selected rows
+        if len(selected_rows) > 1: ids = Utils.table_selection_ids(table_widget)
+        else: ids = Utils.get_column_value(table_widget, 0)
 
-        if isinstance(ids, list):
-            logger.debug(f"Delete Multiple from {coll_name} :: {ids}")
-            response = self.db_handler.delete_many_documents(coll_name, ids)
-        else:
-            logger.debug(f"Delete One from {coll_name} :: {ids}")
-            response = self.db_handler.delete_document(coll_name, ObjectId(ids))
+        if Utils.show_confirm_dialog(self, 'هل أنت متأكد من الحذف'):
+            if isinstance(ids, list):
+                # Delete Multiple
+                logger.debug(f"Delete Multiple from {coll_name} :: {ids}")
+                response = self.db_handler.delete_many_documents(coll_name, ids)
+            else:
+                # Delete One Record
+                logger.debug(f"Delete One from {coll_name} :: {ids}")
+                response = self.db_handler.delete_document(coll_name, ObjectId(ids))
 
-        # Delete items from database
-        if response['status'] == 'success':
-            if coll_name == 'Products': self.goto_page(page="Products")
-            elif coll_name == 'Orders': self.goto_page(page="Orders")
-            elif coll_name == 'Customers': self.goto_page(page="Customers")
+            # Delete items from database
+            if response['status'] == 'success':
+                if coll_name == 'Products': self.goto_page(page="Products")
+                elif coll_name == 'Orders': self.goto_page(page="Orders")
+                elif coll_name == 'Customers': self.goto_page(page="Customers")
 
-            Utils.success_message(label, 'تم الحذف بنجاح', success=True)
-        else:
-            Utils.success_message(label, 'هناك خطأ أعد من جديد', success=False)
+                Utils.success_message(label, 'تم الحذف بنجاح', success=True)
+            else:
+                Utils.success_message(label, 'هناك خطأ أعد من جديد', success=False)
 
     def activate_item(self, coll_name):
         """
@@ -867,15 +870,14 @@ class Interface(QtWidgets.QMainWindow):
 
         # Create a QDialog for selecting the product and quantity
         dialog = QtWidgets.QDialog(self)
+        dialog.setLayoutDirection(QtCore.Qt.RightToLeft)
         dialog.setWindowTitle("إضافة منتج")
 
         # Set Style Sheet
         with open('./dialog_styleSheet.css') as f:
-            style_sheet = f.read()
-            dialog_styleSheet = style_sheet
-            dialog.setStyleSheet(dialog_styleSheet)
+            dialog.setStyleSheet(f.read())
 
-        layout = QtWidgets.QVBoxLayout(dialog)
+        layout = QtWidgets.QFormLayout(dialog)
 
         # Create and populate the QComboBox with product names
         combo_box = QtWidgets.QComboBox()
@@ -888,8 +890,8 @@ class Interface(QtWidgets.QMainWindow):
             product_map[product_name] = {"id": product_id, "qte": product_qte}
             combo_box.addItem(product_name)
 
-        layout.addWidget(QtWidgets.QLabel("اختر منتجاً:"))
-        layout.addWidget(combo_box)
+        layout.setWidget(0, QtWidgets.QFormLayout.LabelRole, QtWidgets.QLabel("اختر منتجاً:"))
+        layout.setWidget(0, QtWidgets.QFormLayout.FieldRole, combo_box)
 
         # Update QSpinBox max value when a product is selected
         def update_spinbox_qte():
@@ -908,8 +910,8 @@ class Interface(QtWidgets.QMainWindow):
 
         # Create a spin box for quantity
         quantity_spinbox = Utils.create_spinBox()
-        layout.addWidget(QtWidgets.QLabel("الكمية:"))
-        layout.addWidget(quantity_spinbox)
+        layout.setWidget(1, QtWidgets.QFormLayout.LabelRole, QtWidgets.QLabel("الكمية:"))
+        layout.setWidget(1, QtWidgets.QFormLayout.FieldRole, quantity_spinbox)
 
         # Initialize the spinbox max value for the first time
         update_spinbox_qte()

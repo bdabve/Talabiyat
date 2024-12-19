@@ -471,6 +471,37 @@ class MongoDBHandler:
         """
         return self.fetch_documents("Customers", query, projection, limit, sort)
 
+    def delete_customer_and_orders(self, customer_id):
+        """
+        Deletes a customer and all their associated orders.
+        :param customer_id: The ID of the customer to delete.
+        :return: A dictionary with the result of the operation.
+        """
+        try:
+            # Convert customer_id to ObjectId
+            customer_id = ObjectId(customer_id)
+
+            # Delete associated orders
+            order_result = self.db["Orders"].delete_many({"customer_id": customer_id})
+
+            # Delete the customer
+            customer_result = self.db["Customers"].delete_one({"_id": customer_id})
+
+            if customer_result.deleted_count > 0:
+                logger.info(f"Customer {customer_id} deleted successfully.")
+                logger.info(f"Deleted {order_result.deleted_count} associated orders.")
+                return {
+                    "status": "success",
+                    "message": f"Customer and {order_result.deleted_count} associated orders deleted successfully."
+                }
+
+            logger.warning(f"Customer {customer_id} not found.")
+            return {"status": "error", "message": "Customer not found."}
+
+        except Exception as err:
+            logger.error(f"Error deleting customer and orders: {err}")
+            return {"status": "error", "message": str(err)}
+
 
 if __name__ == "__main__":
     # Example usage

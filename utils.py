@@ -405,3 +405,27 @@ QMenu::indicator {
             item = form_layout.takeAt(0)
             if widget := item.widget():
                 widget.deleteLater()
+
+    @staticmethod
+    def show_confirm_dialog(parent, message):
+        """
+        Displays a confirmation dialog before deleting an item.
+
+        :param parent: The parent widget for the dialog.
+        :message: the message to display in Dialog
+        :return: True if confirmed, False otherwise.
+        """
+        # Create the confirmation dialog
+        confirm_dialog = QtWidgets.QMessageBox(parent)
+        with open('./dialog_styleSheet.css') as f:
+            confirm_dialog.setStyleSheet(f.read())
+
+        confirm_dialog.setIcon(QtWidgets.QMessageBox.Warning)
+        confirm_dialog.setWindowTitle("تأكيد الحذف")
+        confirm_dialog.setText(message)
+        confirm_dialog.setStandardButtons(QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No)
+
+        # Execute the dialog and get the user's response
+        result = confirm_dialog.exec_()
+
+        return result == QtWidgets.QMessageBox.Yes  # Return True if 'Yes' is clicked
