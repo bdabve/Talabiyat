@@ -89,6 +89,11 @@ class Ui_MainWindow(object):
 "    color: rgb(192, 28, 40);\n"
 "}\n"
 "\n"
+"#labelCartTotal {\n"
+"    background-color: #263848;    \n"
+"    font: 75 15pt \"Droid Sans Fallback\";\n"
+"    border-radius: 5px;\n"
+"}\n"
 "/* **********************\n"
 "                LineEdits \n"
 "*************************/\n"
@@ -296,11 +301,6 @@ class Ui_MainWindow(object):
 "    padding: 3px;\n"
 "}\n"
 "\n"
-"/********************\n"
-"    Details Frame \n"
-"****************************/\n"
-"\n"
-"/*** Search LineEdit Button Icon ***/\n"
 "/***********************\n"
 "         QComboBox \n"
 "************************/\n"
@@ -365,7 +365,7 @@ class Ui_MainWindow(object):
 "}\n"
 "\n"
 "QTableWidget::item:selected {\n"
-"    background-color: #3d3d3d;\n"
+"    background-color: #303030;\n"
 "}\n"
 "\n"
 "QHeaderView::section {\n"
@@ -387,84 +387,99 @@ class Ui_MainWindow(object):
 "}\n"
 "\n"
 "/**************** *************\n"
+"        QMenu \n"
+"********************/\n"
+"QMenu {\n"
+"    background-color: #272727;\n"
+"    margin: 2px; /* some spacing around the menu */\n"
+"}\n"
+"\n"
+"QMenu::item {\n"
+"    padding: 2px 25px 2px 20px;\n"
+"    border: 1px solid transparent; /* reserve space for selection border */\n"
+"}\n"
+"\n"
+"QMenu::item:selected {\n"
+"    border-color: #4b4b4b;\n"
+"    background: rgba(100, 100, 100, 150);\n"
+"}\n"
+"\n"
+"QMenu::icon:checked { /* appearance of a \'checked\' icon */\n"
+"    background: gray;\n"
+"    border: 1px inset gray;\n"
+"    position: absolute;\n"
+"    top: 1px;\n"
+"    right: 1px;\n"
+"    bottom: 1px;\n"
+"    left: 1px;\n"
+"}\n"
+"\n"
+"QMenu::separator {\n"
+"    height: 2px;\n"
+"    background: lightblue;\n"
+"    margin-left: 10px;\n"
+"    margin-right: 5px;\n"
+"}\n"
+"\n"
+"QMenu::indicator {\n"
+"    width: 0px;\n"
+"    height: 0px;\n"
+"}\n"
+"/**************** *************\n"
 "        QScrollBar \n"
 "********************/\n"
 "QScrollBar:horizontal {\n"
-"    border: none;\n"
-"    background: rgb(52, 59, 72);\n"
-"    height: 8px;\n"
-"    margin: 0px 21px 0 21px;\n"
-"    border-radius: 0px;\n"
+"    border: 2px solid #4c4c4c;\n"
+"    background: #263848;\n"
+"    height: 15px;\n"
+"    margin: 0px 20px 0 20px;\n"
 "}\n"
 "QScrollBar::handle:horizontal {\n"
 "    background: #4b7bec;\n"
-"    min-width: 25px;\n"
-"    border-radius: 4px\n"
+"    min-width: 20px;\n"
 "}\n"
 "QScrollBar::add-line:horizontal {\n"
-"    border: none;\n"
-"    background: rgb(55, 63, 77);\n"
+"    border: 2px solid #4c4c4c;\n"
+"    background: #263848;\n"
 "    width: 20px;\n"
-"    border-top-right-radius: 4px;\n"
-"    border-bottom-right-radius: 4px;\n"
 "    subcontrol-position: right;\n"
 "    subcontrol-origin: margin;\n"
 "}\n"
+"\n"
 "QScrollBar::sub-line:horizontal {\n"
-"    border: none;\n"
-"    background: rgb(55, 63, 77);\n"
+"    border: 2px solid #4c4c4c;\n"
+"    background: #263848;\n"
 "    width: 20px;\n"
-"    border-top-left-radius: 4px;\n"
-"    border-bottom-left-radius: 4px;\n"
 "    subcontrol-position: left;\n"
 "    subcontrol-origin: margin;\n"
 "}\n"
-"QScrollBar::up-arrow:horizontal, QScrollBar::down-arrow:horizontal\n"
-"{\n"
-"     background: none;\n"
-"}\n"
-"QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal\n"
-"{\n"
-"     background: none;\n"
-"}\n"
+"\n"
+"/* Vertical ScrollBar */\n"
 " QScrollBar:vertical {\n"
-"    border: none;\n"
-"    background: rgb(52, 59, 72);\n"
-"    width: 8px;\n"
-"    margin: 21px 0 21px 0;\n"
-"    border-radius: 0px;\n"
+"     border: 2px solid #4c4c4c;\n"
+"     background: #263848;\n"
+"     width: 15px;\n"
+"     margin: 22px 0 22px 0;\n"
 " }\n"
-" QScrollBar::handle:vertical {    \n"
-"    background: #4b7bec;\n"
-"    min-height: 25px;\n"
-"    border-radius: 4px\n"
+" QScrollBar::handle:vertical {\n"
+"     background: #4b7bec;\n"
+"     min-height: 20px;\n"
 " }\n"
 " QScrollBar::add-line:vertical {\n"
-"     border: none;\n"
-"    background: rgb(55, 63, 77);\n"
+"     border: 2px solid #4c4c4c;\n"
+"     background: #263848;\n"
 "     height: 20px;\n"
-"    border-bottom-left-radius: 4px;\n"
-"    border-bottom-right-radius: 4px;\n"
 "     subcontrol-position: bottom;\n"
 "     subcontrol-origin: margin;\n"
 " }\n"
+"\n"
 " QScrollBar::sub-line:vertical {\n"
-"    border: none;\n"
-"    background: rgb(55, 63, 77);\n"
+"     border: 2px solid #4c4c4c;\n"
+"     background: #263848;\n"
 "     height: 20px;\n"
-"    border-top-left-radius: 4px;\n"
-"    border-top-right-radius: 4px;\n"
 "     subcontrol-position: top;\n"
 "     subcontrol-origin: margin;\n"
 " }\n"
-" QScrollBar::up-arrow:vertical, QScrollBar::down-arrow:vertical {\n"
-"     background: none;\n"
-" }\n"
-"\n"
-" QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {\n"
-"     background: none;\n"
-" }\n"
-"\n"
 "/**********************\n"
 "    => QToolTip\n"
 "***********************/\n"
@@ -744,6 +759,13 @@ class Ui_MainWindow(object):
         self.buttonDeleteProduct.setIconSize(QtCore.QSize(27, 27))
         self.buttonDeleteProduct.setObjectName("buttonDeleteProduct")
         self.horizontalLayout_12.addWidget(self.buttonDeleteProduct)
+        self.buttonProductStatus = QtWidgets.QPushButton(self.frameToolButton_3)
+        self.buttonProductStatus.setMinimumSize(QtCore.QSize(40, 40))
+        self.buttonProductStatus.setMaximumSize(QtCore.QSize(40, 40))
+        self.buttonProductStatus.setText("")
+        self.buttonProductStatus.setIconSize(QtCore.QSize(27, 27))
+        self.buttonProductStatus.setObjectName("buttonProductStatus")
+        self.horizontalLayout_12.addWidget(self.buttonProductStatus)
         self.verticalLayout_4.addWidget(self.frameToolButton_3)
         self.tableWidgetProduct = QtWidgets.QTableWidget(self.ProductPage)
         self.tableWidgetProduct.setFrameShape(QtWidgets.QFrame.NoFrame)
@@ -939,6 +961,13 @@ class Ui_MainWindow(object):
         self.buttonDeleteCustomer.setIconSize(QtCore.QSize(27, 27))
         self.buttonDeleteCustomer.setObjectName("buttonDeleteCustomer")
         self.horizontalLayout_13.addWidget(self.buttonDeleteCustomer)
+        self.buttonCustomerStatus = QtWidgets.QPushButton(self.frameToolButton_4)
+        self.buttonCustomerStatus.setMinimumSize(QtCore.QSize(40, 40))
+        self.buttonCustomerStatus.setMaximumSize(QtCore.QSize(40, 40))
+        self.buttonCustomerStatus.setText("")
+        self.buttonCustomerStatus.setIconSize(QtCore.QSize(27, 27))
+        self.buttonCustomerStatus.setObjectName("buttonCustomerStatus")
+        self.horizontalLayout_13.addWidget(self.buttonCustomerStatus)
         self.verticalLayout_19.addWidget(self.frameToolButton_4)
         self.tableWidgetCustomer = QtWidgets.QTableWidget(self.CustomerPage)
         self.tableWidgetCustomer.setFrameShape(QtWidgets.QFrame.NoFrame)
@@ -1118,6 +1147,13 @@ class Ui_MainWindow(object):
         self.buttonDeleteOrder.setIconSize(QtCore.QSize(27, 27))
         self.buttonDeleteOrder.setObjectName("buttonDeleteOrder")
         self.horizontalLayout_5.addWidget(self.buttonDeleteOrder)
+        self.buttonOrderStatus = QtWidgets.QPushButton(self.frameToolButton)
+        self.buttonOrderStatus.setMinimumSize(QtCore.QSize(40, 40))
+        self.buttonOrderStatus.setMaximumSize(QtCore.QSize(40, 40))
+        self.buttonOrderStatus.setText("")
+        self.buttonOrderStatus.setIconSize(QtCore.QSize(27, 27))
+        self.buttonOrderStatus.setObjectName("buttonOrderStatus")
+        self.horizontalLayout_5.addWidget(self.buttonOrderStatus)
         self.verticalLayout_15.addWidget(self.frameToolButton)
         self.tableWidgetOrders = QtWidgets.QTableWidget(self.OrderPage)
         self.tableWidgetOrders.setFrameShape(QtWidgets.QFrame.NoFrame)
@@ -1309,12 +1345,13 @@ class Ui_MainWindow(object):
         self.dockWidget.setWindowTitle("")
         self.dockWidget.setObjectName("dockWidget")
         self.dockWidgetContents = QtWidgets.QWidget()
+        self.dockWidgetContents.setMinimumSize(QtCore.QSize(400, 0))
         self.dockWidgetContents.setObjectName("dockWidgetContents")
         self.verticalLayout = QtWidgets.QVBoxLayout(self.dockWidgetContents)
         self.verticalLayout.setContentsMargins(0, -1, 0, -1)
         self.verticalLayout.setObjectName("verticalLayout")
         self.rightFrame = QtWidgets.QFrame(self.dockWidgetContents)
-        self.rightFrame.setMinimumSize(QtCore.QSize(300, 0))
+        self.rightFrame.setMinimumSize(QtCore.QSize(0, 0))
         self.rightFrame.setMaximumSize(QtCore.QSize(16777215, 16777215))
         self.rightFrame.setFrameShape(QtWidgets.QFrame.NoFrame)
         self.rightFrame.setFrameShadow(QtWidgets.QFrame.Raised)
@@ -1389,7 +1426,7 @@ class Ui_MainWindow(object):
         self.scrollArea.setWidgetResizable(True)
         self.scrollArea.setObjectName("scrollArea")
         self.scrollAreaWidgetContents = QtWidgets.QWidget()
-        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 359, 454))
+        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(-56, 0, 141, 116))
         self.scrollAreaWidgetContents.setObjectName("scrollAreaWidgetContents")
         self.verticalLayout_5 = QtWidgets.QVBoxLayout(self.scrollAreaWidgetContents)
         self.verticalLayout_5.setContentsMargins(5, -1, 5, -1)
@@ -1448,32 +1485,32 @@ class Ui_MainWindow(object):
         self.formLayoutNewOrder.setObjectName("formLayoutNewOrder")
         self.label = QtWidgets.QLabel(self.frameNewOrderForm)
         self.label.setObjectName("label")
-        self.formLayoutNewOrder.setWidget(0, QtWidgets.QFormLayout.LabelRole, self.label)
+        self.formLayoutNewOrder.setWidget(1, QtWidgets.QFormLayout.LabelRole, self.label)
         self.comboBoxAddOrderCustomer_id = QtWidgets.QComboBox(self.frameNewOrderForm)
         self.comboBoxAddOrderCustomer_id.setObjectName("comboBoxAddOrderCustomer_id")
-        self.formLayoutNewOrder.setWidget(0, QtWidgets.QFormLayout.FieldRole, self.comboBoxAddOrderCustomer_id)
+        self.formLayoutNewOrder.setWidget(1, QtWidgets.QFormLayout.FieldRole, self.comboBoxAddOrderCustomer_id)
         self.label_2 = QtWidgets.QLabel(self.frameNewOrderForm)
         self.label_2.setObjectName("label_2")
-        self.formLayoutNewOrder.setWidget(1, QtWidgets.QFormLayout.LabelRole, self.label_2)
+        self.formLayoutNewOrder.setWidget(2, QtWidgets.QFormLayout.LabelRole, self.label_2)
         self.comboBoxAddOrderStatus = QtWidgets.QComboBox(self.frameNewOrderForm)
         self.comboBoxAddOrderStatus.setObjectName("comboBoxAddOrderStatus")
-        self.formLayoutNewOrder.setWidget(1, QtWidgets.QFormLayout.FieldRole, self.comboBoxAddOrderStatus)
+        self.formLayoutNewOrder.setWidget(2, QtWidgets.QFormLayout.FieldRole, self.comboBoxAddOrderStatus)
         self.label_3 = QtWidgets.QLabel(self.frameNewOrderForm)
         self.label_3.setObjectName("label_3")
-        self.formLayoutNewOrder.setWidget(2, QtWidgets.QFormLayout.LabelRole, self.label_3)
+        self.formLayoutNewOrder.setWidget(3, QtWidgets.QFormLayout.LabelRole, self.label_3)
         self.dateEditAddOrderDate = QtWidgets.QDateEdit(self.frameNewOrderForm)
         self.dateEditAddOrderDate.setButtonSymbols(QtWidgets.QAbstractSpinBox.NoButtons)
         self.dateEditAddOrderDate.setCalendarPopup(False)
         self.dateEditAddOrderDate.setObjectName("dateEditAddOrderDate")
-        self.formLayoutNewOrder.setWidget(2, QtWidgets.QFormLayout.FieldRole, self.dateEditAddOrderDate)
+        self.formLayoutNewOrder.setWidget(3, QtWidgets.QFormLayout.FieldRole, self.dateEditAddOrderDate)
         self.label_4 = QtWidgets.QLabel(self.frameNewOrderForm)
         self.label_4.setText("")
         self.label_4.setObjectName("label_4")
-        self.formLayoutNewOrder.setWidget(3, QtWidgets.QFormLayout.LabelRole, self.label_4)
+        self.formLayoutNewOrder.setWidget(4, QtWidgets.QFormLayout.LabelRole, self.label_4)
         self.buttonAddToCart = QtWidgets.QPushButton(self.frameNewOrderForm)
         self.buttonAddToCart.setCursor(QtGui.QCursor(QtCore.Qt.OpenHandCursor))
         self.buttonAddToCart.setObjectName("buttonAddToCart")
-        self.formLayoutNewOrder.setWidget(3, QtWidgets.QFormLayout.FieldRole, self.buttonAddToCart)
+        self.formLayoutNewOrder.setWidget(4, QtWidgets.QFormLayout.FieldRole, self.buttonAddToCart)
         self.tableWidgetAddOrderProds = QtWidgets.QTableWidget(self.frameNewOrderForm)
         self.tableWidgetAddOrderProds.setFrameShape(QtWidgets.QFrame.NoFrame)
         self.tableWidgetAddOrderProds.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
@@ -1484,11 +1521,19 @@ class Ui_MainWindow(object):
         self.tableWidgetAddOrderProds.horizontalHeader().setStretchLastSection(True)
         self.tableWidgetAddOrderProds.verticalHeader().setVisible(False)
         self.tableWidgetAddOrderProds.verticalHeader().setDefaultSectionSize(50)
-        self.formLayoutNewOrder.setWidget(4, QtWidgets.QFormLayout.FieldRole, self.tableWidgetAddOrderProds)
+        self.formLayoutNewOrder.setWidget(5, QtWidgets.QFormLayout.FieldRole, self.tableWidgetAddOrderProds)
         self.labelMontajatNedForColData = QtWidgets.QLabel(self.frameNewOrderForm)
         self.labelMontajatNedForColData.setText("")
         self.labelMontajatNedForColData.setObjectName("labelMontajatNedForColData")
-        self.formLayoutNewOrder.setWidget(4, QtWidgets.QFormLayout.LabelRole, self.labelMontajatNedForColData)
+        self.formLayoutNewOrder.setWidget(5, QtWidgets.QFormLayout.LabelRole, self.labelMontajatNedForColData)
+        self.labelCartTotal = QtWidgets.QLabel(self.frameNewOrderForm)
+        self.labelCartTotal.setMinimumSize(QtCore.QSize(0, 40))
+        self.labelCartTotal.setAlignment(QtCore.Qt.AlignCenter)
+        self.labelCartTotal.setObjectName("labelCartTotal")
+        self.formLayoutNewOrder.setWidget(0, QtWidgets.QFormLayout.FieldRole, self.labelCartTotal)
+        self.label_5 = QtWidgets.QLabel(self.frameNewOrderForm)
+        self.label_5.setObjectName("label_5")
+        self.formLayoutNewOrder.setWidget(0, QtWidgets.QFormLayout.LabelRole, self.label_5)
         self.verticalLayout_17.addWidget(self.frameNewOrderForm)
         spacerItem10 = QtWidgets.QSpacerItem(20, 37, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
         self.verticalLayout_17.addItem(spacerItem10)
@@ -1502,7 +1547,7 @@ class Ui_MainWindow(object):
         MainWindow.setStatusBar(self.statusbar)
 
         self.retranslateUi(MainWindow)
-        self.containerStackedWidget.setCurrentIndex(2)
+        self.containerStackedWidget.setCurrentIndex(1)
         self.stackedWidgetInfoCard.setCurrentIndex(0)
         self.stackedWidgetDetails.setCurrentIndex(1)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
@@ -1532,6 +1577,8 @@ class Ui_MainWindow(object):
         self.buttonEditProduct.setStatusTip(_translate("MainWindow", "تعديل على السلعة"))
         self.buttonDeleteProduct.setToolTip(_translate("MainWindow", "حذف السلعة"))
         self.buttonDeleteProduct.setStatusTip(_translate("MainWindow", "حذف السلعة"))
+        self.buttonProductStatus.setToolTip(_translate("MainWindow", "تفعيل السلعة"))
+        self.buttonProductStatus.setStatusTip(_translate("MainWindow", "تفعيل السلعة"))
         self.tableWidgetProduct.setSortingEnabled(True)
         item = self.tableWidgetProduct.verticalHeaderItem(0)
         item.setText(_translate("MainWindow", "New Row"))
@@ -1576,14 +1623,16 @@ class Ui_MainWindow(object):
         self.lineEditSearchCustomer.setStatusTip(_translate("MainWindow", "بحث عن سلعة بالإسم"))
         self.lineEditSearchCustomer.setPlaceholderText(_translate("MainWindow", "بحث"))
         self.labelCustomerTableCount.setText(_translate("MainWindow", "المجموع"))
-        self.buttonCustomerDetails.setToolTip(_translate("MainWindow", "معلومات إضافية عن السلعة"))
-        self.buttonCustomerDetails.setStatusTip(_translate("MainWindow", "معلومات إضافية عن السلعة"))
+        self.buttonCustomerDetails.setToolTip(_translate("MainWindow", "معلومات إضافية"))
+        self.buttonCustomerDetails.setStatusTip(_translate("MainWindow", "معلومات إضافية"))
         self.buttonNewCustomer.setToolTip(_translate("MainWindow", "إضافة مشتري"))
         self.buttonNewCustomer.setStatusTip(_translate("MainWindow", "إضافة مشتري"))
         self.buttonEditCustomer.setToolTip(_translate("MainWindow", "تعديل"))
         self.buttonEditCustomer.setStatusTip(_translate("MainWindow", "تعديل"))
         self.buttonDeleteCustomer.setToolTip(_translate("MainWindow", "حذف المشتري"))
         self.buttonDeleteCustomer.setStatusTip(_translate("MainWindow", "حذف المشتري"))
+        self.buttonCustomerStatus.setToolTip(_translate("MainWindow", "تفعيل المشتري"))
+        self.buttonCustomerStatus.setStatusTip(_translate("MainWindow", "تفعيل المشتري"))
         self.tableWidgetCustomer.setSortingEnabled(True)
         item = self.tableWidgetCustomer.verticalHeaderItem(0)
         item.setText(_translate("MainWindow", "New Row"))
@@ -1634,6 +1683,8 @@ class Ui_MainWindow(object):
         self.buttonOrderDetails.setStatusTip(_translate("MainWindow", "معلومات إضافية"))
         self.buttonDeleteOrder.setToolTip(_translate("MainWindow", "حذف الطلبية"))
         self.buttonDeleteOrder.setStatusTip(_translate("MainWindow", "حذف الطلبية"))
+        self.buttonOrderStatus.setToolTip(_translate("MainWindow", "تغيير حالة الطلبية"))
+        self.buttonOrderStatus.setStatusTip(_translate("MainWindow", "تغيير حالة الطلبية"))
         self.tableWidgetOrders.setSortingEnabled(True)
         item = self.tableWidgetOrders.verticalHeaderItem(0)
         item.setText(_translate("MainWindow", "New Row"))
@@ -1688,4 +1739,6 @@ class Ui_MainWindow(object):
         self.label_2.setText(_translate("MainWindow", "الحالة"))
         self.label_3.setText(_translate("MainWindow", "تاريخ الطلب"))
         self.buttonAddToCart.setText(_translate("MainWindow", "إضافة منتج"))
+        self.labelCartTotal.setText(_translate("MainWindow", "0"))
+        self.label_5.setText(_translate("MainWindow", "المجموع"))
 import resource_rc

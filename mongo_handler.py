@@ -140,10 +140,74 @@ class MongoDBHandler:
             logger.error(f"Error deleting document from {collection_name}: {err}")
             return {"status": "error", "message": str(err)}
 
+    def delete_many_documents(self, collection_name, document_ids):
+        """
+        Deletes multiple documents from a collection based on a list of IDs.
+
+        :param collection_name: Name of the collection.
+        :param document_ids: List of IDs of the documents to delete.
+        :return: Deletion status with the count of deleted documents.
+        """
+        try:
+            # Convert string IDs to ObjectId
+            object_ids = [ObjectId(doc_id) for doc_id in document_ids]
+
+            # Perform the deletion
+            result = self.db[collection_name].delete_many({"_id": {"$in": object_ids}})
+
+            if result.deleted_count > 0:
+                logger.info(f"Deleted {result.deleted_count} documents from {collection_name}.")
+                return {
+                    "status": "success",
+                    "message": f"Deleted {result.deleted_count} documents.",
+                    "deleted_count": result.deleted_count
+                }
+
+            logger.warning(f"No documents found to delete in collection {collection_name} with the given IDs.")
+            return {
+                "status": "error",
+                "message": "No documents found to delete.",
+                "deleted_count": 0
+            }
+
+        except Exception as err:
+            logger.error(f"Error deleting documents from {collection_name}: {err}")
+            return {"status": "error", "message": str(err)}
+
+    def update_record_state(self, collection_name, document_id, field, new_value):
+        """
+        Updates a specific field for a single record in a collection.
+
+        :param collection_name: Name of the collection (e.g., "Products", "Customers", "Orders").
+        :param document_id: The ID of the document to update.
+        :param field: The field to update (e.g., "is_active", "status").
+        :param new_value: The new value to set for the field.
+        :return: A dictionary with the status and a message.
+        """
+        try:
+            # Perform the update
+            result = self.db[collection_name].update_one(
+                {"_id": ObjectId(document_id)},  # Match the document by its _id
+                {"$set": {field: new_value}}     # Update the specified field
+            )
+
+            if result.matched_count > 0:
+                if result.modified_count > 0:
+                    logger.info(f"Updated {field} for document {document_id} in {collection_name} to {new_value}.")
+                    return {"status": "success", "message": "Record updated successfully."}
+                else:
+                    logger.warning(f"No changes made to document {document_id} in {collection_name}.")
+                    return {"status": "warning", "message": "No changes made."}
+            else:
+                logger.error(f"Document {document_id} not found in {collection_name}.")
+                return {"status": "error", "message": "Record not found."}
+        except Exception as err:
+            logger.error(f"Error updating document {document_id} in {collection_name}: {err}")
+            return {"status": "error", "message": str(err)}
+
     # *************************************************************
     # Product Methods
     # *************************************************************
-
     def create_product(self, name, ref, description, qte, price, category, supplier):
         """
         Adds a new product to the Products collection.
@@ -219,10 +283,13 @@ class MongoDBHandler:
             )
 
             if result.matched_count == 0:
+                logger.warning('Product not found')
                 return {"status": "error", "message": "Product not found."}
             if result.modified_count == 0:
+                logger.warning('No changes were made.')
                 return {"status": "warning", "message": "No changes were made."}
 
+            logger.info('Product updated successfully')
             return {"status": "success", "message": "Product updated successfully."}
         except Exception as err:
             logger.error(f"Error updating product: {err}")
@@ -508,9 +575,275 @@ if __name__ == "__main__":
     # print(response)
 
     # Connect to MongoDB
-    # client = pymongo.MongoClient("mongodb://localhost:27017/")
-    # db = client["elSel3a"]
+    client = pymongo.MongoClient("mongodb://localhost:27017/")
+    db = client["elSel3a"]
     # products_collection = db["Products"]
+
+    products = [
+        {
+            "name": "حاسوب محمول",
+            "ref": "LAP001",
+            "description": "حاسوب محمول مع شاشة 15 بوصة",
+            "price": Decimal128("85000"),
+            "qte": 10,
+            "category": "إلكترونيات",
+            "created_at": datetime.now(),
+            "updated_at": datetime.now(),
+            "is_active": True
+        },
+        {
+            "name": "هاتف ذكي",
+            "ref": "PHN002",
+            "description": "هاتف ذكي مزود بكاميرا 48 ميغابيكسل",
+            "price": Decimal128("45000"),
+            "qte": 25,
+            "category": "هواتف",
+            "created_at": datetime.now(),
+            "updated_at": datetime.now(),
+            "is_active": True
+        },
+        {
+            "name": "سماعات بلوتوث",
+            "ref": "HDP003",
+            "description": "سماعات أذن لاسلكية",
+            "price": Decimal128("15000"),
+            "qte": 40,
+            "category": "إلكترونيات",
+            "created_at": datetime.now(),
+            "updated_at": datetime.now(),
+            "is_active": True
+        },
+        {
+            "name": "طابعة",
+            "ref": "PRT004",
+            "description": "طابعة ليزر متعددة الوظائف",
+            "price": Decimal128("30000"),
+            "qte": 5,
+            "category": "أجهزة مكتبية",
+            "created_at": datetime.now(),
+            "updated_at": datetime.now(),
+            "is_active": True
+        },
+        {
+            "name": "ثلاجة صغيرة",
+            "ref": "FRG005",
+            "description": "ثلاجة صغيرة بحجم 120 لتر",
+            "price": Decimal128("65000"),
+            "qte": 8,
+            "category": "أجهزة منزلية",
+            "created_at": datetime.now(),
+            "updated_at": datetime.now(),
+            "is_active": True
+        },
+        {
+            "name": "فرن كهربائي",
+            "ref": "OVN006",
+            "description": "فرن كهربائي مزود بوظيفة الحمل الحراري",
+            "price": Decimal128("40000"),
+            "qte": 6,
+            "category": "أجهزة منزلية",
+            "created_at": datetime.now(),
+            "updated_at": datetime.now(),
+            "is_active": True
+        },
+        {
+            "name": "كتاب 'برمجة بايثون'",
+            "ref": "BK007",
+            "description": "كتاب شامل عن أساسيات البرمجة بلغة بايثون",
+            "price": Decimal128("3000"),
+            "qte": 20,
+            "category": "كتب",
+            "created_at": datetime.now(),
+            "updated_at": datetime.now(),
+            "is_active": True
+        },
+        {
+            "name": "كرسي مكتب",
+            "ref": "CHA008",
+            "description": "كرسي مكتب مريح بعجلات",
+            "price": Decimal128("12000"),
+            "qte": 15,
+            "category": "أثاث",
+            "created_at": datetime.now(),
+            "updated_at": datetime.now(),
+            "is_active": True
+        },
+        {
+            "name": "ماكينة قهوة",
+            "ref": "COF009",
+            "description": "ماكينة لتحضير القهوة مزودة بخاصية الإسبريسو",
+            "price": Decimal128("12000"),
+            "qte": 7,
+            "category": "أجهزة منزلية",
+            "created_at": datetime.now(),
+            "updated_at": datetime.now(),
+            "is_active": True
+        },
+        {
+            "name": "جهاز تكييف",
+            "ref": "AC010",
+            "description": "جهاز تكييف سعة 12000 وحدة",
+            "price": Decimal128("85000"),
+            "qte": 4,
+            "category": "أجهزة منزلية",
+            "created_at": datetime.now(),
+            "updated_at": datetime.now(),
+            "is_active": True
+        },
+        {
+            "name": "حاسوب مكتبي",
+            "ref": "DESK011",
+            "description": "حاسوب مكتبي مزود بمعالج i7",
+            "price": Decimal128("125000"),
+            "qte": 6,
+            "category": "إلكترونيات",
+            "created_at": datetime.now(),
+            "updated_at": datetime.now(),
+            "is_active": True
+        },
+        {
+            "name": "كاميرا مراقبة",
+            "ref": "CAM012",
+            "description": "كاميرا مراقبة بدقة 1080p مع خاصية الرؤية الليلية",
+            "price": Decimal128("25000"),
+            "qte": 10,
+            "category": "إلكترونيات",
+            "created_at": datetime.now(),
+            "updated_at": datetime.now(),
+            "is_active": True
+        },
+        {
+            "name": "ميكروويف",
+            "ref": "MW013",
+            "description": "ميكروويف مزود بخاصية إذابة التجميد",
+            "price": Decimal128("35000"),
+            "qte": 5,
+            "category": "أجهزة منزلية",
+            "created_at": datetime.now(),
+            "updated_at": datetime.now(),
+            "is_active": True
+        }
+    ]
+
+    customers = [
+        {
+            "first_name": "يوسف",
+            "last_name": "حداد",
+            "email": "youssef.haddad@example.com",
+            "phone": "0555544332",
+            "address": "حي الأخوة بوحجر، مستغانم",
+            "is_active": True,
+            "created_at": datetime.now(),
+            "updated_at": datetime.now()
+        },
+        {
+            "first_name": "سهيلة",
+            "last_name": "بن غبريط",
+            "email": "souhaila.benghabrit@example.com",
+            "phone": "0667788990",
+            "address": "شارع جيش التحرير الوطني، البليدة",
+            "is_active": True,
+            "created_at": datetime.now(),
+            "updated_at": datetime.now()
+        },
+        {
+            "first_name": "عبد الرحمن",
+            "last_name": "لعمامرة",
+            "email": "abdelrahman.laamamra@example.com",
+            "phone": "0776655432",
+            "address": "حي المستقبل، تيزي وزو",
+            "is_active": True,
+            "created_at": datetime.now(),
+            "updated_at": datetime.now()
+        },
+        {
+            "first_name": "رانية",
+            "last_name": "بوخاري",
+            "email": "rania.boukhari@example.com",
+            "phone": "0544332211",
+            "address": "حي الزيتون، الشلف",
+            "is_active": False,
+            "created_at": datetime.now(),
+            "updated_at": datetime.now()
+        },
+        {
+            "first_name": "مراد",
+            "last_name": "بن شيخ",
+            "email": "mourad.bencheikh@example.com",
+            "phone": "0567891234",
+            "address": "شارع المجاهدين، ورقلة",
+            "is_active": True,
+            "created_at": datetime.now(),
+            "updated_at": datetime.now()
+        },
+        {
+            "first_name": "محمد",
+            "last_name": "بن أحمد",
+            "email": "mohamed.benahmed@example.com",
+            "phone": "0551123456",
+            "address": "شارع 1 نوفمبر، الجزائر العاصمة",
+            "is_active": True,
+            "created_at": datetime.now(),
+            "updated_at": datetime.now()
+        },
+        {
+            "first_name": "فاطمة",
+            "last_name": "بوعبد الله",
+            "email": "fatima.bouabdallah@example.com",
+            "phone": "0556654321",
+            "address": "حي الزيتون، وهران",
+            "is_active": True,
+            "created_at": datetime.now(),
+            "updated_at": datetime.now()
+        },
+        {
+            "first_name": "عبد القادر",
+            "last_name": "سالمي",
+            "email": "abdelkader.salmi@example.com",
+            "phone": "0772233445",
+            "address": "حي النصر، قسنطينة",
+            "is_active": True,
+            "created_at": datetime.now(),
+            "updated_at": datetime.now()
+        },
+        {
+            "first_name": "نسرين",
+            "last_name": "عمراني",
+            "email": "nesrine.omrani@example.com",
+            "phone": "0667788990",
+            "address": "حي باب الوادي، الجزائر العاصمة",
+            "is_active": True,
+            "created_at": datetime.now(),
+            "updated_at": datetime.now()
+        },
+        {
+            "first_name": "أحمد",
+            "last_name": "زيتوني",
+            "email": "ahmed.zeitouni@example.com",
+            "phone": "0544332211",
+            "address": "حي الورود، سطيف",
+            "is_active": False,
+            "created_at": datetime.now(),
+            "updated_at": datetime.now()
+        },
+        {
+            "first_name": "ليلى",
+            "last_name": "بوشيخي",
+            "email": "leila.bouchikhi@example.com",
+            "phone": "0561123344",
+            "address": "شارع الأمير عبد القادر، عنابة",
+            "is_active": True,
+            "created_at": datetime.now(),
+            "updated_at": datetime.now()
+        }
+    ]
+    # Insert products
+    product_result = db["Products"].insert_many(products)
+    print(f"Inserted {len(product_result.inserted_ids)} products.")
+
+    # Insert customers
+    customer_result = db["Customers"].insert_many(customers)
+    print(f"Inserted {len(customer_result.inserted_ids)} customers.")
 
     # Update all prices to Decimal128
     # for product in products_collection.find({"price": {"$type": "string"}}):

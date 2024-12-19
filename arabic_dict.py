@@ -36,25 +36,17 @@ arabic_mapping = {
 order_status_mapping = {
     "قيد الانتظار": "pending",
     "مؤكد": "confirmed",
-    "قيد التحضير": "preparing",
     "تم الشحن": "shipped",
-    "في الطريق للتوصيل": "out_for_delivery",
     "تم التوصيل": "delivered",
-    "منجز": "completed",
     "ملغي": "cancelled",
-    "فشل": "failed"
 }
 
 order_status_mapping_en = {
     "pending": "قيد الانتظار",
     "confirmed": "مؤكد",
-    "preparing": "قيد التحضير",
     "shipped": "تم الشحن",
-    "out_for_delivery": "في الطريق للتوصيل",
     "delivered": "تم التوصيل",
-    "completed": "منجز",
     "cancelled": "ملغي",
-    "failed": "فشل",
     # this for customer status
     True: "مفعل",
     False: "غير مفعل",

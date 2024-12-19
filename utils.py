@@ -77,6 +77,13 @@ class Utils:
                 qta.icon('mdi6.delete-outline', color=BUTTON_DELETE_COLOR),
                 lambda: root.delete_item(coll_name='Products')
             ),
+
+            (   # Activate Customer
+                root.ui.buttonProductStatus,
+                qta.icon('mdi6.check', color=BUTTON_DELETE_COLOR),
+                lambda: root.activate_item(coll_name='Products')
+            ),
+
             # THE SAVE BUTTON
             (
                 root.ui.buttonSave,
@@ -106,6 +113,11 @@ class Utils:
                 root.ui.buttonDeleteCustomer,
                 qta.icon('mdi6.account-minus', color=BUTTON_DELETE_COLOR),
                 lambda: root.delete_item(coll_name='Customers')
+            ),
+            (   # Activate Customer
+                root.ui.buttonCustomerStatus,
+                qta.icon('mdi6.check-underline', color=BUTTON_DELETE_COLOR),
+                lambda: root.activate_item(coll_name='Customers')
             ),
 
             # ORDERS PAGE
@@ -138,6 +150,9 @@ class Utils:
             button.setIcon(icon)
             button.clicked.connect(callback)
 
+        # Just Icons
+        root.ui.buttonOrderStatus.setIcon(qta.icon('mdi.list-status', color=MENU_BUTTON_COLOR))
+
         # Callback Functions
         root.ui.lineEditSearchProduct.textChanged.connect(root.search_products)
         root.ui.searchButtonIcon.clicked.connect(root.search_products)
@@ -167,6 +182,71 @@ class Utils:
 
         # root.ui.buttonSuspend.setIcon(qta.icon('mdi.motion-pause-outline', color="#ffffff"))
 
+    def setup_order_status_menu(button, callback):
+        """
+        Sets up a QMenu for changing the order status on a QPushButton.
+
+        :param button: The QPushButton instance.
+        :param callback: Function to call when a menu item is clicked.
+        """
+        # Create a QMenu
+        menu = QtWidgets.QMenu()
+        menu.setLayoutDirection(QtCore.Qt.LeftToRight)
+        menu.setStyleSheet("""
+QMenu {
+    background-color: #272727;
+    margin: 2px; /* some spacing around the menu */
+    border-color: 2px solid #4b4b4b;
+    border-radius: 10px;
+}
+
+QMenu::item {
+    font: 10pt "Noto Serif Thai";
+    color: #ffffff;
+    padding: 2px 5px 2px 5px;
+    border: 1px solid transparent; /* reserve space for selection border */
+    min-width: 200px;
+}
+
+QMenu::item:selected {
+    background: #4b4b4b;
+}
+
+QMenu::icon:checked { /* appearance of a 'checked' icon */
+    background: gray;
+    border: 1px inset gray;
+    position: absolute;
+    top: 1px;
+    right: 1px;
+    bottom: 1px;
+    left: 1px;
+}
+
+QMenu::indicator {
+    width: 0px;
+    height: 0px;
+}
+       """)
+        # Define possible statuses
+        statuses = {
+            "pending": "قيد الانتظار",
+            "confirmed": "مؤكد",
+            "shipped": "تم الشحن",
+            "delivered": "تم التوصيل",
+            "cancelled": "ملغي"
+        }
+
+        # Add actions for each status
+        for status_key, status_label in statuses.items():
+            action = menu.addAction(status_label)
+            action.setData(status_key)  # Store the status key as action data
+
+        # Connect the menu's triggered signal to the callback function
+        menu.triggered.connect(lambda action: callback(action.data()))
+
+        # Attach the menu to the QPushButton
+        button.setMenu(menu)
+
     def success_message(label, message, success=True):
         """
         This function display message in label
@@ -190,6 +270,18 @@ class Utils:
         # TODO:  Enter this in TableWidgetFuncs class
         if len(table.selectionModel().selectedRows()) > 0: return True
         else: return False
+
+    @staticmethod
+    def table_selection_ids(table: QtWidgets.QTableWidget) -> list:
+        """
+        This function return column(0) for a multiple selection in a table
+        :table: QTableWidget
+        :return: a list of ids.
+        """
+        selected_rows = set(index.row() for index in table.selectedIndexes())   # return index of selected row
+        if len(selected_rows) > 0:
+            ids = [table.item(row, 0).text() for row in selected_rows]
+        return ids
 
     @staticmethod
     def get_column_value(table: QtWidgets.QTableWidget, column: int) -> str:
@@ -223,6 +315,7 @@ class Utils:
                 table.setItem(row_idx, col_idx, item)
 
         table.resizeColumnsToContents()
+        table.horizontalHeader().setStretchLastSection(True)
 
     @staticmethod
     def table_column_size(table: QtWidgets.QTableWidget, columns: list) -> None:
