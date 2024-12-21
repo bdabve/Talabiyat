@@ -2,12 +2,12 @@ from PyQt5 import QtWidgets, QtGui, QtCore
 import qtawesome as qta
 
 MENU_BUTTON_COLOR = "#ffffff"
-# BUTTON_PLUS_COLOR = "#25CCF7"
-# BUTTON_EDIT_COLOR = "#60a3bc"
-# BUTTON_DELETE_COLOR = "#EA2027"
+BUTTON_PLUS_COLOR = "#1abc9c"
+BUTTON_EDIT_COLOR = "#3498db"
+BUTTON_DELETE_COLOR = "#e74c3c"
 BUTTON_PLUS_COLOR = "#ffffff"
-BUTTON_EDIT_COLOR = "#ffffff"
-BUTTON_DELETE_COLOR = "#ffffff"
+# BUTTON_EDIT_COLOR = "#ffffff"
+# BUTTON_DELETE_COLOR = "#ffffff"
 
 
 class Utils:
@@ -56,7 +56,7 @@ class Utils:
             (
                 # product details
                 root.ui.buttonProductDetails,
-                qta.icon('mdi6.information-variant', color="#ffffff"),
+                qta.icon('mdi6.information-variant', color=MENU_BUTTON_COLOR),
                 lambda: root.item_details(lineEditEnabled=False)
             ),
             (
@@ -80,21 +80,22 @@ class Utils:
 
             (   # Activate Customer
                 root.ui.buttonProductStatus,
-                qta.icon('mdi6.check', color=BUTTON_DELETE_COLOR),
+                qta.icon('mdi6.check', color=MENU_BUTTON_COLOR),
                 lambda: root.activate_item(coll_name='Products')
             ),
 
             # THE SAVE BUTTON
             (
                 root.ui.buttonSave,
-                qta.icon('mdi.content-save', color="#ffffff"),
+                qta.icon('mdi.content-save', color=BUTTON_EDIT_COLOR),
                 root.save_new_item
             ),
 
+            # ------------------------------------------------------------------------
             # CUSTOMERS PAGE
             (   # Customer Details
                 root.ui.buttonCustomerDetails,
-                qta.icon('mdi.account-question', color="#ffffff"),
+                qta.icon('mdi.account-question', color=MENU_BUTTON_COLOR),
                 lambda: root.item_details(lineEditEnabled=False, operation="None", coll_name="Customers")
             ),
 
@@ -116,14 +117,20 @@ class Utils:
             ),
             (   # Activate Customer
                 root.ui.buttonCustomerStatus,
-                qta.icon('mdi6.check-underline', color=BUTTON_DELETE_COLOR),
+                qta.icon('mdi6.check-underline', color=MENU_BUTTON_COLOR),
                 lambda: root.activate_item(coll_name='Customers')
             ),
+            (   # Orders Customer
+                root.ui.buttonCustomerOrders,
+                qta.icon('mdi6.badge-account-horizontal', color=MENU_BUTTON_COLOR),
+                root.customer_orders
+            ),
 
+            # ------------------------------------------------------------------------
             # ORDERS PAGE
             (   # Order Details
                 root.ui.buttonOrderDetails,
-                qta.icon('mdi6.information-variant', color="#ffffff"),
+                qta.icon('mdi6.information-variant', color=MENU_BUTTON_COLOR),
                 lambda: root.order_details(lineEditEnabled=False)
             ),
             (
@@ -135,7 +142,7 @@ class Utils:
             (
                 # Button Add To Cart
                 root.ui.buttonAddToCart,
-                qta.icon('ph.plus', color="#ffffff"),
+                qta.icon('ph.plus', color=BUTTON_PLUS_COLOR),
                 lambda: root.add_product_to_table(root.ui.tableWidgetAddOrderProds)
             ),
             (
@@ -407,25 +414,35 @@ QMenu::indicator {
                 widget.deleteLater()
 
     @staticmethod
-    def show_confirm_dialog(parent, message):
+    def create_qtablewidget(column_count: int, headers: list):
+        """
+        Create a QTableWidget and set all options
+        """
+        table_widget = QtWidgets.QTableWidget()
+        table_widget.setColumnCount(column_count)   # Columns Like: product_id, name, quantity, total
+        table_widget.setHorizontalHeaderLabels(headers)
+        # Adjust table settings
+        table_widget.setFrameShape(QtWidgets.QFrame.NoFrame)
+        table_widget.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
+        table_widget.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectRows)
+        table_widget.resizeColumnsToContents()
+        table_widget.verticalHeader().setVisible(False)
+        table_widget.setEditTriggers(QtWidgets.QTableWidget.NoEditTriggers)  # Make the table read-only
+        table_widget.horizontalHeader().setStretchLastSection(True)
+        return table_widget
+
+    @staticmethod
+    def show_confirm_dialog(message):
         """
         Displays a confirmation dialog before deleting an item.
 
-        :param parent: The parent widget for the dialog.
         :message: the message to display in Dialog
         :return: True if confirmed, False otherwise.
         """
         # Create the confirmation dialog
-        confirm_dialog = QtWidgets.QMessageBox(parent)
-        with open('./dialog_styleSheet.css') as f:
-            confirm_dialog.setStyleSheet(f.read())
-
-        confirm_dialog.setIcon(QtWidgets.QMessageBox.Warning)
-        confirm_dialog.setWindowTitle("تأكيد الحذف")
-        confirm_dialog.setText(message)
-        confirm_dialog.setStandardButtons(QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No)
-
+        from confirm_dialog import ConfirmDialog
+        confirmDialog = ConfirmDialog(message)
         # Execute the dialog and get the user's response
-        result = confirm_dialog.exec_()
+        result = confirmDialog.exec_()
 
-        return result == QtWidgets.QMessageBox.Yes  # Return True if 'Yes' is clicked
+        return result       # Return True if 'Yes' is clicked

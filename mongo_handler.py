@@ -471,6 +471,22 @@ class MongoDBHandler:
         """
         return self.fetch_documents("Customers", query, projection, limit, sort)
 
+    def fetch_customer_orders(self, customer_id):
+        """
+        Fetch all orders for a given customer ID.
+
+        :param customer_id: The ID of the customer.
+        :return: List of orders or an error message.
+        """
+        try:
+            projection = {"_id": 1, "order_date": 1, "status": 1, "total_price": 1}
+            orders = list(self.db["Orders"].find({"customer_id": ObjectId(customer_id)}, projection))
+            logger.info(f"Fetch all orders for customer({customer_id})")
+            return {"status": "success", "orders": orders}
+        except Exception as e:
+            logger.error(f"Error fetching order for Customer({customer_id})\n{e}")
+            return {"status": "error", "message": str(e)}
+
     def delete_customer_and_orders(self, customer_id):
         """
         Deletes a customer and all their associated orders.
