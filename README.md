@@ -82,3 +82,9 @@
 
 ## **تفاصيل الطلب**
 ![تفاصيل الطلب](screenshots/product_details.png)
+## **المشترية**
+![تفاصيل الطلب](screenshots/customers.png)
+## **الطلبيات**
+![تفاصيل الطلب](screenshots/orders.png)
+## **الإحصائيات**
+![تفاصيل الطلب](screenshots/statistics.png)
