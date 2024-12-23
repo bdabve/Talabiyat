@@ -3,11 +3,9 @@ import qtawesome as qta
 
 MENU_BUTTON_COLOR = "#ffffff"
 BUTTON_PLUS_COLOR = "#1abc9c"
-BUTTON_EDIT_COLOR = "#3498db"
+BUTTON_EDIT_COLOR = "#7ed6df"
 BUTTON_DELETE_COLOR = "#e74c3c"
-BUTTON_PLUS_COLOR = "#ffffff"
-# BUTTON_EDIT_COLOR = "#ffffff"
-# BUTTON_DELETE_COLOR = "#ffffff"
+BUTTON_CHECK_COLOR = "#ffbe76"
 
 
 class Utils:
@@ -15,8 +13,8 @@ class Utils:
     Utility class for PyQt5 operations such as handling QTableWidget and QComboBox.
     """
 
-    success_stylesheet = "color: rgb(28, 113, 216);"
-    error_stylesheet = "color: rgb(192, 28, 40);"
+    success_stylesheet = "color: #1abc9c;"
+    error_stylesheet = "color: #e74c3c;"
 
     def interface_icons_callbacks(root):
         """
@@ -32,17 +30,20 @@ class Utils:
                 qta.icon('mdi.alpha-p-box', color=MENU_BUTTON_COLOR),
                 lambda: root.goto_page(page="Products")
             ),
-
             (
                 root.ui.buttonCustomerPage,
                 qta.icon('ph.users-three-light', color=MENU_BUTTON_COLOR),
                 lambda: root.goto_page(page="Customers")
             ),
-
             (
                 root.ui.buttonOrderPage,
                 qta.icon('mdi6.clipboard', color=MENU_BUTTON_COLOR),
                 lambda: root.goto_page(page="Orders")
+            ),
+            (
+                root.ui.buttonStatisticsPage,
+                qta.icon('mdi6.chart-bar-stacked', color=MENU_BUTTON_COLOR),
+                lambda: root.goto_page(page="Statistics")
             ),
 
             # Details Card Buttons
@@ -80,7 +81,7 @@ class Utils:
 
             (   # Activate Customer
                 root.ui.buttonProductStatus,
-                qta.icon('mdi6.check', color=MENU_BUTTON_COLOR),
+                qta.icon('mdi6.check', color=BUTTON_CHECK_COLOR),
                 lambda: root.activate_item(coll_name='Products')
             ),
 
@@ -117,7 +118,7 @@ class Utils:
             ),
             (   # Activate Customer
                 root.ui.buttonCustomerStatus,
-                qta.icon('mdi6.check-underline', color=MENU_BUTTON_COLOR),
+                qta.icon('mdi6.check', color=BUTTON_CHECK_COLOR),
                 lambda: root.activate_item(coll_name='Customers')
             ),
             (   # Orders Customer
@@ -337,6 +338,7 @@ class Utils:
         root.ui.buttonProductPage.setChecked(current_page == 0)
         root.ui.buttonCustomerPage.setChecked(current_page == 1)
         root.ui.buttonOrderPage.setChecked(current_page == 2)
+        root.ui.buttonStatisticsPage.setChecked(current_page == 3)
 
     @staticmethod
     def create_label(parent, label_name):

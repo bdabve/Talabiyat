@@ -447,6 +447,48 @@ class MongoDBHandler:
                 logger.warning(f"Product {product['product_id']} not found.")
         return total_price
 
+    def cancel_order(self, order_id):
+        """
+        Handles the cancellation of an order and updates product quantities.
+
+        :param order_id: The ID of the order to cancel.
+        """
+        try:
+            # Fetch the order details
+            order = self.db["Orders"].find_one({"_id": ObjectId(order_id)})
+            if not order:
+                logger.warning('[ Cancel Order ] Order not found.')
+                return {"status": "error", "message": "Order not found."}
+
+            # Update product quantities
+            for item in order.get("products", []):
+                product_id = item.get("product_id")
+                quantity = item.get("quantity", 0)
+
+                update_result = self.db["Products"].update_one(
+                    {"_id": ObjectId(product_id)},
+                    {"$inc": {"qte": quantity}}
+                )
+
+                if update_result.modified_count == 0:
+                    logger.warning(f"Product with ID {product_id} not found or could not be updated.")
+
+            # Update the order status to 'cancelled'
+            update_status = self.db["Orders"].update_one(
+                {"_id": ObjectId(order_id)},
+                {"$set": {"status": "cancelled", "updated_at": datetime.now()}}
+            )
+
+            if update_status.modified_count > 0:
+                logger.info(f"Order {order_id} cancelled successfully.")
+                return {"status": "success", "message": "Order cancelled and product quantities updated."}
+
+            return {"status": "error", "message": "Failed to update order status."}
+
+        except Exception as e:
+            logger.error(f"Error cancelling order: {e}")
+            return {"status": "error", "message": str(e)}
+
     # *************************************************************
     # Customer Methods
     # *************************************************************
@@ -518,6 +560,76 @@ class MongoDBHandler:
         except Exception as err:
             logger.error(f"Error deleting customer and orders: {err}")
             return {"status": "error", "message": str(err)}
+
+    # *************************************************************
+    #       => Statistics
+    # *************************************************************
+
+    def generate_statistics(self):
+        """
+        Generate all required statistics for the dashboard widget, excluding cancelled orders.
+
+        :return: Dictionary containing statistics for products, orders, and customers.
+        """
+        try:
+            # Product Statistics
+            products_stats = {
+                "total_products": self.db["Products"].count_documents({}),
+                "total_quantity": self.db["Products"].aggregate([
+                    {"$group": {"_id": None, "total_quantity": {"$sum": "$qte"}}}
+                ]).next()["total_quantity"],
+                "top_products": list(self.db["Products"].find({}, {"name": 1, "qte": 1}).sort("qte", -1).limit(5)),
+            }
+
+            # Order Statistics (excluding cancelled orders)
+            orders_stats = {
+                "total_orders": self.db["Orders"].count_documents({"status": {"$ne": "cancelled"}}),
+                "total_revenue": self.db["Orders"].aggregate([
+                    {"$match": {"status": {"$ne": "cancelled"}}},  # Exclude cancelled orders
+                    {"$group": {"_id": None, "total_revenue": {"$sum": "$total_price"}}}
+                ]).next()["total_revenue"],
+                "orders_by_status": list(self.db["Orders"].aggregate([
+                    {"$match": {"status": {"$ne": "cancelled"}}},  # Exclude cancelled orders
+                    {"$group": {"_id": "$status", "count": {"$sum": 1}}}
+                ])),
+                "top_customers": list(self.db["Orders"].aggregate([
+                    {"$match": {"status": {"$ne": "cancelled"}}},  # Exclude cancelled orders
+                    {"$group": {"_id": "$customer_id", "order_count": {"$sum": 1}}},
+                    {"$sort": {"order_count": -1}},
+                    {"$limit": 5},
+                    {"$lookup": {
+                        "from": "Customers",
+                        "localField": "_id",
+                        "foreignField": "_id",
+                        "as": "customer_details"
+                    }},
+                    {"$project": {
+                        "customer_name": {"$concat": [
+                            {"$arrayElemAt": ["$customer_details.first_name", 0]},
+                            " ",
+                            {"$arrayElemAt": ["$customer_details.last_name", 0]},
+                        ]},
+                        "order_count": 1
+                    }},
+                ])),
+            }
+
+            # Customer Statistics
+            customers_stats = {
+                "total_customers": self.db["Customers"].count_documents({}),
+                "active_customers": self.db["Customers"].count_documents({"is_active": True}),
+                "trusted_customers": list(self.db["Customers"].find(
+                    {"client_status": "trusted"}, {"first_name": 1, "last_name": 1}).limit(5)),
+            }
+
+            return {
+                "products": products_stats,
+                "orders": orders_stats,
+                "customers": customers_stats,
+            }
+        except Exception as e:
+            logger.error(f"Error generating statistics: {e}")
+            return {}
 
 
 if __name__ == "__main__":

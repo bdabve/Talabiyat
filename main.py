@@ -115,6 +115,12 @@ class Interface(QtWidgets.QMainWindow):
             self.ui.labelErrorOrderPage.setText('')
             self.ui.containerStackedWidget.setCurrentWidget(self.ui.OrderPage)
 
+        elif page == 'Statistics':
+            # self.enable_disable_buttons(page='Statistics')
+            self.show_statistics()
+            self.ui.dockWidget.close()
+            self.ui.containerStackedWidget.setCurrentWidget(self.ui.StatisticsPage)
+
         Utils.pagebuttons_stats(self)
 
     def update_count_label(self, label, rows):
@@ -349,14 +355,17 @@ class Interface(QtWidgets.QMainWindow):
         item_id = Utils.get_column_value(self.ui.tableWidgetOrders, 0)
         if new_status == 'cancelled':
             logger.debug('Order Cancelled: the quantity must return to product')
-
-        response = self.db_handler.update_record_state(
-            collection_name='Orders',
-            document_id=item_id, field="status",
-            new_value=new_status
-        )
-        Utils.success_message(self.ui.labelErrorOrderPage, response['message'], response['status'] == 'success')
-        self.all_orders()
+            response = self.db_handler.cancel_order(item_id)
+            Utils.success_message(self.ui.labelErrorOrderPage, response['message'], response['status'] == 'success')
+            self.all_orders()
+        else:
+            response = self.db_handler.update_record_state(
+                collection_name='Orders',
+                document_id=item_id, field="status",
+                new_value=new_status
+            )
+            Utils.success_message(self.ui.labelErrorOrderPage, response['message'], response['status'] == 'success')
+            self.all_orders()
 
     # ************************************************
     # Form Management
@@ -941,8 +950,15 @@ class Interface(QtWidgets.QMainWindow):
             logger.debug(response['message'])
             return
 
+        # Clear all the widget for the new order
+        self.ui.comboBoxAddOrderCustomer_id.clear()     # clear the combobox
+        self.ui.comboBoxAddOrderStatus.clear()
+        self.ui.dateEditAddOrderDate.clear()
+        self.ui.labelCartTotal.setText('0')
+        self.ui.tableWidgetAddOrderProds.setRowCount(0)
+
         # Combobox Order Customers
-        self.customers_map = {}  # Map orders names to ObjectIds
+        self.customers_map = {}                         # Map orders names to ObjectIds
         for customer in response['documents']:
             cust_name = f"{customer.get('first_name', '')} {customer.get('last_name')}".strip()
             cust_id = str(customer["_id"])
@@ -950,15 +966,21 @@ class Interface(QtWidgets.QMainWindow):
             self.ui.comboBoxAddOrderCustomer_id.addItem(cust_name)
 
         # Combobox Order Status
-        self.ui.comboBoxAddOrderStatus.clear()
-        for status in arabic.status_mapping.keys():
+        status_mapping = {
+            "قيد الانتظار": "pending",
+            "مؤكد": "confirmed",
+            "تم الشحن": "shipped",
+            "تم التوصيل": "delivered",
+            "ملغي": "cancelled",
+        }
+        for status in status_mapping.keys():
             self.ui.comboBoxAddOrderStatus.addItem(status)
 
         # Set DateEdit to now
         self.ui.dateEditAddOrderDate.setDate(datetime.now())
 
-        self.ui.stackedWidgetDetails.setCurrentWidget(self.ui.createOrderPage)
         self.ui.frameToolButton_2.show()
+        self.ui.stackedWidgetDetails.setCurrentWidget(self.ui.createOrderPage)
         self.ui.dockWidget.show()
 
     def add_product_to_table(self, table_widget):
@@ -1000,17 +1022,18 @@ class Interface(QtWidgets.QMainWindow):
             prod_price = Decimal(product_response["price"].to_decimal())
             total = Decimal(self.ui.labelCartTotal.text())
             total += quantity * prod_price
+
             self.ui.labelCartTotal.setText(f"{total}")
 
             # Add the selected product to the table
-            table_widget.setColumnCount(4)  # Columns: Product ID, Name, Quantity, Actions
-            table_widget.setHorizontalHeaderLabels(["رقم المنتج", "اسم المنتج", "الكمية", "إزالة"])
+            table_widget.setColumnCount(5)  # Columns: Product ID, Name, Quantity, Actions
+            table_widget.setHorizontalHeaderLabels(["رقم المنتج", "اسم المنتج", "الكمية", "السعر", "إزالة"])
             row_position = table_widget.rowCount()
             table_widget.insertRow(row_position)
-            # table_widget.setItem(row_position, 0, QtWidgets.QTableWidgetItem(product_id))
-            table_widget.setItem(row_position, 0, QtWidgets.QTableWidgetItem(selected_product_name))
-            table_widget.setItem(row_position, 1, QtWidgets.QTableWidgetItem(str(quantity)))
-            table_widget.setItem(row_position, 2, QtWidgets.QTableWidgetItem(str(prod_price)))
+            table_widget.setItem(row_position, 0, QtWidgets.QTableWidgetItem(product_id))
+            table_widget.setItem(row_position, 1, QtWidgets.QTableWidgetItem(selected_product_name))
+            table_widget.setItem(row_position, 2, QtWidgets.QTableWidgetItem(str(quantity)))
+            table_widget.setItem(row_position, 3, QtWidgets.QTableWidgetItem(str(prod_price)))
 
             # Add a remove button
             remove_button = QtWidgets.QPushButton(" إزالة")
@@ -1018,7 +1041,81 @@ class Interface(QtWidgets.QMainWindow):
             remove_button.setIconSize(QtCore.QSize(20, 20))
             remove_button.clicked.connect(lambda: table_widget.removeRow(row_position))
 
-            table_widget.setCellWidget(row_position, 3, remove_button)
+            table_widget.setCellWidget(row_position, 4, remove_button)
+
+    # ********************************************
+    #       ==> STATISTICS PAGE
+    # ********************************************
+
+    def display_statistics_labels(self, stats):
+        """
+        Display computed statistics in text labels on the UI.
+        :param stats: Dictionary containing statistics for products, orders, and customers.
+        """
+        self.ui.labelTotalProducts.setText(f"إجمالي المنتجات: {stats['products']['total_products']}")
+        self.ui.labelTotalQuantity.setText(f"إجمالي الكمية: {stats['products']['total_quantity']}")
+
+        self.ui.labelTotalOrders.setText(f"إجمالي الطلبات: {stats['orders']['total_orders']}")
+        total_revenu = Decimal(stats['orders']['total_revenue'].to_decimal())
+        self.ui.labelTotalRevenue.setText(f"إجمالي الإيرادات: ${total_revenu:.2f}")
+
+        self.ui.labelTotalCustomers.setText(f"إجمالي العملاء: {stats['customers']['total_customers']}")
+        self.ui.labelActiveCustomers.setText(f"العملاء النشطون: {stats['customers']['active_customers']}")
+
+    def display_top_products(self, stats):
+        """
+        Display the top products by quantity in a QTableWidget.
+
+        :param stats: Dictionary containing statistics for products.
+        """
+        top_products = stats["products"]["top_products"]
+
+        # Clear the table and set headers
+        self.ui.tableWidgetTopProducts.setRowCount(0)
+        self.ui.tableWidgetTopProducts.setColumnCount(2)
+        self.ui.tableWidgetTopProducts.setHorizontalHeaderLabels(["Product Name", "Quantity"])
+
+        # Populate the table
+        for row, product in enumerate(top_products):
+            self.ui.tableWidgetTopProducts.insertRow(row)
+            self.ui.tableWidgetTopProducts.setItem(row, 0, QtWidgets.QTableWidgetItem(product["name"]))
+            self.ui.tableWidgetTopProducts.setItem(row, 1, QtWidgets.QTableWidgetItem(str(product["qte"])))
+
+    def plot_orders_by_status(self, stats):
+        """
+        Plot a bar chart for orders grouped by status.
+
+        :param stats: Dictionary containing statistics for orders.
+        """
+        data = stats["orders"]["orders_by_status"]
+        statuses = [entry["_id"] for entry in data]
+        counts = [entry["count"] for entry in data]
+
+        from statistic import StatisticsWidget
+        stats_widget = StatisticsWidget(self)
+        stats_widget.axes.bar(statuses, counts, color="blue")
+        stats_widget.axes.set_title("Orders by Status")
+        stats_widget.axes.set_xlabel("Status")
+        stats_widget.axes.set_ylabel("Count")
+        stats_widget.draw()
+
+        layout = self.ui.horizontalLayout
+        while layout.count():
+            item = layout.takeAt(0)
+            if widget := item.widget():
+                widget.deleteLater()
+        layout.addWidget(stats_widget)
+
+    def show_statistics(self):
+        """
+        Show statistics in the application with embedded graphs.
+        """
+        # Fetch statistics
+        stats = self.db_handler.generate_statistics()
+
+        self.display_statistics_labels(stats)
+        self.display_top_products(stats)
+        self.plot_orders_by_status(stats)
 
 
 if __name__ == '__main__':

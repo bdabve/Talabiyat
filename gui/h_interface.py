@@ -23,7 +23,8 @@ class Ui_MainWindow(object):
 "    background-color: #393836;\n"
 "}\n"
 "\n"
-"#ProductPage, #OrderPage, #statisticsPage, #CustomerPage {\n"
+"#ProductPage, #OrderPage, #StatisticsPage, #CustomerPage, \n"
+"#scrollArea_2, #scrollWidgetStats {\n"
 "    background: transparent;\n"
 "}\n"
 "/* **********************\n"
@@ -171,50 +172,21 @@ class Ui_MainWindow(object):
 "}\n"
 "\n"
 "/****************\n"
-"**    Os Info Page\n"
+"**    Statistics Page\n"
 "******************************/\n"
-"#cardInfoPage, #stWidgetInfoPage, #stWidgetOsInfoPage {\n"
-"    background: transparent;\n"
-"}\n"
-"\n"
-"#stWidgetInfoPage, #stWidgetOsInfoPage {\n"
+"#frameTotals, #frameBarChart, #frameTables {\n"
 "    background-color: #272727;\n"
 "    border-radius: 12px;\n"
 "    border: 1px solid #383838;\n"
 "}\n"
 "\n"
-"#stWidgetInfoPage QPushButton {\n"
-"    background-color: transparent;\n"
-"    border: none;\n"
-"    border-radius: 5px;\n"
-"    color: #ffffff;\n"
-"    font-size: 10pt;\n"
-"    padding: 10px 15px;\n"
+"#frameTotals QLabel {\n"
+"    border: 1px solid rgb(64, 66, 72);\n"
+"    background: #303030;\n"
+"    padding: 5px;\n"
+"    border-radius: 24px;    \n"
+"    font: 13pt \"Droid Sans Fallback\";\n"
 "}\n"
-"\n"
-"#stWidgetInfoPage QPushButton:hover {\n"
-"    background-color: #3a3a3a;\n"
-"}\n"
-"\n"
-"#stWidgetInfoPage QPushButton:pressed {\n"
-"    background-color: transparent;\n"
-"}\n"
-"\n"
-"#labelName, #labelVersion, \n"
-"#labelPlatform, #labelArch,\n"
-" #labelCpu, #labelRam {    \n"
-"    font: 11pt \"Ubuntu\";\n"
-"    color: #8b8b8b;\n"
-"}\n"
-"\n"
-"#labelNameValue, #labelVersionValue, \n"
-"#labelPlatformValue, #labelArchValue,\n"
-"#labelCpuValue, #labelRamValue \n"
-"{        \n"
-"    font: 16pt \"Ubuntu\";\n"
-"    color: #ffffff;\n"
-"}\n"
-"\n"
 "/*****************************\n"
 "**    SEARCH FRAME\n"
 "******************************/\n"
@@ -1252,144 +1224,107 @@ class Ui_MainWindow(object):
         self.tableWidgetOrders.verticalHeader().setHighlightSections(False)
         self.verticalLayout_15.addWidget(self.tableWidgetOrders)
         self.containerStackedWidget.addWidget(self.OrderPage)
-        self.statisticsPage = QtWidgets.QWidget()
-        self.statisticsPage.setObjectName("statisticsPage")
-        self.verticalLayout_6 = QtWidgets.QVBoxLayout(self.statisticsPage)
+        self.StatisticsPage = QtWidgets.QWidget()
+        self.StatisticsPage.setObjectName("StatisticsPage")
+        self.verticalLayout_6 = QtWidgets.QVBoxLayout(self.StatisticsPage)
         self.verticalLayout_6.setObjectName("verticalLayout_6")
-        spacerItem4 = QtWidgets.QSpacerItem(20, 116, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
-        self.verticalLayout_6.addItem(spacerItem4)
-        self.stackedWidgetInfoCard = QtWidgets.QStackedWidget(self.statisticsPage)
-        self.stackedWidgetInfoCard.setMinimumSize(QtCore.QSize(0, 350))
-        self.stackedWidgetInfoCard.setStyleSheet("")
-        self.stackedWidgetInfoCard.setFrameShape(QtWidgets.QFrame.NoFrame)
-        self.stackedWidgetInfoCard.setFrameShadow(QtWidgets.QFrame.Raised)
-        self.stackedWidgetInfoCard.setObjectName("stackedWidgetInfoCard")
-        self.stWidgetInfoPage = QtWidgets.QWidget()
-        self.stWidgetInfoPage.setObjectName("stWidgetInfoPage")
-        self.verticalLayout_7 = QtWidgets.QVBoxLayout(self.stWidgetInfoPage)
+        self.frameStatistics = QtWidgets.QFrame(self.StatisticsPage)
+        self.frameStatistics.setFrameShape(QtWidgets.QFrame.NoFrame)
+        self.frameStatistics.setFrameShadow(QtWidgets.QFrame.Raised)
+        self.frameStatistics.setObjectName("frameStatistics")
+        self.verticalLayout_7 = QtWidgets.QVBoxLayout(self.frameStatistics)
+        self.verticalLayout_7.setContentsMargins(0, 0, 0, 0)
+        self.verticalLayout_7.setSpacing(0)
         self.verticalLayout_7.setObjectName("verticalLayout_7")
-        self.gridFrame = QtWidgets.QFrame(self.stWidgetInfoPage)
-        self.gridFrame.setObjectName("gridFrame")
-        self.gridLayout_2 = QtWidgets.QGridLayout(self.gridFrame)
-        self.gridLayout_2.setContentsMargins(-1, 5, -1, 5)
-        self.gridLayout_2.setObjectName("gridLayout_2")
-        self.pushButton = QtWidgets.QPushButton(self.gridFrame)
-        icon6 = QtGui.QIcon()
-        icon6.addPixmap(QtGui.QPixmap(":/icons/icons/cil-clipboard.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.pushButton.setIcon(icon6)
-        self.pushButton.setIconSize(QtCore.QSize(20, 20))
-        self.pushButton.setObjectName("pushButton")
-        self.gridLayout_2.addWidget(self.pushButton, 1, 0, 1, 1)
-        spacerItem5 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.gridLayout_2.addItem(spacerItem5, 1, 1, 1, 1)
-        self.verticalLayout_7.addWidget(self.gridFrame)
-        self.tableWidgetProcessConnections = QtWidgets.QTableWidget(self.stWidgetInfoPage)
-        self.tableWidgetProcessConnections.setObjectName("tableWidgetProcessConnections")
-        self.tableWidgetProcessConnections.setColumnCount(0)
-        self.tableWidgetProcessConnections.setRowCount(0)
-        self.verticalLayout_7.addWidget(self.tableWidgetProcessConnections)
-        self.stackedWidgetInfoCard.addWidget(self.stWidgetInfoPage)
-        self.stWidgetOsInfoPage = QtWidgets.QWidget()
-        self.stWidgetOsInfoPage.setMaximumSize(QtCore.QSize(800, 16777215))
-        self.stWidgetOsInfoPage.setObjectName("stWidgetOsInfoPage")
-        self.verticalLayout_14 = QtWidgets.QVBoxLayout(self.stWidgetOsInfoPage)
-        self.verticalLayout_14.setSpacing(15)
-        self.verticalLayout_14.setObjectName("verticalLayout_14")
-        spacerItem6 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
-        self.verticalLayout_14.addItem(spacerItem6)
-        self.horizontalLayout_3 = QtWidgets.QHBoxLayout()
-        self.horizontalLayout_3.setContentsMargins(10, 0, 10, 0)
-        self.horizontalLayout_3.setObjectName("horizontalLayout_3")
-        self.verticalLayout_8 = QtWidgets.QVBoxLayout()
-        self.verticalLayout_8.setSpacing(0)
+        self.scrollArea_2 = QtWidgets.QScrollArea(self.frameStatistics)
+        self.scrollArea_2.setFrameShape(QtWidgets.QFrame.NoFrame)
+        self.scrollArea_2.setWidgetResizable(True)
+        self.scrollArea_2.setObjectName("scrollArea_2")
+        self.scrollWidgetStats = QtWidgets.QWidget()
+        self.scrollWidgetStats.setGeometry(QtCore.QRect(0, 0, 563, 518))
+        self.scrollWidgetStats.setObjectName("scrollWidgetStats")
+        self.verticalLayout_8 = QtWidgets.QVBoxLayout(self.scrollWidgetStats)
+        self.verticalLayout_8.setContentsMargins(0, 0, 0, 0)
         self.verticalLayout_8.setObjectName("verticalLayout_8")
-        self.labelName = QtWidgets.QLabel(self.stWidgetOsInfoPage)
-        self.labelName.setAlignment(QtCore.Qt.AlignBottom|QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft)
-        self.labelName.setObjectName("labelName")
-        self.verticalLayout_8.addWidget(self.labelName)
-        self.labelNameValue = QtWidgets.QLabel(self.stWidgetOsInfoPage)
-        self.labelNameValue.setObjectName("labelNameValue")
-        self.verticalLayout_8.addWidget(self.labelNameValue)
-        self.horizontalLayout_3.addLayout(self.verticalLayout_8)
-        self.verticalLayout_9 = QtWidgets.QVBoxLayout()
-        self.verticalLayout_9.setSpacing(0)
-        self.verticalLayout_9.setObjectName("verticalLayout_9")
-        self.labelVersion = QtWidgets.QLabel(self.stWidgetOsInfoPage)
-        self.labelVersion.setAlignment(QtCore.Qt.AlignBottom|QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft)
-        self.labelVersion.setObjectName("labelVersion")
-        self.verticalLayout_9.addWidget(self.labelVersion)
-        self.labelVersionValue = QtWidgets.QLabel(self.stWidgetOsInfoPage)
-        self.labelVersionValue.setObjectName("labelVersionValue")
-        self.verticalLayout_9.addWidget(self.labelVersionValue)
-        self.horizontalLayout_3.addLayout(self.verticalLayout_9)
-        self.verticalLayout_14.addLayout(self.horizontalLayout_3)
-        self.horizontalLayout_6 = QtWidgets.QHBoxLayout()
-        self.horizontalLayout_6.setContentsMargins(10, 0, 10, 0)
-        self.horizontalLayout_6.setObjectName("horizontalLayout_6")
-        self.verticalLayout_10 = QtWidgets.QVBoxLayout()
-        self.verticalLayout_10.setSpacing(0)
-        self.verticalLayout_10.setObjectName("verticalLayout_10")
-        self.labelPlatform = QtWidgets.QLabel(self.stWidgetOsInfoPage)
-        self.labelPlatform.setAlignment(QtCore.Qt.AlignBottom|QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft)
-        self.labelPlatform.setObjectName("labelPlatform")
-        self.verticalLayout_10.addWidget(self.labelPlatform)
-        self.labelPlatformValue = QtWidgets.QLabel(self.stWidgetOsInfoPage)
-        self.labelPlatformValue.setObjectName("labelPlatformValue")
-        self.verticalLayout_10.addWidget(self.labelPlatformValue)
-        self.horizontalLayout_6.addLayout(self.verticalLayout_10)
-        self.verticalLayout_11 = QtWidgets.QVBoxLayout()
-        self.verticalLayout_11.setSpacing(0)
-        self.verticalLayout_11.setObjectName("verticalLayout_11")
-        self.labelArch = QtWidgets.QLabel(self.stWidgetOsInfoPage)
-        font = QtGui.QFont()
-        font.setFamily("Ubuntu")
-        font.setPointSize(11)
-        font.setBold(False)
-        font.setItalic(False)
-        font.setWeight(50)
-        self.labelArch.setFont(font)
-        self.labelArch.setAlignment(QtCore.Qt.AlignBottom|QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft)
-        self.labelArch.setObjectName("labelArch")
-        self.verticalLayout_11.addWidget(self.labelArch)
-        self.labelArchValue = QtWidgets.QLabel(self.stWidgetOsInfoPage)
-        self.labelArchValue.setObjectName("labelArchValue")
-        self.verticalLayout_11.addWidget(self.labelArchValue)
-        self.horizontalLayout_6.addLayout(self.verticalLayout_11)
-        self.verticalLayout_14.addLayout(self.horizontalLayout_6)
-        self.horizontalLayout_7 = QtWidgets.QHBoxLayout()
-        self.horizontalLayout_7.setContentsMargins(10, 0, 10, 0)
-        self.horizontalLayout_7.setObjectName("horizontalLayout_7")
-        self.verticalLayout_12 = QtWidgets.QVBoxLayout()
-        self.verticalLayout_12.setSpacing(0)
-        self.verticalLayout_12.setObjectName("verticalLayout_12")
-        self.labelCpu = QtWidgets.QLabel(self.stWidgetOsInfoPage)
-        self.labelCpu.setAlignment(QtCore.Qt.AlignBottom|QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft)
-        self.labelCpu.setObjectName("labelCpu")
-        self.verticalLayout_12.addWidget(self.labelCpu)
-        self.labelCpuValue = QtWidgets.QLabel(self.stWidgetOsInfoPage)
-        self.labelCpuValue.setObjectName("labelCpuValue")
-        self.verticalLayout_12.addWidget(self.labelCpuValue)
-        self.horizontalLayout_7.addLayout(self.verticalLayout_12)
-        self.verticalLayout_13 = QtWidgets.QVBoxLayout()
-        self.verticalLayout_13.setSpacing(0)
-        self.verticalLayout_13.setObjectName("verticalLayout_13")
-        self.labelRam = QtWidgets.QLabel(self.stWidgetOsInfoPage)
-        self.labelRam.setAlignment(QtCore.Qt.AlignBottom|QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft)
-        self.labelRam.setObjectName("labelRam")
-        self.verticalLayout_13.addWidget(self.labelRam)
-        self.labelRamValue = QtWidgets.QLabel(self.stWidgetOsInfoPage)
-        self.labelRamValue.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
-        self.labelRamValue.setObjectName("labelRamValue")
-        self.verticalLayout_13.addWidget(self.labelRamValue)
-        self.horizontalLayout_7.addLayout(self.verticalLayout_13)
-        self.verticalLayout_14.addLayout(self.horizontalLayout_7)
-        spacerItem7 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
-        self.verticalLayout_14.addItem(spacerItem7)
-        self.stackedWidgetInfoCard.addWidget(self.stWidgetOsInfoPage)
-        self.verticalLayout_6.addWidget(self.stackedWidgetInfoCard)
-        spacerItem8 = QtWidgets.QSpacerItem(20, 116, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
-        self.verticalLayout_6.addItem(spacerItem8)
-        self.containerStackedWidget.addWidget(self.statisticsPage)
+        self.frameTotals = QtWidgets.QFrame(self.scrollWidgetStats)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.frameTotals.sizePolicy().hasHeightForWidth())
+        self.frameTotals.setSizePolicy(sizePolicy)
+        self.frameTotals.setFrameShape(QtWidgets.QFrame.StyledPanel)
+        self.frameTotals.setFrameShadow(QtWidgets.QFrame.Raised)
+        self.frameTotals.setObjectName("frameTotals")
+        self.gridLayout_2 = QtWidgets.QGridLayout(self.frameTotals)
+        self.gridLayout_2.setObjectName("gridLayout_2")
+        self.labelActiveCustomers = QtWidgets.QLabel(self.frameTotals)
+        self.labelActiveCustomers.setStyleSheet("background-color: #12CBC4;")
+        self.labelActiveCustomers.setAlignment(QtCore.Qt.AlignCenter)
+        self.labelActiveCustomers.setObjectName("labelActiveCustomers")
+        self.gridLayout_2.addWidget(self.labelActiveCustomers, 0, 2, 1, 1)
+        self.labelTotalCustomers = QtWidgets.QLabel(self.frameTotals)
+        self.labelTotalCustomers.setStyleSheet("background-color: #F79F1F;")
+        self.labelTotalCustomers.setAlignment(QtCore.Qt.AlignCenter)
+        self.labelTotalCustomers.setObjectName("labelTotalCustomers")
+        self.gridLayout_2.addWidget(self.labelTotalCustomers, 0, 3, 1, 1)
+        self.labelTotalQuantity = QtWidgets.QLabel(self.frameTotals)
+        self.labelTotalQuantity.setStyleSheet("background-color: #9980FA;")
+        self.labelTotalQuantity.setAlignment(QtCore.Qt.AlignCenter)
+        self.labelTotalQuantity.setObjectName("labelTotalQuantity")
+        self.gridLayout_2.addWidget(self.labelTotalQuantity, 0, 0, 1, 1)
+        self.labelTotalProducts = QtWidgets.QLabel(self.frameTotals)
+        self.labelTotalProducts.setStyleSheet("background-color: #B53471;")
+        self.labelTotalProducts.setAlignment(QtCore.Qt.AlignCenter)
+        self.labelTotalProducts.setObjectName("labelTotalProducts")
+        self.gridLayout_2.addWidget(self.labelTotalProducts, 0, 1, 1, 1)
+        self.labelTotalRevenue = QtWidgets.QLabel(self.frameTotals)
+        self.labelTotalRevenue.setStyleSheet("background-color: #1B1464;")
+        self.labelTotalRevenue.setAlignment(QtCore.Qt.AlignCenter)
+        self.labelTotalRevenue.setObjectName("labelTotalRevenue")
+        self.gridLayout_2.addWidget(self.labelTotalRevenue, 1, 1, 1, 1)
+        self.labelTotalOrders = QtWidgets.QLabel(self.frameTotals)
+        self.labelTotalOrders.setStyleSheet("background-color: #5758BB;")
+        self.labelTotalOrders.setAlignment(QtCore.Qt.AlignCenter)
+        self.labelTotalOrders.setObjectName("labelTotalOrders")
+        self.gridLayout_2.addWidget(self.labelTotalOrders, 1, 2, 1, 1)
+        self.verticalLayout_8.addWidget(self.frameTotals)
+        self.frameTables = QtWidgets.QFrame(self.scrollWidgetStats)
+        self.frameTables.setFrameShape(QtWidgets.QFrame.NoFrame)
+        self.frameTables.setFrameShadow(QtWidgets.QFrame.Raised)
+        self.frameTables.setObjectName("frameTables")
+        self.gridLayout_5 = QtWidgets.QGridLayout(self.frameTables)
+        self.gridLayout_5.setObjectName("gridLayout_5")
+        self.tableWidgetTopProducts = QtWidgets.QTableWidget(self.frameTables)
+        self.tableWidgetTopProducts.setMinimumSize(QtCore.QSize(0, 150))
+        self.tableWidgetTopProducts.setMaximumSize(QtCore.QSize(16777215, 16777215))
+        self.tableWidgetTopProducts.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
+        self.tableWidgetTopProducts.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectRows)
+        self.tableWidgetTopProducts.setObjectName("tableWidgetTopProducts")
+        self.tableWidgetTopProducts.setColumnCount(0)
+        self.tableWidgetTopProducts.setRowCount(0)
+        self.tableWidgetTopProducts.horizontalHeader().setDefaultSectionSize(200)
+        self.tableWidgetTopProducts.horizontalHeader().setStretchLastSection(True)
+        self.tableWidgetTopProducts.verticalHeader().setVisible(False)
+        self.gridLayout_5.addWidget(self.tableWidgetTopProducts, 1, 1, 1, 1)
+        spacerItem4 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.gridLayout_5.addItem(spacerItem4, 1, 2, 1, 1)
+        self.label_6 = QtWidgets.QLabel(self.frameTables)
+        self.label_6.setObjectName("label_6")
+        self.gridLayout_5.addWidget(self.label_6, 0, 1, 1, 1)
+        self.verticalLayout_8.addWidget(self.frameTables)
+        self.frameBarChart = QtWidgets.QFrame(self.scrollWidgetStats)
+        self.frameBarChart.setFrameShape(QtWidgets.QFrame.NoFrame)
+        self.frameBarChart.setFrameShadow(QtWidgets.QFrame.Raised)
+        self.frameBarChart.setObjectName("frameBarChart")
+        self.horizontalLayout = QtWidgets.QHBoxLayout(self.frameBarChart)
+        self.horizontalLayout.setObjectName("horizontalLayout")
+        spacerItem5 = QtWidgets.QSpacerItem(540, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.horizontalLayout.addItem(spacerItem5)
+        self.verticalLayout_8.addWidget(self.frameBarChart)
+        self.scrollArea_2.setWidget(self.scrollWidgetStats)
+        self.verticalLayout_7.addWidget(self.scrollArea_2)
+        self.verticalLayout_6.addWidget(self.frameStatistics)
+        self.containerStackedWidget.addWidget(self.StatisticsPage)
         self.verticalLayout_2.addWidget(self.containerStackedWidget)
         self.verticalLayout_18.addWidget(self.mainWidget)
         MainWindow.setCentralWidget(self.centralwidget)
@@ -1464,8 +1399,8 @@ class Ui_MainWindow(object):
         self.buttonSave.setIconSize(QtCore.QSize(27, 27))
         self.buttonSave.setObjectName("buttonSave")
         self.horizontalLayout_11.addWidget(self.buttonSave)
-        spacerItem9 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.horizontalLayout_11.addItem(spacerItem9)
+        spacerItem6 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.horizontalLayout_11.addItem(spacerItem6)
         self.verticalLayout_3.addWidget(self.frameToolButton_2)
         self.stackedWidgetDetails = QtWidgets.QStackedWidget(self.rightFrame)
         self.stackedWidgetDetails.setObjectName("stackedWidgetDetails")
@@ -1588,8 +1523,8 @@ class Ui_MainWindow(object):
         self.label_5.setObjectName("label_5")
         self.formLayoutNewOrder.setWidget(0, QtWidgets.QFormLayout.LabelRole, self.label_5)
         self.verticalLayout_17.addWidget(self.frameNewOrderForm)
-        spacerItem10 = QtWidgets.QSpacerItem(20, 37, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
-        self.verticalLayout_17.addItem(spacerItem10)
+        spacerItem7 = QtWidgets.QSpacerItem(20, 37, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
+        self.verticalLayout_17.addItem(spacerItem7)
         self.stackedWidgetDetails.addWidget(self.createOrderPage)
         self.verticalLayout_3.addWidget(self.stackedWidgetDetails)
         self.verticalLayout.addWidget(self.rightFrame)
@@ -1600,8 +1535,7 @@ class Ui_MainWindow(object):
         MainWindow.setStatusBar(self.statusbar)
 
         self.retranslateUi(MainWindow)
-        self.containerStackedWidget.setCurrentIndex(1)
-        self.stackedWidgetInfoCard.setCurrentIndex(0)
+        self.containerStackedWidget.setCurrentIndex(3)
         self.stackedWidgetDetails.setCurrentIndex(1)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
@@ -1774,19 +1708,13 @@ class Ui_MainWindow(object):
         item = self.tableWidgetOrders.item(1, 2)
         item.setText(_translate("MainWindow", "runing"))
         self.tableWidgetOrders.setSortingEnabled(__sortingEnabled)
-        self.pushButton.setText(_translate("MainWindow", "Copy "))
-        self.labelName.setText(_translate("MainWindow", "Name"))
-        self.labelNameValue.setText(_translate("MainWindow", "Value"))
-        self.labelVersion.setText(_translate("MainWindow", "Version"))
-        self.labelVersionValue.setText(_translate("MainWindow", "Value"))
-        self.labelPlatform.setText(_translate("MainWindow", "Platform"))
-        self.labelPlatformValue.setText(_translate("MainWindow", "Value"))
-        self.labelArch.setText(_translate("MainWindow", "Architecture"))
-        self.labelArchValue.setText(_translate("MainWindow", "Value"))
-        self.labelCpu.setText(_translate("MainWindow", "Cpu"))
-        self.labelCpuValue.setText(_translate("MainWindow", "Value"))
-        self.labelRam.setText(_translate("MainWindow", "Ram"))
-        self.labelRamValue.setText(_translate("MainWindow", "Value"))
+        self.labelActiveCustomers.setText(_translate("MainWindow", "TextLabel"))
+        self.labelTotalCustomers.setText(_translate("MainWindow", "المجموع"))
+        self.labelTotalQuantity.setText(_translate("MainWindow", "TextLabel"))
+        self.labelTotalProducts.setText(_translate("MainWindow", "المجموع"))
+        self.labelTotalRevenue.setText(_translate("MainWindow", "المجموع"))
+        self.labelTotalOrders.setText(_translate("MainWindow", "TextLabel"))
+        self.label_6.setText(_translate("MainWindow", "المنتجات الأفضل"))
         self.labelTitleDetails.setText(_translate("MainWindow", "معلومات إضافية"))
         self.buttonSave.setToolTip(_translate("MainWindow", "حفظ البيانات"))
         self.buttonSave.setStatusTip(_translate("MainWindow", "حفظ البيانات"))
