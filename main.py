@@ -33,6 +33,9 @@ class Interface(QtWidgets.QMainWindow):
             exit()
 
         # TABLE WIDGETS SETTINGS
+        self.product_headers = ["_id", "name", "ref", "description", "price", "qte", "category"]
+        self.customer_headers = ["_id", "first_name", "last_name", "phone", "email", "address", "is_active", "client_status"]
+
         # column size
         Utils.table_column_size(self.ui.tableWidgetProduct, [(0, 0), (1, 180), (2, 100), (3, 450), (4, 90), (5, 80)])
 
@@ -44,8 +47,37 @@ class Interface(QtWidgets.QMainWindow):
         self.ui.dockWidget.setTitleBarWidget(empty_title_bar)
         self.ui.dockWidget.close()
 
-        # add menu for order status
-        Utils.setup_order_status_menu(self.ui.buttonOrderStatus, self.change_order_status)
+        # MENU Define the order status actions
+        order_actions = [
+            ({"pending": "قيد الانتظار"}, self.change_order_status, qta.icon('mdi6.clock-time-seven', color="#ffffff")),
+            ({"confirmed": "مؤكد"}, self.change_order_status, qta.icon('mdi6.check-circle-outline', color="#ffffff")),
+            ({"shipped": "تم الشحن"}, self.change_order_status, qta.icon('mdi6.truck-outline', color="#ffffff")),
+            ({"delivered": "تم التوصيل"}, self.change_order_status, qta.icon('mdi6.check-bold', color="#ffffff")),
+            ({"cancelled": "ملغي"}, self.change_order_status, qta.icon('mdi6.close-circle-outline', color="#ffffff")),
+        ]
+        # create the menu
+        Utils.create_menu(
+            root=self,
+            button=self.ui.buttonOrderStatus,
+            icon_name='mdi.list-status',
+            actions=order_actions,
+            is_action_with_icon=True
+        )
+
+        # Define the customer status actions
+        customer_status_actions = [
+            ({"good_client": "عميل جيد"}, self.change_customer_status, qta.icon('mdi6.thumb-up', color="#4caf50")),
+            ({"bad_client": "عميل سيئ"}, self.change_customer_status, qta.icon('mdi6.thumb-down', color="#f44336")),
+            ({"trusted": "موثوق"}, self.change_customer_status, qta.icon('mdi6.star', color="#ffc107")),
+        ]
+
+        Utils.create_menu(
+            root=self,
+            button=self.ui.buttonCustomerTrust,
+            icon_name='mdi.account-circle',
+            actions=customer_status_actions,
+            is_action_with_icon=True
+        )
 
         # initial functions
         self.goto_page(page='Products')
@@ -61,7 +93,7 @@ class Interface(QtWidgets.QMainWindow):
             # Display all products
             self.fetch_and_display_data(
                 collection_name='Products',
-                headers=["_id", "name", "ref", "description", "price", "qte", "category"],
+                headers=self.product_headers,
             )
             self.enable_disable_buttons(page='Products')
             self.ui.labelErrorProductPage.setText('')
@@ -71,7 +103,7 @@ class Interface(QtWidgets.QMainWindow):
             # Display all customers
             self.fetch_and_display_data(
                 collection_name='Customers',
-                headers=["_id", "first_name", "last_name", "phone", "email", "address", "is_active"]
+                headers=self.customer_headers
             )
             self.enable_disable_buttons(page='Customers')
             self.ui.labelErrorCustomerPage.setText('')
@@ -165,6 +197,7 @@ class Interface(QtWidgets.QMainWindow):
                 self.ui.buttonDeleteCustomer,
                 self.ui.buttonCustomerStatus,
                 self.ui.buttonCustomerOrders,
+                self.ui.buttonCustomerTrust,
             ]
             table_widget = self.ui.tableWidgetCustomer
         elif page == 'Orders':
@@ -203,7 +236,7 @@ class Interface(QtWidgets.QMainWindow):
         self.ui.frameDetailsID.hide()
 
         if operation in ['Edit', 'Create']:
-            projection = {"_id": 0, "created_at": 0, "updated_at": 0}
+            projection = {"_id": 0, "created_at": 0, "updated_at": 0, "client_status": 0}
             self.ui.frameToolButton_2.show()
         else:
             projection = {"_id": 0}
@@ -312,6 +345,7 @@ class Interface(QtWidgets.QMainWindow):
         Change the order status
         :new_stats: "pending" | "confirmed" | "shipped" | "delivered" | "cancelled"
         """
+        logger.debug(f'Change order status to: {new_status}')
         item_id = Utils.get_column_value(self.ui.tableWidgetOrders, 0)
         if new_status == 'cancelled':
             logger.debug('Order Cancelled: the quantity must return to product')
@@ -344,6 +378,10 @@ class Interface(QtWidgets.QMainWindow):
                 value_edit = Utils.create_doubleSpinBox(parent, f"lineEdit_{key}")
                 value_edit.setValue(0)
                 value_edit.setEnabled(True)
+            elif key == 'client_status':
+                values = ["عميل جيد", "عميل سيئ", "موثوق"]
+                # Create the comboBox
+                value_edit = Utils.create_comboBox(parent=parent, object_name=f"lineEdit_{key}", values=values)
             else:
                 value_edit = Utils.create_lineEdit(parent, f"lineEdit_{key}")
                 value_edit.setText("")
@@ -395,11 +433,15 @@ class Interface(QtWidgets.QMainWindow):
 
                 # Handle QComboBox inputs for NewOrders
                 if isinstance(label_widget, QtWidgets.QLabel) and isinstance(input_widget, QtWidgets.QComboBox):
-                    key = input_widget.objectName().replace("comboBoxAddOrder", "").lower()
+                    if input_widget.objectName().startswith('lineEdit'):
+                        key = input_widget.objectName().replace('lineEdit_', "")
+                    else:
+                        key = input_widget.objectName().replace("comboBoxAddOrder", "").lower()
+
                     if key == 'customer_id':
                         value = self.customers_map.get(input_widget.currentText().strip(), '')
-                    elif key == 'status':
-                        value = arabic.order_status_mapping.get(input_widget.currentText().strip(), 'None')
+                    elif key in ['status', 'client_status']:
+                        value = arabic.status_mapping.get(input_widget.currentText().strip(), 'None')
                     else:
                         value = input_widget.currentText().strip()
                     input_data[key] = value
@@ -434,8 +476,9 @@ class Interface(QtWidgets.QMainWindow):
             logger.debug('Returning from save do Nothing.')
             return
 
-        # ------------# Products ------------#
+        # Collect data
         data = self.collect_form_data(self.ui.formLayout)
+        # ------------# Products ------------#
         if mongo_table == 'Products':
             label = self.ui.labelErrorProductPage
             logger.debug(f'Save Button: Saving Product( {operation} ) \n{data}')
@@ -447,7 +490,7 @@ class Interface(QtWidgets.QMainWindow):
                     # re-display all the Products
                     self.fetch_and_display_data(
                         collection_name='Products',
-                        headers=["_id", "name", "ref", "description", "price", "qte", "category"]
+                        headers=self.product_headers
                     )
 
                 Utils.success_message(self.ui.labelErrorProductPage, response['message'], response['status'] == 'success')
@@ -462,7 +505,7 @@ class Interface(QtWidgets.QMainWindow):
                     # re-display all Products
                     self.fetch_and_display_data(
                         collection_name='Products',
-                        headers=["_id", "name", "ref", "description", "price", "qte", "category"]
+                        headers=self.product_headers
                     )
                 else:
                     Utils.success_message(label, 'هنالك خطأ إعد من جديد', success=False)
@@ -481,7 +524,7 @@ class Interface(QtWidgets.QMainWindow):
                     # re-display all customers in tableWidget
                     self.fetch_and_display_data(
                         collection_name='Customers',
-                        headers=["_id", "first_name", "last_name", "phone", "email", "address", "is_active"]
+                        headers=self.customer_headers
                     )
                 else:
                     message = "هنالك خطأ إعد من جديد"
@@ -500,7 +543,7 @@ class Interface(QtWidgets.QMainWindow):
                     # re-display the Customers in the tableWidget
                     self.fetch_and_display_data(
                         collection_name='Customers',
-                        headers=["_id", "first_name", "last_name", "phone", "email", "address", "is_active"]
+                        headers=self.customer_headers
                     )
                 else:
                     Utils.success_message(label, 'هنالك خطأ إعد من جديد', success=False)
@@ -648,8 +691,8 @@ class Interface(QtWidgets.QMainWindow):
                 continue
 
             # Translate to arabic
-            if key in ["status", "is_active"]:
-                value = arabic.order_status_mapping_en.get(value, value)
+            if key in ["status", "is_active", "client_status"]:
+                value = arabic.status_mapping_en.get(value, value)
 
             # Create a line edit for the value
             value_edit = Utils.create_lineEdit(self.ui.scrollAreaWidgetContents, f"lineEdit_{key}")
@@ -722,6 +765,7 @@ class Interface(QtWidgets.QMainWindow):
             "phone": "رقم الهاتف",
             "email": "الإيمايل",
             "address": "العنوان",
+            "client_status": "درجة الثقة"
         }
         # init config files
         self.ui.labelTitleDetails.setText('مشتري جديد')
@@ -754,7 +798,7 @@ class Interface(QtWidgets.QMainWindow):
                         order.get('_id', ''),
                         customer_name,
                         order.get('order_date', ''),
-                        arabic.order_status_mapping_en.get(order.get('status', ''), ''),
+                        arabic.status_mapping_en.get(order.get('status', ''), ''),
                         order.get('total_price')
                     ]
                     for order in orders
@@ -766,6 +810,29 @@ class Interface(QtWidgets.QMainWindow):
                 Utils.success_message(self.ui.labelErrorCustomerPage, message=f"لا يوجد طلبيات للمشتري {customer_name}")
         else:
             logger.error(response["error"])
+
+    def change_customer_status(self, status_key):
+        """
+        Callback to handle customer status changes.
+        :param status_key: The key of the selected status (e.g., 'good_client', 'bad_client', 'trusted').
+        """
+        # Get the current customer ID (you can fetch it from the UI or context)
+        customer_id = Utils.get_column_value(self.ui.tableWidgetCustomer, 0)
+
+        # Update the database with the new status
+        response = self.db_handler.update_record_state(
+            collection_name="Customers",
+            document_id=customer_id,
+            field="client_status",
+            new_value=status_key
+        )
+
+        # Display success or error message
+        if response["status"] == "success":
+            self.goto_page(page="Customers")
+            Utils.success_message(self.ui.labelErrorCustomerPage, "تم تحديث حالة العميل بنجاح", True)
+        else:
+            Utils.success_message(self.ui.labelErrorCustomerPage, response["message"], False)
 
     # ********************************************
     # == ORDERS PAGE
@@ -794,7 +861,7 @@ class Interface(QtWidgets.QMainWindow):
                     order.get("_id", ""),
                     'غير مسجل' if order.get("customer_name") is None else order.get("customer_name", "Unknown"),
                     order.get("order_date", "").strftime('%Y - %m - %d'),
-                    arabic.order_status_mapping_en.get(order.get("status", ""), ""),
+                    arabic.status_mapping_en.get(order.get("status", ""), ""),
                     order.get("total_price", ""),
                 ]
                 for order in response["orders"]
@@ -836,7 +903,6 @@ class Interface(QtWidgets.QMainWindow):
             return
 
         response = response["orders"][0]
-        logger.debug(response)
         # Re-order the fields
         response = {
             "order_date": response.get("order_date", ""),
@@ -885,7 +951,7 @@ class Interface(QtWidgets.QMainWindow):
 
         # Combobox Order Status
         self.ui.comboBoxAddOrderStatus.clear()
-        for status in arabic.order_status_mapping.keys():
+        for status in arabic.status_mapping.keys():
             self.ui.comboBoxAddOrderStatus.addItem(status)
 
         # Set DateEdit to now

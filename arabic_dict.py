@@ -31,17 +31,22 @@ arabic_mapping = {
     "address": "العنوان",
     True: "مفعل",
     False: "غير مفعل",
+    "client_status": "درجة الثقة"
 }
 
-order_status_mapping = {
+status_mapping = {
     "قيد الانتظار": "pending",
     "مؤكد": "confirmed",
     "تم الشحن": "shipped",
     "تم التوصيل": "delivered",
     "ملغي": "cancelled",
+    # customer status mapping
+    "موثوق": "trusted",
+    "عميل جيد": "good_client",
+    "عميل سيئ": "bad_client",
 }
 
-order_status_mapping_en = {
+status_mapping_en = {
     "pending": "قيد الانتظار",
     "confirmed": "مؤكد",
     "shipped": "تم الشحن",
@@ -50,8 +55,11 @@ order_status_mapping_en = {
     # this for customer status
     True: "مفعل",
     False: "غير مفعل",
+    "trusted": "موثوق",
+    "good_client": "عميل جيد",
+    "bad_client": "عميل سيئ",
 }
 
 prod_headers = ["أيد", "الاسم", "المرجع", "الوصف", "السعر", "الكمية", "الفئة"]
-customer_headers = ["إيد", "الإسم", "اللقب", "الهاتف", "إيمايل", "العنوان", "مفعل"]
+customer_headers = ["إيد", "الإسم", "اللقب", "الهاتف", "إيمايل", "العنوان", "مفعل", "درجة الثقة"]
 order_headers = ["أيد", "المشتري", "التاريخ", "الوضعية", "المجموع"]

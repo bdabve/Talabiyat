@@ -160,7 +160,7 @@ class Utils:
         # Just Icons
         root.ui.buttonOrderStatus.setIcon(qta.icon('mdi.list-status', color=MENU_BUTTON_COLOR))
 
-        # Callback Functions
+        # Callback Functions [ LineEditSearch and his Button ]
         root.ui.lineEditSearchProduct.textChanged.connect(root.search_products)
         root.ui.searchButtonIcon.clicked.connect(root.search_products)
 
@@ -172,10 +172,9 @@ class Utils:
         root.ui.tableWidgetCustomer.itemDoubleClicked.connect(
             lambda: root.item_details(lineEditEnabled=False, coll_name="Customers")
         )
-
         root.ui.tableWidgetCustomer.itemSelectionChanged.connect(lambda: root.enable_disable_buttons('Customers'))
 
-        # Order Table
+        # => Order TableWidget
         root.ui.tableWidgetOrders.itemDoubleClicked.connect(lambda: root.order_details(lineEditEnabled=False))
         root.ui.tableWidgetOrders.itemSelectionChanged.connect(lambda: root.enable_disable_buttons('Orders'))
 
@@ -185,73 +184,53 @@ class Utils:
         # # resume, suspend, terminate buttons
         # root.ui.buttonTerminate.setIcon(qta.icon('mdi6.skull', color="#ffffff"))
 
-        # root.ui.buttonResume.setIcon(qta.icon('fa5s.walking', color="#ffffff"))
-
-        # root.ui.buttonSuspend.setIcon(qta.icon('mdi.motion-pause-outline', color="#ffffff"))
-
-    def setup_order_status_menu(button, callback):
+    def create_menu(root, button: QtWidgets.QPushButton, icon_name: str, actions: list, is_action_with_icon=False):
         """
-        Sets up a QMenu for changing the order status on a QPushButton.
+        Helper function to create a dynamic menu for a QPushButton.
 
-        :param button: The QPushButton instance.
-        :param callback: Function to call when a menu item is clicked.
+        :param root: The parent widget (usually the main window).
+        :param button: The QPushButton to which the menu will be attached.
+        :param icon_name: The icon name for the button (e.g., 'mdi.list-status').
+        :param actions: A list of tuples where each tuple contains:
+                        - A dictionary mapping data to the visible label (e.g., {"pending": "قيد الانتظار"}).
+                        - The callback function (callable).
+                        - Optional: The icon (if is_action_with_icon is True).
+        :param is_action_with_icon: Whether the actions include icons.
+
+        :example usage:
+            order_actions = [
+                ({"pending": "قيد الانتظار"}, self.change_order_status, qta.icon('mdi6.clock-time-seven', color="#ffffff")),
+                ({"confirmed": "مؤكد"}, self.change_order_status, qta.icon('mdi6.check-circle-outline', color="#ffffff")),
+            ]
+            Utils.create_menu(
+                root=self,
+                button=self.ui.buttonOrderStatus,
+                icon_name='mdi.list-status',
+                actions=order_actions,
+                is_action_with_icon=True
+            )
         """
-        # Create a QMenu
-        menu = QtWidgets.QMenu()
-        menu.setLayoutDirection(QtCore.Qt.LeftToRight)
-        menu.setStyleSheet("""
-QMenu {
-    background-color: #272727;
-    margin: 2px; /* some spacing around the menu */
-    border-color: 2px solid #4b4b4b;
-    border-radius: 10px;
-}
+        # Set the icon for the button
+        button.setIcon(qta.icon(icon_name, color='#ffffff'))
 
-QMenu::item {
-    font: 10pt "Noto Serif Thai";
-    color: #ffffff;
-    padding: 2px 5px 2px 5px;
-    border: 1px solid transparent; /* reserve space for selection border */
-    min-width: 200px;
-}
+        # Create the menu
+        menu = QtWidgets.QMenu(root)
 
-QMenu::item:selected {
-    background: #4b4b4b;
-}
+        for action in actions:
+            action_name, callback = action[:2]  # Get the action dictionary and callback function
+            action_icon = action[2] if is_action_with_icon else None  # Get the icon if applicable
 
-QMenu::icon:checked { /* appearance of a 'checked' icon */
-    background: gray;
-    border: 1px inset gray;
-    position: absolute;
-    top: 1px;
-    right: 1px;
-    bottom: 1px;
-    left: 1px;
-}
+            # Add menu items based on the action dictionary
+            for data, label in action_name.items():
+                menu_action = menu.addAction(label)
+                menu_action.setData(data)  # Store the data (e.g., "pending")
+                if action_icon:
+                    menu_action.setIcon(action_icon)
 
-QMenu::indicator {
-    width: 0px;
-    height: 0px;
-}
-       """)
-        # Define possible statuses
-        statuses = {
-            "pending": "قيد الانتظار",
-            "confirmed": "مؤكد",
-            "shipped": "تم الشحن",
-            "delivered": "تم التوصيل",
-            "cancelled": "ملغي"
-        }
+                # Connect the menu action to the callback
+                menu_action.triggered.connect(lambda _, d=data, cb=callback: cb(d))
 
-        # Add actions for each status
-        for status_key, status_label in statuses.items():
-            action = menu.addAction(status_label)
-            action.setData(status_key)  # Store the status key as action data
-
-        # Connect the menu's triggered signal to the callback function
-        menu.triggered.connect(lambda action: callback(action.data()))
-
-        # Attach the menu to the QPushButton
+        # Attach the menu to the button
         button.setMenu(menu)
 
     def success_message(label, message, success=True):
@@ -321,8 +300,8 @@ QMenu::indicator {
                 item = QtWidgets.QTableWidgetItem(str(value))
                 table.setItem(row_idx, col_idx, item)
 
-        table.resizeColumnsToContents()
         table.horizontalHeader().setStretchLastSection(True)
+        table.resizeColumnsToContents()
 
     @staticmethod
     def table_column_size(table: QtWidgets.QTableWidget, columns: list) -> None:
@@ -406,14 +385,6 @@ QMenu::indicator {
         return double_spinbox
 
     @staticmethod
-    def clear_details_form(form_layout):
-        """Clear all widgets from a QFormLayout."""
-        while form_layout.count():
-            item = form_layout.takeAt(0)
-            if widget := item.widget():
-                widget.deleteLater()
-
-    @staticmethod
     def create_qtablewidget(column_count: int, headers: list):
         """
         Create a QTableWidget and set all options
@@ -432,17 +403,26 @@ QMenu::indicator {
         return table_widget
 
     @staticmethod
-    def show_confirm_dialog(message):
+    def create_comboBox(parent, object_name, values):
         """
-        Displays a confirmation dialog before deleting an item.
+        Dynamically creates a QComboBox and populates it with the given values.
 
-        :message: the message to display in Dialog
-        :return: True if confirmed, False otherwise.
+        :param parent: The parent widget for the QComboBox.
+        :param object_name: The object name to set for the QComboBox.
+        :param values: A list of values to populate in the comboBox.
+        :return: The created QComboBox instance.
         """
-        # Create the confirmation dialog
-        from confirm_dialog import ConfirmDialog
-        confirmDialog = ConfirmDialog(message)
-        # Execute the dialog and get the user's response
-        result = confirmDialog.exec_()
+        # Create the QComboBox
+        combo_box = QtWidgets.QComboBox(parent)
+        combo_box.setObjectName(object_name)
+        # Add the values to the comboBox
+        combo_box.addItems(values)
+        return combo_box
 
-        return result       # Return True if 'Yes' is clicked
+    @staticmethod
+    def clear_details_form(form_layout):
+        """Clear all widgets from a QFormLayout."""
+        while form_layout.count():
+            item = form_layout.takeAt(0)
+            if widget := item.widget():
+                widget.deleteLater()

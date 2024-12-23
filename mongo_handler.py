@@ -451,7 +451,7 @@ class MongoDBHandler:
     # Customer Methods
     # *************************************************************
 
-    def add_customer(self, first_name, last_name, email, phone, address):
+    def add_customer(self, first_name, last_name, email, phone, address, client_status):
         """
         Adds a new customer to the Customers collection.
         """
@@ -461,7 +461,8 @@ class MongoDBHandler:
             "email": email,
             "phone": phone,
             "address": address,
-            "is_active": True
+            "is_active": False,
+            "client_status": client_status
         }
         return self.add_document("Customers", customer)
 

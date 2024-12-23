@@ -398,16 +398,20 @@ class Ui_MainWindow(object):
 "QMenu {\n"
 "    background-color: #272727;\n"
 "    margin: 2px; /* some spacing around the menu */\n"
+"    border-color: 2px solid #4b4b4b;\n"
+"    border-radius: 10px;\n"
 "}\n"
 "\n"
 "QMenu::item {\n"
-"    padding: 2px 25px 2px 20px;\n"
+"    font: 10pt \"Noto Serif Thai\";\n"
+"    color: #ffffff;\n"
+"    padding: 2px 5px 2px 5px;\n"
 "    border: 1px solid transparent; /* reserve space for selection border */\n"
+"    min-width: 50px;\n"
 "}\n"
 "\n"
 "QMenu::item:selected {\n"
-"    border-color: #4b4b4b;\n"
-"    background: rgba(100, 100, 100, 150);\n"
+"    background: #4b4b4b;\n"
 "}\n"
 "\n"
 "QMenu::icon:checked { /* appearance of a \'checked\' icon */\n"
@@ -418,13 +422,6 @@ class Ui_MainWindow(object):
 "    right: 1px;\n"
 "    bottom: 1px;\n"
 "    left: 1px;\n"
-"}\n"
-"\n"
-"QMenu::separator {\n"
-"    height: 2px;\n"
-"    background: lightblue;\n"
-"    margin-left: 10px;\n"
-"    margin-right: 5px;\n"
 "}\n"
 "\n"
 "QMenu::indicator {\n"
@@ -518,7 +515,7 @@ class Ui_MainWindow(object):
         self.menuFrame.setFrameShadow(QtWidgets.QFrame.Raised)
         self.menuFrame.setObjectName("menuFrame")
         self.horizontalLayout_9 = QtWidgets.QHBoxLayout(self.menuFrame)
-        self.horizontalLayout_9.setContentsMargins(0, 9, 0, -1)
+        self.horizontalLayout_9.setContentsMargins(0, 5, 0, 5)
         self.horizontalLayout_9.setObjectName("horizontalLayout_9")
         self.buttonUsername = QtWidgets.QPushButton(self.menuFrame)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Minimum)
@@ -991,6 +988,13 @@ class Ui_MainWindow(object):
         self.line.setFrameShadow(QtWidgets.QFrame.Sunken)
         self.line.setObjectName("line")
         self.horizontalLayout_13.addWidget(self.line)
+        self.buttonCustomerTrust = QtWidgets.QPushButton(self.frameToolButton_4)
+        self.buttonCustomerTrust.setMinimumSize(QtCore.QSize(40, 40))
+        self.buttonCustomerTrust.setMaximumSize(QtCore.QSize(40, 40))
+        self.buttonCustomerTrust.setText("")
+        self.buttonCustomerTrust.setIconSize(QtCore.QSize(27, 27))
+        self.buttonCustomerTrust.setObjectName("buttonCustomerTrust")
+        self.horizontalLayout_13.addWidget(self.buttonCustomerTrust)
         self.buttonCustomerStatus = QtWidgets.QPushButton(self.frameToolButton_4)
         self.buttonCustomerStatus.setMinimumSize(QtCore.QSize(40, 40))
         self.buttonCustomerStatus.setMaximumSize(QtCore.QSize(40, 40))
@@ -1394,7 +1398,7 @@ class Ui_MainWindow(object):
         self.dockWidget.setWindowTitle("")
         self.dockWidget.setObjectName("dockWidget")
         self.dockWidgetContents = QtWidgets.QWidget()
-        self.dockWidgetContents.setMinimumSize(QtCore.QSize(400, 0))
+        self.dockWidgetContents.setMinimumSize(QtCore.QSize(480, 0))
         self.dockWidgetContents.setObjectName("dockWidgetContents")
         self.verticalLayout = QtWidgets.QVBoxLayout(self.dockWidgetContents)
         self.verticalLayout.setContentsMargins(0, -1, 0, -1)
