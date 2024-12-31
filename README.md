@@ -88,3 +88,5 @@
 ![تفاصيل الطلب](screenshots/orders.png)
 ## **الإحصائيات**
 ![تفاصيل الطلب](screenshots/statistics.png)
+
+For any inquiries or collaborations, feel free to reach out at: [bdabve@gmail.com](mailto:bdabve@gmail.com)
