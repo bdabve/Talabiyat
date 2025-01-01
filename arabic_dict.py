@@ -46,6 +46,15 @@ status_mapping = {
     "عميل سيئ": "bad_client",
 }
 
+# New Order status mapping
+status_mapping_neworder = {
+    "قيد الانتظار": "pending",
+    "مؤكد": "confirmed",
+    "تم الشحن": "shipped",
+    "تم التوصيل": "delivered",
+    "ملغي": "cancelled",
+}
+
 status_mapping_en = {
     "pending": "قيد الانتظار",
     "confirmed": "مؤكد",

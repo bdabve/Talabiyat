@@ -1,3 +1,4 @@
+from datetime import datetime, date
 from PyQt5 import QtWidgets, QtGui, QtCore
 import qtawesome as qta
 
@@ -164,6 +165,10 @@ class Utils:
         # Callback Functions [ LineEditSearch and his Button ]
         root.ui.lineEditSearchProduct.textChanged.connect(root.search_products)
         root.ui.searchButtonIcon.clicked.connect(root.search_products)
+
+        root.ui.lineEditSearchCustomer.textChanged.connect(root.search_customers)   # Customers
+
+        root.ui.lineEditSearchOrder.textChanged.connect(root.search_orders)   # Orders
 
         # => Product TableWidget
         root.ui.tableWidgetProduct.itemDoubleClicked.connect(lambda: root.item_details(lineEditEnabled=False))
@@ -428,3 +433,20 @@ class Utils:
             item = form_layout.takeAt(0)
             if widget := item.widget():
                 widget.deleteLater()
+
+    @staticmethod
+    def datetime_fields(self, value):
+        """
+        Transform datetime fields
+        """
+        try:
+            # If the value is a string that looks like a datetime, convert it
+            if isinstance(value, str):
+                value = datetime.strptime(value, "%Y-%m-%dT%H:%M:%S%z")
+            elif isinstance(value, date):
+                value = datetime.combine(value, datetime.min.time())
+            value = value.strftime("%Y-%m-%d")  # Format the datetime in '%d-%m-%Y' format
+        except ValueError:
+            value = "تاريخ غير صالح"
+
+        return value
