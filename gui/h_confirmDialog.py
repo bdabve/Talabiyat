@@ -14,34 +14,33 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
-        Dialog.resize(456, 265)
+        Dialog.resize(430, 211)
         Dialog.setStyleSheet("QDialog {\n"
 "    background: white;\n"
-"    border-radius: 20px;\n"
+"    border-radius: 10px;\n"
 "}\n"
 "\n"
 "#centralWidget {\n"
 "    background-color: #2f2f2f;\n"
-"    border-radius: 20px;\n"
+"    border-radius: 10px;\n"
+"    border: 2px solid #4a4a4a;\n"
 "}\n"
 "\n"
 "QLabel {\n"
 "    color: #ffffff;\n"
-"    padding: 25px 10px;\n"
+"    padding: 10px 10px;\n"
 "}\n"
 "\n"
-"#labelTitle {\n"
-"    border: 2px solid #444444;\n"
-"    border-top: none;\n"
-"    border-left: none;\n"
-"    border-right: none;\n"
+"#line, #line_2, #line_3 {\n"
+"    background: #4a4a4a;\n"
 "}\n"
+"\n"
 "QPushButton {\n"
-"    border-radius: 17px;\n"
-"    padding: 3px 0;\n"
-"    background-color: #2f2f2f;\n"
+"    border-bottom-right-radius: 10px;\n"
+"    border: none;\n"
+"    background-color: transparent;\n"
 "    color: #ffffff;\n"
-"    border: 1px solid #575757;\n"
+"    /* border: 1px solid #575757;*/\n"
 "}\n"
 "\n"
 "QPushButton:hover {\n"
@@ -49,11 +48,13 @@ class Ui_Dialog(object):
 "}\n"
 "\n"
 "#buttonConfirm {\n"
-"    background-color: #ef4444;\n"
+"    background-color: transparent;\n"
+"    color: #f77861;\n"
+"    border-bottom-left-radius: 10px;\n"
 "}\n"
 "\n"
 "#buttonConfirm:hover {\n"
-"    background-color: #b91c1c;\n"
+"    background-color: #3b3230;\n"
 "}")
         self.verticalLayout = QtWidgets.QVBoxLayout(Dialog)
         self.verticalLayout.setContentsMargins(0, 0, 0, 0)
@@ -64,7 +65,8 @@ class Ui_Dialog(object):
         self.centralWidget.setStyleSheet("")
         self.centralWidget.setObjectName("centralWidget")
         self.verticalLayout_2 = QtWidgets.QVBoxLayout(self.centralWidget)
-        self.verticalLayout_2.setContentsMargins(0, 0, 0, 20)
+        self.verticalLayout_2.setContentsMargins(0, 0, 0, 0)
+        self.verticalLayout_2.setSpacing(0)
         self.verticalLayout_2.setObjectName("verticalLayout_2")
         self.labelTitle = QtWidgets.QLabel(self.centralWidget)
         font = QtGui.QFont()
@@ -73,37 +75,65 @@ class Ui_Dialog(object):
         self.labelTitle.setAlignment(QtCore.Qt.AlignCenter)
         self.labelTitle.setObjectName("labelTitle")
         self.verticalLayout_2.addWidget(self.labelTitle)
+        self.line_3 = QtWidgets.QFrame(self.centralWidget)
+        self.line_3.setFrameShape(QtWidgets.QFrame.HLine)
+        self.line_3.setFrameShadow(QtWidgets.QFrame.Sunken)
+        self.line_3.setObjectName("line_3")
+        self.verticalLayout_2.addWidget(self.line_3)
         self.labelMessage = QtWidgets.QLabel(self.centralWidget)
+        self.labelMessage.setMinimumSize(QtCore.QSize(0, 80))
         font = QtGui.QFont()
         font.setPointSize(13)
         self.labelMessage.setFont(font)
         self.labelMessage.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignVCenter)
         self.labelMessage.setObjectName("labelMessage")
         self.verticalLayout_2.addWidget(self.labelMessage)
+        self.line_2 = QtWidgets.QFrame(self.centralWidget)
+        self.line_2.setFrameShape(QtWidgets.QFrame.HLine)
+        self.line_2.setFrameShadow(QtWidgets.QFrame.Sunken)
+        self.line_2.setObjectName("line_2")
+        self.verticalLayout_2.addWidget(self.line_2)
         self.frame = QtWidgets.QFrame(self.centralWidget)
+        self.frame.setMinimumSize(QtCore.QSize(0, 0))
         self.frame.setFrameShape(QtWidgets.QFrame.NoFrame)
         self.frame.setFrameShadow(QtWidgets.QFrame.Raised)
         self.frame.setObjectName("frame")
         self.horizontalLayout = QtWidgets.QHBoxLayout(self.frame)
+        self.horizontalLayout.setContentsMargins(2, 0, 2, 2)
+        self.horizontalLayout.setSpacing(0)
         self.horizontalLayout.setObjectName("horizontalLayout")
-        spacerItem = QtWidgets.QSpacerItem(253, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.horizontalLayout.addItem(spacerItem)
         self.buttonCancel = QtWidgets.QPushButton(self.frame)
-        self.buttonCancel.setMinimumSize(QtCore.QSize(85, 0))
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Preferred)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.buttonCancel.sizePolicy().hasHeightForWidth())
+        self.buttonCancel.setSizePolicy(sizePolicy)
+        self.buttonCancel.setMinimumSize(QtCore.QSize(0, 0))
         font = QtGui.QFont()
         font.setFamily("Droid Sans Fallback")
-        font.setPointSize(12)
+        font.setPointSize(14)
         self.buttonCancel.setFont(font)
         self.buttonCancel.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         self.buttonCancel.setObjectName("buttonCancel")
         self.horizontalLayout.addWidget(self.buttonCancel)
+        self.line = QtWidgets.QFrame(self.frame)
+        self.line.setFrameShape(QtWidgets.QFrame.VLine)
+        self.line.setFrameShadow(QtWidgets.QFrame.Sunken)
+        self.line.setObjectName("line")
+        self.horizontalLayout.addWidget(self.line)
         self.buttonConfirm = QtWidgets.QPushButton(self.frame)
-        self.buttonConfirm.setMinimumSize(QtCore.QSize(85, 0))
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Preferred)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.buttonConfirm.sizePolicy().hasHeightForWidth())
+        self.buttonConfirm.setSizePolicy(sizePolicy)
+        self.buttonConfirm.setMinimumSize(QtCore.QSize(0, 0))
         font = QtGui.QFont()
         font.setFamily("Droid Sans Fallback")
-        font.setPointSize(12)
+        font.setPointSize(14)
         self.buttonConfirm.setFont(font)
         self.buttonConfirm.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+        self.buttonConfirm.setIconSize(QtCore.QSize(20, 20))
         self.buttonConfirm.setObjectName("buttonConfirm")
         self.horizontalLayout.addWidget(self.buttonConfirm)
         self.verticalLayout_2.addWidget(self.frame)
@@ -115,7 +145,7 @@ class Ui_Dialog(object):
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
         Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
-        self.labelTitle.setText(_translate("Dialog", "حذف المنتج"))
+        self.labelTitle.setText(_translate("Dialog", "تأكيد ؟"))
         self.labelMessage.setText(_translate("Dialog", "Are you sure to delete item"))
         self.buttonCancel.setText(_translate("Dialog", "لا"))
         self.buttonConfirm.setText(_translate("Dialog", "حذف"))
